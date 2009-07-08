@@ -1,0 +1,11 @@
+# ls
+alias ls="ls -F"
+alias l="ls -lAh"
+alias ll="ls -l"
+alias la='ls -A'
+
+# java
+alias clojure='java -cp ${JLINE_PATH}:${CLOJURE_PATH} jline.ConsoleRunner clojure.lang.Repl'
+
+# OSX specific
+[[ -d /Applications/GitX.app ]] && alias gitx='Open -a /Applications/GitX.app'
