@@ -1,1 +1,0 @@
-complete -C ~/.bash/completion_scripts/project_completion.rb -o default c
