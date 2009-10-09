@@ -1,0 +1,8 @@
+# colors
+export CLICOLOR=1
+export LSCOLORS=GxFxCxDxBxegedabagacad
+
+export PS1='%m:%3~%(?..[%?])%# '
+
+fpath=(~/.zsh/functions $fpath)
+autoload -U ~/.zsh/functions/*(:t)
