@@ -4,6 +4,17 @@ alias l="ls -lAh"
 alias ll="ls -l"
 alias la='ls -A'
 
+# OS X
+alias showhidden='defaults write com.apple.finder AppleShowAllFiles'
+alias ff='find . -name'
+
+# GWT
+if [[ -d "${GWT_HOME}" ]]; then
+	alias gwt='mvn com.totsp.gwt:maven-googlewebtoolkit2-plugin:gwt'
+	alias gwttest='mvn com.totsp.gwt:maven-googlewebtoolkit2-plugin:gwt -Ptest'
+	alias gwt-debug='mvn com.totsp.gwt:maven-googlewebtoolkit2-plugin:debug'
+fi
+
 # java
 [[ -d "${CLOJURE_PATH}" ]] && alias clojure='java -cp ${JLINE_PATH}:${CLOJURE_PATH} jline.ConsoleRunner clojure.lang.Repl'
 
