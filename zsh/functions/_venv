@@ -1,2 +1,2 @@
-#compdef env
+#compdef venv
 _files -W ~/Code/envs/
