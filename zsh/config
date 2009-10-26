@@ -2,10 +2,11 @@
 export CLICOLOR=1
 export LSCOLORS=GxFxCxDxBxegedabagacad
 
-export PS1='%m:%3~%(?..[%?])%# '
+export PS1='%m:%3~$(git_info_for_prompt)%(?..[%?])%# '
 export PYTHONPATH=.:${PYTHONPATH}
 
 fpath=(~/.zsh/functions $fpath)
 autoload -U ~/.zsh/functions/*(:t)
 
-setopt   histignorealldups
+setopt promptsubst
+setopt histignorealldups
