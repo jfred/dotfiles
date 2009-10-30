@@ -10,3 +10,7 @@ autoload -U ~/.zsh/functions/*(:t)
 
 setopt promptsubst
 setopt histignorealldups
+
+HISTSIZE=1000
+SAVEHIST=1000
+HISTFILE=~/.history
