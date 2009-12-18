@@ -86,6 +86,9 @@ nmap <silent> <C-D> :NERDTree<CR>
 autocmd BufRead *.py set makeprg=python\ -c\ \"import\ py_compile,sys;\ sys.stderr=sys.stdout;\ py_compile.compile(r'%')\"
 autocmd BufRead *.py set efm=%C\ %.%#,%A\ \ File\ \"%f\"\\,\ line\ %l%.%#,%Z%[%^\ ]%\\@=%m
 
+" File search
+map <silent> <C-T> :FufFile<CR>
+
 " Ctags
 map <F8> :!bash -l -c "ctags -f '.tags' -R ."<CR>
 set tags=tags,.tags
