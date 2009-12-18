@@ -5,12 +5,14 @@ set nocompatible
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
 
+set foldlevelstart=20   " Don't start folded
+set hidden              " allow for editied buffers in the background 
 set nobackup		" do not keep a backup file, use versions instead
 set history=50		" keep 50 lines of command line history
 set ruler		" show the cursor position all the time
 set showcmd		" display incomplete commands
 set incsearch		" do incremental searching
-set title		" set the terminal title
+"set title		" set the terminal title
 
 " For Win32 GUI: remove 't' flag from 'guioptions': no tearoff menu entries
 " let &guioptions = substitute(&guioptions, "t", "", "g")
@@ -78,3 +80,16 @@ endif
 
 " NERDTree
 let NERDTreeIgnore=['\.pyc']
+nmap <silent> <C-D> :NERDTree<CR>
+
+" Python make
+autocmd BufRead *.py set makeprg=python\ -c\ \"import\ py_compile,sys;\ sys.stderr=sys.stdout;\ py_compile.compile(r'%')\"
+autocmd BufRead *.py set efm=%C\ %.%#,%A\ \ File\ \"%f\"\\,\ line\ %l%.%#,%Z%[%^\ ]%\\@=%m
+
+" Ctags
+map <F8> :!bash -l -c "ctags -f '.tags' -R ."<CR>
+set tags=tags,.tags
+
+" MiniBuffer
+let g:miniBufExplMapCTabSwitchBufs = 1
+let g:miniBufExplMapWindowNavVim = 1 
