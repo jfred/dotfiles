@@ -14,8 +14,17 @@ set showcmd		" display incomplete commands
 set incsearch		" do incremental searching
 "set title		" set the terminal title
 
-" For Win32 GUI: remove 't' flag from 'guioptions': no tearoff menu entries
-" let &guioptions = substitute(&guioptions, "t", "", "g")
+" removes the toolbar in macvim
+colorscheme default
+" set bg=dark
+" if &background == "dark"
+"     hi normal guibg=black
+"     set transp=0
+" endif
+if has("gui_running")
+    set guioptions=egmrt
+    set guifont=Monaco:h10
+endif
 
 " Don't use Ex mode, use Q for formatting
 map Q gq
@@ -80,14 +89,16 @@ endif
 
 " NERDTree
 let NERDTreeIgnore=['\.pyc']
-nmap <silent> <C-D> :NERDTree<CR>
+nmap <silent> <Leader>nd :NERDTree<CR>
+nmap <silent> <Leader>nt :NERDTreeToggle<CR>
 
 " Python make
 autocmd BufRead *.py set makeprg=python\ -c\ \"import\ py_compile,sys;\ sys.stderr=sys.stdout;\ py_compile.compile(r'%')\"
 autocmd BufRead *.py set efm=%C\ %.%#,%A\ \ File\ \"%f\"\\,\ line\ %l%.%#,%Z%[%^\ ]%\\@=%m
 
 " File search
-map <silent> <C-T> :FufFile<CR>
+map <silent> <Leader>ff :FufFile<CR>
+map <silent> <Leader>ft :FufTag<CR>
 
 " Ctags
 map <F8> :!bash -l -c "ctags -f '.tags' -R ."<CR>
@@ -96,3 +107,4 @@ set tags=tags,.tags
 " MiniBuffer
 let g:miniBufExplMapCTabSwitchBufs = 1
 let g:miniBufExplMapWindowNavVim = 1 
+
