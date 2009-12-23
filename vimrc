@@ -13,15 +13,18 @@ set ruler		" show the cursor position all the time
 set showcmd		" display incomplete commands
 set incsearch		" do incremental searching
 "set title		" set the terminal title
+set tabstop=4
+set expandtab
+set shiftwidth=4
 
 " removes the toolbar in macvim
-colorscheme default
-" set bg=dark
-" if &background == "dark"
-"     hi normal guibg=black
-"     set transp=0
-" endif
+colorscheme slate
 if has("gui_running")
+    set bg=dark
+    if &background == "dark"
+        hi normal guibg=black
+    endif
+    set transp=5
     set guioptions=egmrt
     set guifont=Monaco:h10
 endif
