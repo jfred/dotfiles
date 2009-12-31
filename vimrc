@@ -18,7 +18,7 @@ set expandtab
 set shiftwidth=4
 
 " removes the toolbar in macvim
-colorscheme slate
+colorscheme desert
 if has("gui_running")
     set bg=dark
     if &background == "dark"
