@@ -91,9 +91,10 @@ if !exists(":DiffOrig")
 		  \ | wincmd p | diffthis
 endif
 
+" Color styles
 if !exists(":StyleDefault")
-    command StyleDefault colorscheme desert | set background=dark | set transp=5
-    command StylePlain colorscheme default | set background=light | set transp=0
+    command StyleDefault colorscheme desert  | set transp=5 | set background=dark
+    command StylePlain   colorscheme default | set transp=0 | set background=light
 endif
 
 " NERDTree
@@ -117,3 +118,5 @@ set tags=tags,.tags
 let g:miniBufExplMapCTabSwitchBufs = 1
 let g:miniBufExplMapWindowNavVim = 1 
 
+nnoremap <silent> <F12> :bn<CR>
+nnoremap <silent> <S-F12> :bp<CR>
