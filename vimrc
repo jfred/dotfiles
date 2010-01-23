@@ -16,6 +16,7 @@ set incsearch		" do incremental searching
 set tabstop=4
 set expandtab
 set shiftwidth=4
+set cursorline
 
 " removes the toolbar in macvim
 colorscheme desert
@@ -88,6 +89,11 @@ endif " has("autocmd")
 if !exists(":DiffOrig")
   command DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis
 		  \ | wincmd p | diffthis
+endif
+
+if !exists(":StyleDefault")
+    command StyleDefault colorscheme desert | set background=dark | set transp=5
+    command StylePlain colorscheme default | set background=light | set transp=0
 endif
 
 " NERDTree
