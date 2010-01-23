@@ -1,9 +1,43 @@
-# colors
+autoload colors
+colors
+autoload -Uz vcs_info
+
+# set some colors
+for COLOR in RED GREEN YELLOW WHITE BLACK CYAN BLUE MAGENTA; do
+    eval PR_$COLOR='%{$fg[${(L)COLOR}]%}'
+    eval PR_BRIGHT_$COLOR='%{$fg_bold[${(L)COLOR}]%}'
+done
+PR_RESET="%{${reset_color}%}";
+
+# check-for-changes can be really slow.
+# you should disable it, if you work with large repositories
+zstyle ':vcs_info:*:prompt:*' check-for-changes true
+zstyle ':vcs_info:*:prompt:*' unstagedstr '¹'  # display ¹ if there are unstaged changes
+zstyle ':vcs_info:*:prompt:*' stagedstr '²'    # display ² if there are staged changes
+
+zstyle ':vcs_info:*:prompt:*' actionformats "(%s:%b%u%s)"
+zstyle ':vcs_info:*:prompt:*' formats       "${PR_GREEN}(%s:%b${PR_RED}%u${PR_YELLOW}%c${PR_GREEN})${PR_RESET}"
+zstyle ':vcs_info:*:prompt:*' nvcsformats   ""  "%~"
+
+function precmd {
+    vcs_info 'prompt'
+}
+
+function lprompt {
+    local vcs='$vcs_info_msg_0_'
+    local cwd="${color2}%B%1~%b"
+
+    PROMPT="${PR_RESET}%m:%3~${vcs}%# ${PR_RESET}"
+}
+
+lprompt
+
+# term colors
 export CLICOLOR=1
 export LSCOLORS=GxFxCxDxBxegedabagacad
 
-export PS1='%m:%3~$(vcs_info_for_prompt)%(?..[%?])%# '
-export PYTHONPATH=.:${PYTHONPATH}
+#export PS1='%m:%3~$(vcs_info_for_prompt)%(?..[%?])%# '
+#export PYTHONPATH=.:${PYTHONPATH}
 
 fpath=(~/.zsh/functions $fpath)
 autoload -U ~/.zsh/functions/*(:t)
