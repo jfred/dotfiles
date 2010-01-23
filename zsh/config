@@ -2,7 +2,7 @@
 export CLICOLOR=1
 export LSCOLORS=GxFxCxDxBxegedabagacad
 
-export PS1='%m:%3~$(git_info_for_prompt)%(?..[%?])%# '
+export PS1='%m:%3~$(vcs_info_for_prompt)%(?..[%?])%# '
 export PYTHONPATH=.:${PYTHONPATH}
 
 fpath=(~/.zsh/functions $fpath)
