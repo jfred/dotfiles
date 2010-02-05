@@ -107,8 +107,10 @@ autocmd BufRead *.py set makeprg=python\ -c\ \"import\ py_compile,sys;\ sys.stde
 autocmd BufRead *.py set efm=%C\ %.%#,%A\ \ File\ \"%f\"\\,\ line\ %l%.%#,%Z%[%^\ ]%\\@=%m
 
 " File search
-map <silent> <Leader>ff :FufFile<CR>
-map <silent> <Leader>ft :FufTag<CR>
+"map <silent> <Leader>ff :FufFile<CR>
+"map <silent> <Leader>ft :FufTag<CR>
+map <Leader>t :FuzzyFinderTextMate<CR>
+
 
 " Ctags
 map <F8> :!bash -l -c "ctags -f '.tags' -R ."<CR>
