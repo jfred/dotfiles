@@ -97,6 +97,16 @@ if !exists(":StyleDefault")
     command StylePlain   colorscheme default | set transp=0 | set background=light
 endif
 
+" remap leader
+let mapleader = ","
+
+" NERDCommenter
+" let NERDCreateDefaultMappings=0
+let NERDSpaceDelims=1
+map <Leader>/ <plug>NERDCommenterToggle
+map <Leader>[ <plug>NERDCommenterAlignLeft
+map <Leader>] <plug>NERDCommenterUncomment
+
 " NERDTree
 let NERDTreeIgnore=['\.pyc']
 nmap <silent> <Leader>nd :NERDTree<CR>
@@ -111,6 +121,9 @@ autocmd BufRead *.py set efm=%C\ %.%#,%A\ \ File\ \"%f\"\\,\ line\ %l%.%#,%Z%[%^
 "map <silent> <Leader>ft :FufTag<CR>
 map <Leader>t :FuzzyFinderTextMate<CR>
 
+" Git Status line
+set laststatus=2
+set statusline=%<%f%m%r\ (%l:%c)\ %=\ %{GitBranch()}\ %h%w%y
 
 " Ctags
 map <F8> :!bash -l -c "ctags -f '.tags' -R ."<CR>
