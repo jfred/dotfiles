@@ -117,16 +117,17 @@ autocmd BufRead *.py set makeprg=python\ -c\ \"import\ py_compile,sys;\ sys.stde
 autocmd BufRead *.py set efm=%C\ %.%#,%A\ \ File\ \"%f\"\\,\ line\ %l%.%#,%Z%[%^\ ]%\\@=%m
 
 " File search
-"map <silent> <Leader>ff :FufFile<CR>
-"map <silent> <Leader>ft :FufTag<CR>
-map <Leader>t :FuzzyFinderTextMate<CR>
+let g:fuzzy_ignore = "*/build/*;*/dist/*;*.egg-info/*;*.pyc"
+
+map <Leader>t :FuzzyFinderTag<CR>
+map <Leader>f :FuzzyFinderTextMate<CR>
 
 " Git Status line
 set laststatus=2
 set statusline=%<%f%m%r\ (%l:%c)\ %=\ %{GitBranch()}\ %h%w%y
 
 " Ctags
-map <F8> :!bash -l -c "ctags -f '.tags' -R ."<CR>
+map <F8> :!/usr/local/bin/ctags -f '.tags' --exclude='build' -R .<CR>
 set tags=tags,.tags
 
 " MiniBuffer
