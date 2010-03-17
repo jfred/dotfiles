@@ -127,12 +127,22 @@ set laststatus=2
 set statusline=%<%f%m%r\ (%l:%c)\ %=\ %{GitBranch()}\ %h%w%y
 
 " Ctags
-map <F8> :!/usr/local/bin/ctags -f '.tags' --exclude='build' -R .<CR>
-set tags=tags,.tags
+let Tlist_Ctags_Cmd='/usr/local/bin/ctags'
+nnoremap <silent> <F8> :TlistToggle<CR>
+let Tlist_Exit_OnlyWindow = 1     " exit if taglist is last window open
+let Tlist_Show_One_File = 1       " Only show tags for current buffer
+let Tlist_Enable_Fold_Column = 0  " no fold column (only showing one file)
+
+map <S-F8> :!/usr/local/bin/ctags -f '.tags' --exclude='build' -R .<CR>
+set tags=tags,.tags,/
+
+set nohlsearch          " turn off highlight searches, but:
+" Turn hlsearch off/on with CTRL-N
+:map <silent> <C-N> :se invhlsearch<CR>
 
 " MiniBuffer
 let g:miniBufExplMapCTabSwitchBufs = 1
 let g:miniBufExplMapWindowNavVim = 1 
 
 nnoremap <silent> <F12> :bn<CR>
-nnoremap <silent> <S-F12> :bp<CR>
+nnoremap <silent> <F11> :bp<CR>
