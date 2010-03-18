@@ -21,6 +21,7 @@ set cursorline
 " removes the toolbar in macvim
 colorscheme desert
 if has("gui_running")
+    colorscheme ps_color
     set bg=dark
     if &background == "dark"
         hi normal guibg=black
@@ -136,6 +137,11 @@ let Tlist_Enable_Fold_Column = 0  " no fold column (only showing one file)
 map <S-F8> :!/usr/local/bin/ctags -f '.tags' --exclude='build' -R .<CR>
 set tags=tags,.tags,/
 
+" completion
+let g:SuperTabDefaultCompletionType = "<C-X><C-O>"
+let g:SuperTabDefaultCompletionType = "context"
+set completeopt=menu
+
 set nohlsearch          " turn off highlight searches, but:
 " Turn hlsearch off/on with CTRL-N
 :map <silent> <C-N> :se invhlsearch<CR>
@@ -143,6 +149,11 @@ set nohlsearch          " turn off highlight searches, but:
 " MiniBuffer
 let g:miniBufExplMapCTabSwitchBufs = 1
 let g:miniBufExplMapWindowNavVim = 1 
+
+" popups
+highlight Pmenu guibg=brown gui=bold
+highlight PmenuSel guibg=darkred
+highlight CursorLine   cterm=NONE ctermbg=darkblue ctermfg=white guibg=darkblue guifg=white
 
 nnoremap <silent> <F12> :bn<CR>
 nnoremap <silent> <F11> :bp<CR>
