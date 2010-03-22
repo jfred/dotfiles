@@ -134,7 +134,8 @@ let Tlist_Exit_OnlyWindow = 1     " exit if taglist is last window open
 let Tlist_Show_One_File = 1       " Only show tags for current buffer
 let Tlist_Enable_Fold_Column = 0  " no fold column (only showing one file)
 
-map <S-F8> :!/usr/local/bin/ctags -f '.tags' --exclude='build' -R .<CR>
+map <S-F8> :!/usr/local/bin/ctags -f '.tags' --exclude='build' --extra=+f -R .<CR>
+
 set tags=tags,.tags,/
 
 " completion
