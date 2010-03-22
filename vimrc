@@ -21,7 +21,8 @@ set cursorline
 " removes the toolbar in macvim
 colorscheme desert
 if has("gui_running")
-    colorscheme ps_color
+    " colorscheme ps_color
+    colorscheme darkspectrum
     set bg=dark
     if &background == "dark"
         hi normal guibg=black
@@ -152,9 +153,9 @@ let g:miniBufExplMapCTabSwitchBufs = 1
 let g:miniBufExplMapWindowNavVim = 1 
 
 " popups
-highlight Pmenu guibg=brown gui=bold
-highlight PmenuSel guibg=darkred
-highlight CursorLine   cterm=NONE ctermbg=darkblue ctermfg=white guibg=darkblue guifg=white
+" highlight Pmenu guibg=brown gui=bold
+" highlight PmenuSel guibg=darkred
+" highlight CursorLine   cterm=NONE ctermbg=darkblue ctermfg=white guibg=darkblue guifg=white
 
 nnoremap <silent> <F12> :bn<CR>
 nnoremap <silent> <F11> :bp<CR>
