@@ -22,7 +22,7 @@ set cursorline
 colorscheme desert
 if has("gui_running")
     " colorscheme ps_color
-    colorscheme darkspectrum
+    colorscheme candycode
     set bg=dark
     if &background == "dark"
         hi normal guibg=black
