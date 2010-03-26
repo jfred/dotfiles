@@ -123,6 +123,7 @@ let g:fuzzy_ignore = "*/build/*;*/dist/*;*.egg-info/*;*.pyc"
 
 map <Leader>t :FuzzyFinderTag<CR>
 map <Leader>f :FuzzyFinderTextMate<CR>
+map <Leader>b :FuzzyFinderBuffer<CR>
 
 " Git Status line
 set laststatus=2
