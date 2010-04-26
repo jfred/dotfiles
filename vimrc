@@ -118,6 +118,7 @@ nmap <silent> <Leader>nt :NERDTreeToggle<CR>
 " autocmd BufRead *.py set makeprg=python\ -c\ \"import\ py_compile,sys;\ sys.stderr=sys.stdout;\ py_compile.compile(r'%')\"
 " autocmd BufRead *.py set efm=%C\ %.%#,%A\ \ File\ \"%f\"\\,\ line\ %l%.%#,%Z%[%^\ ]%\\@=%m
 autocmd FileType python compiler pylint
+let g:pylint_cwindow=0
 
 " File search
 let g:fuzzy_ignore = "*/build/*;*/dist/*;*.egg-info/*;*.pyc"
