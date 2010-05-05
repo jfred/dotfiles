@@ -159,6 +159,16 @@ let g:miniBufExplMapWindowNavVim = 1
 " highlight Pmenu guibg=brown gui=bold
 " highlight PmenuSel guibg=darkred
 " highlight CursorLine   cterm=NONE ctermbg=darkblue ctermfg=white guibg=darkblue guifg=white
-
 nnoremap <silent> <F12> :bn<CR>
 nnoremap <silent> <F11> :bp<CR>
+
+" prevent falling back on bad habits
+" unmap arrow keys
+nmap <right> <nop>
+nmap <left> <nop>
+nmap <up> <nop>
+nmap <down> <nop>
+imap <right> <nop>
+imap <left> <nop>
+imap <up> <nop>
+imap <down> <nop>
