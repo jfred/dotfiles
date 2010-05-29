@@ -18,6 +18,8 @@ set expandtab
 set shiftwidth=4
 set cursorline
 
+set nowrap
+
 " removes the toolbar in macvim
 colorscheme desert
 if has("gui_running")
