@@ -31,7 +31,8 @@ if has("gui_running")
     endif
     set transp=5
     set guioptions=egmrt
-    set guifont=Monaco:h10
+    "set guifont=Monaco:h10
+    set guifont=Consolas:h12
 endif
 
 " Don't use Ex mode, use Q for formatting
