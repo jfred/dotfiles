@@ -165,6 +165,9 @@ let g:miniBufExplMapWindowNavVim = 1
 nnoremap <silent> <F12> :bn<CR>
 nnoremap <silent> <F11> :bp<CR>
 
+" alternative for <Esc>
+inoremap <C-J> <Esc>
+
 " prevent falling back on bad habits
 " unmap arrow keys
 nmap <right> <nop>
