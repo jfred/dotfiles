@@ -162,8 +162,6 @@ let g:miniBufExplMapWindowNavVim = 1
 " highlight Pmenu guibg=brown gui=bold
 " highlight PmenuSel guibg=darkred
 " highlight CursorLine   cterm=NONE ctermbg=darkblue ctermfg=white guibg=darkblue guifg=white
-nnoremap <silent> <F12> :bn<CR>
-nnoremap <silent> <F11> :bp<CR>
 
 " alternative for <Esc>
 inoremap <C-J> <Esc>
@@ -178,3 +176,9 @@ imap <right> <nop>
 imap <left> <nop>
 imap <up> <nop>
 imap <down> <nop>
+
+if filereadable($VIRTUAL_ENV . '/bin/activate_this.py')
+    python import os
+    python activate_this = os.environ['VIRTUAL_ENV'] + '/bin/activate_this.py'
+    python execfile(activate_this, dict(__file__=activate_this))
+endif
