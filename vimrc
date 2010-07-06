@@ -124,11 +124,12 @@ autocmd FileType python compiler pylint
 let g:pylint_cwindow=0
 
 " File search
-let g:fuzzy_ignore = "*/build/*;*/dist/*;*.egg-info/*;*.pyc"
+let g:fuf_file_exclude = "*/build/*;*/dist/*;*.egg-info/*;*.pyc"
 
-map <Leader>t :FuzzyFinderTag<CR>
-map <Leader>f :FuzzyFinderTextMate<CR>
-map <Leader>b :FuzzyFinderBuffer<CR>
+map <Leader>t :FufTag<CR>
+map <Leader>f :FufFile<CR>
+map <Leader>b :FufBuffer<CR>
+map <Leader>l :FufLine<CR>
 
 " Git Status line
 set laststatus=2
