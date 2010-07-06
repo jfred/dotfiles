@@ -124,7 +124,7 @@ autocmd FileType python compiler pylint
 let g:pylint_cwindow=0
 
 " File search
-let g:fuf_file_exclude = "*/build/*;*/dist/*;*.egg-info/*;*.pyc"
+let g:fuf_file_exclude = '\v\~$|\.(o|exe|dll|bak|pyc|sw[po])$|(^|[/\\])(\.(hg|git|bzr|egg-info)|build|dist)($|[/\\])'
 
 map <Leader>t :FufTag<CR>
 map <Leader>f :FufFile<CR>
