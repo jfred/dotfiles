@@ -18,6 +18,8 @@ set expandtab
 set shiftwidth=4
 set cursorline
 
+set clipboard=unnamed
+set visualbell
 set nowrap
 
 " removes the toolbar in macvim
@@ -104,7 +106,6 @@ endif
 
 " remap leader
 let mapleader = ","
-set visualbell
 
 " NERDCommenter
 " let NERDCreateDefaultMappings=0
