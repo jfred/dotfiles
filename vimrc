@@ -104,6 +104,7 @@ endif
 
 " remap leader
 let mapleader = ","
+set visualbell
 
 " NERDCommenter
 " let NERDCreateDefaultMappings=0
