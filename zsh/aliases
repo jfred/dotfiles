@@ -4,6 +4,8 @@ alias l="ls -lAh"
 alias ll="ls -l"
 alias la='ls -A'
 
+alias tag="/usr/local/bin/ctags -f '.tags' --exclude='build' --extra=+f -R ."
+
 # OS X
 alias showhidden='defaults write com.apple.finder AppleShowAllFiles'
 alias ff='find . -name'
