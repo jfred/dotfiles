@@ -129,6 +129,7 @@ let g:pylint_cwindow=0
 let g:fuf_file_exclude = '\v\~$|\.(o|exe|dll|bak|pyc|sw[po])$|(^|[/\\])(\.(hg|git|bzr|egg-info)|build|dist)($|[/\\])'
 
 map <Leader>t :FufTag<CR>
+map <Leader>F :FufFile<CR>
 map <Leader>f :FufTaggedFile<CR>
 map <Leader>b :FufBuffer<CR>
 map <Leader>l :FufLine<CR>
