@@ -1,62 +1,52 @@
-" Use Vim settings, rather then Vi settings (much better!).
-" This must be first, because it changes other options as a side effect.
 set nocompatible
 
-" allow backspacing over everything in insert mode
-set backspace=indent,eol,start
+filetype off
+call pathogen#helptags()
+call pathogen#runtime_append_all_bundles()
 
-set foldlevelstart=20   " Don't start folded
-set hidden              " allow for editied buffers in the background 
-set nobackup		" do not keep a backup file, use versions instead
-set history=50		" keep 50 lines of command line history
-set ruler		" show the cursor position all the time
-set showcmd		" display incomplete commands
-set incsearch		" do incremental searching
-"set title		" set the terminal title
-set tabstop=4
+set foldlevelstart=20 " Don't start folded
+set hidden            " allow for editied buffers in the background 
+set nobackup          " do not keep a backup file, use versions instead
+set history=50        " keep 50 lines of command line history
+set ruler             " show the cursor position all the time
+set showcmd           " display incomplete commands
+set incsearch         " do incremental searching
+set hlsearch          " highlight last search
+"set title             " set the terminal title
+
 set expandtab
+set tabstop=4
 set shiftwidth=4
-set cursorline
-
-set clipboard=unnamed
-set visualbell
 set nowrap
 
-" removes the toolbar in macvim
-colorscheme desert
+set clipboard=unnamed
+set cursorline
+set visualbell
+
+if has('mouse')
+  set mouse=a
+endif
+
+colorscheme vividchalk
+"colorscheme candycode
 if has("gui_running")
-    " colorscheme ps_color
-    colorscheme candycode
     set bg=dark
     if &background == "dark"
         hi normal guibg=black
     endif
     set transp=5
+    " removes the toolbar in macvim
     set guioptions=egmrt
     "set guifont=Monaco:h10
     set guifont=Consolas:h12
 endif
 
-" Don't use Ex mode, use Q for formatting
-map Q gq
-
-" CTRL-U in insert mode deletes a lot.  Use CTRL-G u to first break undo,
-" so that you can undo CTRL-U after inserting a line break.
-inoremap <C-U> <C-G>u<C-U>
-
-" In many terminal emulators the mouse works just fine, thus enable it.
-if has('mouse')
-  set mouse=a
-endif
-
 " Switch syntax highlighting on, when the terminal has colors
-" Also switch on highlighting the last used search pattern.
 if &t_Co > 2 || has("gui_running")
   syntax on
-  set hlsearch
+" Only do this part when compiled with support for autocommands.
 endif
 
-" Only do this part when compiled with support for autocommands.
 if has("autocmd")
 
   " Enable file type detection.
@@ -69,14 +59,7 @@ if has("autocmd")
   augroup vimrcEx
   au!
 
-  " For all text files set 'textwidth' to 78 characters.
-  autocmd FileType text setlocal textwidth=78
-
   " When editing a file, always jump to the last known cursor position.
-  " Don't do it when the position is invalid or when inside an event handler
-  " (happens when dropping a file on gvim).
-  " Also don't do it when the mark is in the first line, that is the default
-  " position when opening a file.
   autocmd BufReadPost *
     \ if line("'\"") > 1 && line("'\"") <= line("$") |
     \   exe "normal! g`\"" |
@@ -89,20 +72,6 @@ else
   set autoindent		" always set autoindenting on
 
 endif " has("autocmd")
-
-" Convenient command to see the difference between the current buffer and the
-" file it was loaded from, thus the changes you made.
-" Only define it when not defined already.
-if !exists(":DiffOrig")
-  command DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis
-		  \ | wincmd p | diffthis
-endif
-
-" Color styles
-if !exists(":StyleDefault")
-    command StyleDefault colorscheme desert  | set transp=5 | set background=dark
-    command StylePlain   colorscheme default | set transp=0 | set background=light
-endif
 
 " remap leader
 let mapleader = ","
@@ -122,10 +91,12 @@ nmap <silent> <Leader>nt :NERDTreeToggle<CR>
 " Python
 " autocmd BufRead *.py set makeprg=python\ -c\ \"import\ py_compile,sys;\ sys.stderr=sys.stdout;\ py_compile.compile(r'%')\"
 " autocmd BufRead *.py set efm=%C\ %.%#,%A\ \ File\ \"%f\"\\,\ line\ %l%.%#,%Z%[%^\ ]%\\@=%m
-autocmd FileType python compiler pylint
+
+" autocmd FileType python compiler pylint
 let g:pylint_cwindow=0
 
 " File search
+let g:fuf_autoPreview = 0
 let g:fuf_file_exclude = '\v\~$|\.(o|exe|dll|bak|pyc|sw[po])$|(^|[/\\])(\.(hg|git|bzr|egg-info)|build|dist)($|[/\\])'
 
 map <Leader>t :FufTag<CR>
@@ -136,7 +107,8 @@ map <Leader>l :FufLine<CR>
 
 " Git Status line
 set laststatus=2
-set statusline=%<%f%m%r\ (%l:%c)\ %=\ %{GitBranch()}\ %h%w%y
+set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
+"set statusline=%<%f%m%r\ (%l:%c)\ %=\ %{GitBranch()}\ %h%w%y
 
 " Ctags
 let Tlist_Ctags_Cmd='/usr/local/bin/ctags'
