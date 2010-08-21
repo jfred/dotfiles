@@ -14,6 +14,8 @@ set incsearch         " do incremental searching
 set hlsearch          " highlight last search
 "set title             " set the terminal title
 
+set wildmode=list:longest 
+
 set expandtab
 set tabstop=4
 set shiftwidth=4
