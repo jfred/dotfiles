@@ -159,4 +159,8 @@ if filereadable($VIRTUAL_ENV . '/bin/activate_this.py')
     python import os
     python activate_this = os.environ['VIRTUAL_ENV'] + '/bin/activate_this.py'
     python execfile(activate_this, dict(__file__=activate_this))
+    let g:pydiction_location = $VIRTUAL_ENV . '/complete-dict'
+else
+    let g:pydiction_location = $PYTHON_COMPLETE_DICT
 endif
+
