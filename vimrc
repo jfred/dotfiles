@@ -132,7 +132,7 @@ set completeopt=menu
 
 set nohlsearch          " turn off highlight searches, but:
 " Turn hlsearch off/on with CTRL-N
-:map <silent> <C-N> :se invhlsearch<CR>
+map <silent> <C-N> :se invhlsearch<CR>
 
 " MiniBuffer
 let g:miniBufExplMapCTabSwitchBufs = 1
