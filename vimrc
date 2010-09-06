@@ -136,6 +136,9 @@ set nohlsearch          " turn off highlight searches, but:
 let g:miniBufExplMapCTabSwitchBufs = 1
 let g:miniBufExplMapWindowNavVim = 1 
 
+" task list
+map <leader>v <Plug>TaskList
+
 " popups
 " highlight Pmenu guibg=brown gui=bold
 " highlight PmenuSel guibg=darkred
