@@ -4,26 +4,43 @@ filetype off
 call pathogen#helptags()
 call pathogen#runtime_append_all_bundles()
 
+"set title             " set the terminal title
+set autoindent        " always set autoindenting on
+set copyindent
+set cursorline
+set expandtab
 set foldlevelstart=20 " Don't start folded
 set hidden            " allow for editied buffers in the background 
-set nobackup          " do not keep a backup file, use versions instead
-set history=50        " keep 50 lines of command line history
-set ruler             " show the cursor position all the time
-set showcmd           " display incomplete commands
-set incsearch         " do incremental searching
 set hlsearch          " highlight last search
-"set title             " set the terminal title
-
+set ignorecase        " ignore case when searching
+set incsearch         " do incremental searching
+set nowrap
+set ruler             " show the cursor position all the time
+set shiftwidth=4
+set showcmd           " display incomplete commands
+set showmatch
+set smarttab
+set tabstop=4
 set wildmode=list:longest 
 
-set expandtab
-set tabstop=4
-set shiftwidth=4
-set nowrap
+set history=1000      " keep 50 lines of command line history
+set undolevels=1000
+set wildignore=*.swp,*.bak,*.pyc,*.class
 
-set clipboard=unnamed
-set cursorline
 set visualbell
+set noerrorbells
+
+set nobackup          " do not keep a backup file, use versions instead
+set noswapfile
+
+" for full screen
+set fuoptions=maxvert,maxhorz
+
+" Show whitespace chars
+"set list
+"set listchars=tab:>.,trail:.,extends:#,nbsp:.
+
+"set clipboard=unnamed
 
 if has('mouse')
   set mouse=a
@@ -73,12 +90,25 @@ if has("autocmd")
 
 else
 
-  set autoindent		" always set autoindenting on
 
 endif " has("autocmd")
 
 " remap leader
 let mapleader = ","
+
+nnoremap ; :
+
+" Quickly edit/reload the vimrc file
+nmap <silent> <leader>ev :e $MYVIMRC<CR>
+nmap <silent> <leader>sv :so $MYVIMRC<CR>
+
+" Easy window navigation
+map <C-h> <C-w>h
+map <C-j> <C-w>j
+map <C-k> <C-w>k
+map <C-l> <C-w>l
+
+nmap <silent> ,/ :nohlsearch<CR>
 
 " NERDCommenter
 " let NERDCreateDefaultMappings=0
