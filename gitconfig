@@ -1,6 +1,7 @@
 [alias]
     ci = commit
     co = checkout
+    dk = difftool -y -t Kaleidoscope
     lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
 [color]
     diff = auto
@@ -10,3 +11,5 @@
 [user]
     name = Joshua Frederick
     email = josh@jfred.net
+[difftool "Kaleidoscope"]
+	cmd = ksdiff-wrapper git \"$LOCAL\" \"$REMOTE\"
