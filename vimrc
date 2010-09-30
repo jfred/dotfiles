@@ -179,6 +179,10 @@ map <leader>v <Plug>TaskList
 " alternative for <Esc>
 inoremap <C-J> <Esc>
 
+" resize split windos
+map - <C-W>-
+map + <C-W>+
+
 " prevent falling back on bad habits
 " unmap arrow keys
 nmap <right> <nop>
