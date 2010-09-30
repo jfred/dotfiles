@@ -13,3 +13,5 @@
     email = josh@jfred.net
 [difftool "Kaleidoscope"]
 	cmd = ksdiff-wrapper git \"$LOCAL\" \"$REMOTE\"
+[core]
+	editor = gvim -v
