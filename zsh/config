@@ -11,15 +11,23 @@ PR_RESET="%{${reset_color}%}";
 
 # check-for-changes can be really slow.
 # you should disable it, if you work with large repositories
-zstyle ':vcs_info:*:prompt:*' check-for-changes true
-zstyle ':vcs_info:*:prompt:*' unstagedstr '¹'  # display ¹ if there are unstaged changes
-zstyle ':vcs_info:*:prompt:*' stagedstr '²'    # display ² if there are staged changes
-
+#zstyle ':vcs_info:*:prompt:*' unstagedstr '¹'  # display ¹ if there are unstaged changes
+#zstyle ':vcs_info:*:prompt:*' stagedstr '²'    # display ² if there are staged changes
+zstyle ':vcs_info:*:prompt:*' unstagedstr '●'
+zstyle ':vcs_info:*:prompt:*' stagedstr '●'
 zstyle ':vcs_info:*:prompt:*' actionformats "(%s:%b%u%s)"
-zstyle ':vcs_info:*:prompt:*' formats       "${PR_GREEN}(%s:%b${PR_RED}%u${PR_YELLOW}%c${PR_GREEN})${PR_RESET}"
 zstyle ':vcs_info:*:prompt:*' nvcsformats   ""  "%~"
+zstyle ':vcs_info:*:prompt:*' check-for-changes true
+
+#zstyle ':vcs_info:*:prompt:*' formats       "${PR_GREEN}(%b${PR_RED}%u${PR_YELLOW}%c${PR_GREEN})${PR_RESET}"
 
 function precmd {
+    if [[ -z $(git ls-files --other --exclude-standard 2> /dev/null) ]] {
+        zstyle ':vcs_info:*:prompt:*' formats       "${PR_GREEN}(%b${PR_GREEN}%u${PR_YELLOW}%c${PR_GREEN})${PR_RESET}"
+    } else {
+        zstyle ':vcs_info:*:prompt:*' formats       "${PR_GREEN}(%b${PR_GREEN}%u${PR_YELLOW}%c${PR_RED}●${PR_GREEN})${PR_RESET}"
+        zstyle ':vcs_info:*' formats ' [%F{green}%b%c%u%F{red}●%F{blue}]'
+    }
     vcs_info 'prompt'
 }
 
