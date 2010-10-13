@@ -697,7 +697,7 @@ function! s:Commit(args) abort
       endif
       return ''
     else
-      let error = get(readfile(errorfile),-2,'!')
+      let error = get(readfile(errorfile,'',1),0,'!')
       if error =~# "'false'\\.$"
         let args = a:args
         let args = s:gsub(args,'%(%(^| )-- )@<!%(^| )@<=%(-[se]|--edit|--interactive)%($| )','')
@@ -948,11 +948,7 @@ function! s:Write(force,...) abort
     execute 'write! '.s:fnameescape(s:repo().translate(path))
   endif
 
-  if a:force
-    let error = s:repo().git_chomp_in_tree('add', '--force', file)
-  else
-    let error = s:repo().git_chomp_in_tree('add', file)
-  endif
+  let error = s:repo().git_chomp_in_tree('add', file)
   if v:shell_error
     let v:errmsg = 'fugitive: '.error
     return 'echoerr v:errmsg'
@@ -1369,7 +1365,7 @@ function! s:BufReadIndex()
     if fnamemodify($GIT_INDEX_FILE !=# '' ? $GIT_INDEX_FILE : b:git_dir . '/index', ':p') ==# expand('%:p')
       let index = ''
     else
-      let index = expand('%:p')
+      let index = expand('%')
     endif
     if b:fugitive_display_format
       call s:ReplaceCmd(s:repo().git_command('ls-files','--stage'),index)
@@ -1395,8 +1391,6 @@ function! s:BufReadIndex()
     xnoremap <buffer> <silent> - :<C-U>execute <SID>StageToggle(line("'<"),line("'>"))<CR>
     nnoremap <buffer> <silent> p :<C-U>execute <SID>StagePatch(line('.'),line('.')+v:count1-1)<CR>
     xnoremap <buffer> <silent> p :<C-U>execute <SID>StagePatch(line("'<"),line("'>"))<CR>
-    nnoremap <buffer> <silent> <C-N> :call search('^#\t.*','W')<Bar>.<CR>
-    nnoremap <buffer> <silent> <C-P> :call search('^#\t.*','Wbe')<Bar>.<CR>
     call s:JumpInit()
     nunmap   <buffer>          P
     nunmap   <buffer>          ~

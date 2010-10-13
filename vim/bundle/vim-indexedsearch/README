@@ -1,0 +1,17 @@
+This plugin redefines 6 search commands (/,?,n,N,*,#). At every
+search command, it automatically prints
+       "At match #N out of M matches".
+This helps to get oriented when searching forward and backward.
+
+This is a mirror of http://www.vim.org/scripts/script.php?script_id=1682
+
+--------
+
+This mirror was set up by Scott Bronson: http://github.com/bronson
+Message me if it's out of date.
+
+When committing, make sure the author date matches the upstream release date.
+For 070503 released on 2007-05-03:
+
+    $ GIT_AUTHOR_DATE=2007-05-03T00:00:00 git commit
+    $ GIT_COMMITTER_DATE=2007-05-03T00:00:00 git tag -a 070503
