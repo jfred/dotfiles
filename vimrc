@@ -34,7 +34,7 @@ set nobackup          " do not keep a backup file, use versions instead
 set noswapfile
 
 " for full screen
-set fuoptions=maxvert,maxhorz
+" set fuoptions=maxvert,maxhorz
 
 " Show whitespace chars
 "set list
@@ -53,13 +53,13 @@ if has("gui_running")
     if &background == "dark"
         hi normal guibg=black
     endif
-    set transp=5
     " removes the toolbar in macvim
-    set guioptions=egmrt
+    set guioptions=egrt
+    set guioptions-=mT
     "set guifont=Monaco:h10
     "set guifont=Consolas:h12
     "set guifont=Inconsolata:h13
-    set guifont=DejaVuSansMono:h12
+    "set guifont=DejaVuSansMono:h12
 endif
 
 " Switch syntax highlighting on, when the terminal has colors
