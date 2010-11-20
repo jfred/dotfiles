@@ -54,8 +54,8 @@ if has("gui_running")
         hi normal guibg=black
     endif
     " removes the toolbar in macvim
-    set guioptions=egrt
-    set guioptions-=mT
+    set guioptions=egt
+    set guioptions-=mrT
     "set guifont=Monaco:h10
     "set guifont=Consolas:h12
     "set guifont=Inconsolata:h13
