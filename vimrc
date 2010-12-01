@@ -156,17 +156,11 @@ set completeopt=menu
 let g:miniBufExplMapCTabSwitchBufs = 1
 let g:miniBufExplMapWindowNavVim = 1 
 
-" task list
-map <leader>v <Plug>TaskList
-
 " python - virtual env ********************************************************
 if filereadable($VIRTUAL_ENV . '/bin/activate_this.py')
     python import os
     python activate_this = os.environ['VIRTUAL_ENV'] + '/bin/activate_this.py'
     python execfile(activate_this, dict(__file__=activate_this))
-    " let g:pydiction_location = $VIRTUAL_ENV . '/complete-dict'
-else
-    " let g:pydiction_location = $PYTHON_COMPLETE_DICT
 endif
 
 autocmd FileType python set omnifunc=pythoncomplete#Complete
