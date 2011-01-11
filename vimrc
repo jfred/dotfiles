@@ -36,6 +36,7 @@ set smarttab
 " Indents ********************************************************************
 set autoindent
 set smartindent
+set cindent
 set copyindent
 
 set hidden            " allow for editied buffers in the background 
@@ -170,6 +171,9 @@ autocmd FileType python set omnifunc=pythoncomplete#Complete
 set laststatus=2
 set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
 "set statusline=%<%f%m%r\ (%l:%c)\ %=\ %{GitBranch()}\ %h%w%y
+
+" Gundo - vim undo tree
+nnoremap <F5> :GundoToggle<CR>
 
 " prevent falling back on bad habits
 " unmap arrow keys
