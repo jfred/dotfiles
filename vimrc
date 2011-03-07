@@ -74,7 +74,7 @@ if has("gui_running")
     " removes the toolbar in macvim
     set guioptions=egt
     set guioptions-=mrT
-    set guifont=Inconsolata:h14
+    set guifont="DejaVu Sans Mono":h12
 endif
 
 " Switch syntax highlighting on, when the terminal has colors
