@@ -64,8 +64,6 @@ if exists('+colorcolumn')
     highlight ColorColumn guibg=#222222 ctermbg=246
 endif
 
-colorscheme vividchalk
-"colorscheme candycode
 if has("gui_running")
     set bg=dark
     if &background == "dark"
@@ -75,6 +73,7 @@ if has("gui_running")
     set guioptions=egt
     set guioptions-=mrT
     set guifont="DejaVu Sans Mono":h12
+    colorscheme github
 endif
 
 " Switch syntax highlighting on, when the terminal has colors
