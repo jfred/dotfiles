@@ -127,6 +127,9 @@ syn keyword pythonPreCondit	import from as
 syn keyword pythonException	try except finally
 syn keyword pythonOperator	and in is not or
 
+syn keyword pythonFunction open object dir file
+syn keyword pythonComment self
+
 if !exists("python_print_as_function") || python_print_as_function == 0
   syn keyword pythonStatement print
 endif
