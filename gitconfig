@@ -15,3 +15,13 @@
 [core]
     editor = gvim -v
     excludesfile = /Users/jfred/.gitignore
+[advice]
+	statusHints = false
+[diff]
+	renames = copies
+[branch]
+	autosetupmerge = true
+[push]
+	default = tracking
+[merge]
+	stat = true
