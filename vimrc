@@ -172,6 +172,8 @@ set laststatus=2
 set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
 "set statusline=%<%f%m%r\ (%l:%c)\ %=\ %{GitBranch()}\ %h%w%y
 
+autocmd BufRead *.mirah set filetype=ruby
+
 " Gundo - vim undo tree
 nnoremap <F5> :GundoToggle<CR>
 
