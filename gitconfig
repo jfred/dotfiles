@@ -1,7 +1,9 @@
 [alias]
     ci = commit
     co = checkout
-    lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
+    aa = add --all
+    st = status
+    lg = log --graph --pretty=format:'%Cred%h%Creset : %C(yellow)%d%Creset %s %Cgreen(%an %cr)%Creset' --abbrev-commit --date=relative
     type = cat-file -t
     dump = cat-file -p
 [color]
