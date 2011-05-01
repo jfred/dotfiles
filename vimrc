@@ -6,12 +6,9 @@ call pathogen#runtime_append_all_bundles()
 
 let mapleader = ","
 "Why leave the home keys
+
 inoremap <C-J> <Esc>
 nnoremap ; :
-
-" Quickly edit/reload the vimrc file
-nmap <silent> <leader>ev :e $MYVIMRC<CR>
-nmap <silent> <leader>sv :so $MYVIMRC<CR>
 
 " defaults *******************************************************************
 let ctags_cmd='/usr/local/bin/ctags'
@@ -20,6 +17,8 @@ let ctags_cmd='/usr/local/bin/ctags'
 if filereadable(expand("~/.vimrc_local"))
   source ~/.vimrc_local
 endif
+
+set number
 
 " Invisible characters *******************************************************
 set listchars=trail:.,tab:>-,eol:$
@@ -73,8 +72,9 @@ if has("gui_running")
     set guioptions=egt
     set guioptions-=mrT
     "set guifont="DejaVu Sans Mono":h12
-    set guifont=Menlo:h14
-    colorscheme github
+    "set guifont=Menlo:h14
+    set guifont=Consolas:h12
+    colorscheme vividchalk
 endif
 
 " Switch syntax highlighting on, when the terminal has colors
@@ -100,7 +100,7 @@ else
 endif " has("autocmd")
 
 " Navigation *****************************************************************
-map <Leader>p <C-^>
+" map <Leader>p <C-^>
 " Easy window navigation
 map <C-h> <C-w>h
 map <C-j> <C-w>j
