@@ -22,3 +22,9 @@ fi
 
 # java
 [[ -d "${CLOJURE_PATH}" ]] && alias clojure='java -cp ${JLINE_PATH}:${CLOJURE_PATH} jline.ConsoleRunner clojure.lang.Repl'
+
+# http://todotxt.com/
+if [[ -f "${TODOTXT_PATH}" ]]; then
+    alias t="${TODOTXT_PATH}"
+    alias tl="${TODOTXT_PATH} list"
+fi
