@@ -1,13 +1,13 @@
-# grb prompt theme
+# jfred prompt theme
 # copied from wunjo prompt theme and modified
 
 autoload -U zgitinit
 zgitinit
 
-prompt_grb_help () {
+prompt_jfred_help () {
   cat <<'EOF'
 
-  prompt grb
+  prompt jfred
 
 EOF
 }
@@ -49,7 +49,7 @@ function minutes_since_last_commit {
     echo $minutes_since_last_commit
 }
 
-function prompt_grb_scm_time_since_commit() {
+function prompt_jfred_scm_time_since_commit() {
 	local -A pc
 	pc=(${(kv)wunjo_prompt_colors})
 
@@ -62,18 +62,26 @@ function prompt_grb_scm_time_since_commit() {
         else
             COLOR="$pc[scm_time_short]"
         fi
-        local SINCE_LAST_COMMIT="${COLOR}$(minutes_since_last_commit)m$pc[reset]"
+        local time_str="${MINUTES_SINCE_LAST_COMMIT}m"
+        if [ "$MINUTES_SINCE_LAST_COMMIT" -lt 120 ]; then
+            time_str="$((MINUTES_SINCE_LAST_COMMIT))m"
+        elif [ "$MINUTES_SINCE_LAST_COMMIT" -lt 1440 ]; then
+            time_str="$((MINUTES_SINCE_LAST_COMMIT/60))h"
+        else
+            time_str="$((MINUTES_SINCE_LAST_COMMIT/60/24))d"
+        fi
+        local SINCE_LAST_COMMIT="${COLOR}${time_str}$pc[reset]"
         echo $SINCE_LAST_COMMIT
     fi
 }
 
-function prompt_grb_scm_info() {
+function prompt_jfred_scm_info() {
     if zgit_inworktree; then
-        echo "($(prompt_grb_scm_time_since_commit)|$(prompt_wunjo_scm_branch))"
+        echo "($(prompt_jfred_scm_time_since_commit)|$(prompt_wunjo_scm_branch))"
     fi
 }
 
-prompt_grb_setup() {
+prompt_jfred_setup() {
 	local verbose
 	if [[ $TERM == screen* ]] && [ -n "$STY" ]; then
 		verbose=
@@ -162,7 +170,7 @@ prompt_grb_setup() {
 #"
 	#PROMPT+="($pc[hist]%h$pc[reset])"
 	PROMPT+=":$pc[shortpath]%1~$pc[reset]"
-    PROMPT+="\$(prompt_grb_scm_info)"
+    PROMPT+="\$(prompt_jfred_scm_info)"
 	PROMPT+=" $pc[#]\$$pc[reset] "
 
     #RPROMPT=
@@ -325,6 +333,6 @@ prompt_wunjo_scm_branch() {
 	echo $pc[reset]
 }
 
-prompt_grb_setup "$@"
+prompt_jfred_setup "$@"
 
 # vim:set ft=zsh:
