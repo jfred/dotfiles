@@ -174,9 +174,6 @@ set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
 
 autocmd BufRead *.mirah set filetype=ruby
 
-" Gundo - vim undo tree
-nnoremap <F5> :GundoToggle<CR>
-
 " prevent falling back on bad habits
 " unmap arrow keys
 nmap <right> <nop>
