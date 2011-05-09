@@ -55,9 +55,9 @@ function prompt_jfred_scm_time_since_commit() {
 
 	if zgit_inworktree; then
         local MINUTES_SINCE_LAST_COMMIT=`minutes_since_last_commit`
-        if [ "$MINUTES_SINCE_LAST_COMMIT" -gt 30 ]; then
+        if [ "$MINUTES_SINCE_LAST_COMMIT" -gt 480 ]; then
             COLOR="$pc[scm_time_long]"
-        elif [ "$MINUTES_SINCE_LAST_COMMIT" -gt 10 ]; then
+        elif [ "$MINUTES_SINCE_LAST_COMMIT" -gt 20 ]; then
             COLOR="$pc[scm_time_medium]"
         else
             COLOR="$pc[scm_time_short]"
