@@ -27,4 +27,7 @@ fi
 if [[ -f "${TODOTXT_PATH}" ]]; then
     alias t="${TODOTXT_PATH}"
     alias tl="${TODOTXT_PATH} list"
+else
+    alias t="task"
 fi
+
