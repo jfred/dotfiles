@@ -1,3 +1,7 @@
 = jfred dot files
 
 My way or some other one
+
+After clone run:
+ * git submodule update
+ * ./install.sh
