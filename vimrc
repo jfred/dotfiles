@@ -77,6 +77,9 @@ if has("gui_running")
     colorscheme vividchalk
 endif
 
+" Sudo file if you must
+cmap w!! %!sudo tee > /dev/null %
+
 " Switch syntax highlighting on, when the terminal has colors
 if &t_Co > 2 || has("gui_running")
   syntax on
