@@ -3,6 +3,7 @@
     co = checkout
     aa = add --all
     st = status
+    dh = diff HEAD
     lg = log --graph --pretty=format:'%Cred%h%Creset : %C(yellow)%d%Creset %s %Cgreen(%an %cr)%Creset' --abbrev-commit --date=relative
     type = cat-file -t
     dump = cat-file -p
