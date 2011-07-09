@@ -9,7 +9,7 @@ include /usr/local/share/doc/task/rc/dark-256.theme
 #include /usr/local/share/doc/task/rc/dark-violets-256.theme
 #include /usr/local/share/doc/task/rc/dark-yellow-green.theme
 
-data.location=/Users/jfred/task
+data.location=/Users/jfred/.tasks
 journal.time=on
 
 merge.default.uri=/Users/jfred/Dropbox/tasks/
