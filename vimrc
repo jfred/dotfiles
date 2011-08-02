@@ -73,8 +73,9 @@ if has("gui_running")
     set guioptions-=mrT
     "set guifont="DejaVu Sans Mono":h12
     "set guifont=Menlo:h14
-    set guifont=Consolas\ Bold:h14
-    colorscheme vividchalk
+    " set guifont=Consolas\ Bold:h14
+    set guifont=Consolas:h14
+    colorscheme wombat
 endif
 
 " Sudo file if you must
