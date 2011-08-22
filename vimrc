@@ -58,6 +58,12 @@ if has('mouse')
   set mouse=a
 endif
 
+
+" Switch syntax highlighting on, when the terminal has colors
+if &t_Co > 2 || has("gui_running")
+  syntax on
+endif
+
 if exists('+colorcolumn')
     set colorcolumn=80,120
     highlight ColorColumn guibg=#222222 ctermbg=246
@@ -74,17 +80,12 @@ if has("gui_running")
     "set guifont="DejaVu Sans Mono":h12
     "set guifont=Menlo:h14
     " set guifont=Consolas\ Bold:h14
-    set guifont=Consolas:h14
-    colorscheme wombat
+    set guifont=Monaco:h13
 endif
+colorscheme wombat
 
 " Sudo file if you must
 cmap w!! %!sudo tee > /dev/null %
-
-" Switch syntax highlighting on, when the terminal has colors
-if &t_Co > 2 || has("gui_running")
-  syntax on
-endif
 
 " Only do this part when compiled with support for autocommands.
 if has("autocmd")
