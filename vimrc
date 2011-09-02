@@ -58,7 +58,6 @@ if has('mouse')
   set mouse=a
 endif
 
-
 " Switch syntax highlighting on, when the terminal has colors
 if &t_Co > 2 || has("gui_running")
   syntax on
@@ -69,20 +68,15 @@ if exists('+colorcolumn')
     highlight ColorColumn guibg=#222222 ctermbg=246
 endif
 
+
 if has("gui_running")
-    set bg=dark
-    if &background == "dark"
-       hi normal guibg=black
-    endif
     " removes the toolbar in macvim
+    set background=dark
     set guioptions=egt
     set guioptions-=mrT
-    "set guifont="DejaVu Sans Mono":h12
-    "set guifont=Menlo:h14
-    " set guifont=Consolas\ Bold:h14
-    set guifont=Monaco:h13
+    set guifont=Monaco:h12
+    colorscheme ir_black
 endif
-colorscheme wombat
 
 " Sudo file if you must
 cmap w!! %!sudo tee > /dev/null %
