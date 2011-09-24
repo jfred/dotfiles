@@ -13,11 +13,6 @@ nnoremap ; :
 " defaults *******************************************************************
 let ctags_cmd='/usr/local/bin/ctags'
 
-" system specific ************************************************************
-if filereadable(expand("~/.vimrc_local"))
-  source ~/.vimrc_local
-endif
-
 "set number
 
 " Invisible characters *******************************************************
@@ -73,11 +68,8 @@ if has("gui_running")
     " removes the toolbar in macvim
     set guioptions=egt
     set guioptions-=mrT
-    set guifont=Monaco:h12
-    set background=light
-else
-    set background=dark
 endif
+set background=dark
 colorscheme solarized
 
 " Sudo file if you must
@@ -190,3 +182,9 @@ imap <right> <nop>
 imap <left> <nop>
 imap <up> <nop>
 imap <down> <nop>
+
+" system specific ************************************************************
+if filereadable(expand("~/.vimrc_local"))
+  source ~/.vimrc_local
+endif
+
