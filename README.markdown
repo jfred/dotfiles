@@ -15,4 +15,4 @@ OSX Specifics
 
 3. install zsh, git, python, ruby, etc via brew
 
-    ./extra.osx.sh
+    ./extras/osx.sh

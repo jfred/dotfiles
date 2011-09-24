@@ -13,7 +13,7 @@ verbose(){
 }
 fi
 
-LINKS=`find . -d 1 ! -name '*.sh' ! -name '.git*' ! -name '*.markdown' | sed 's/\.\///g'`
+LINKS=`find . -d 1 ! -name '*.sh' ! -name '.git*' ! -name '*.markdown' ! -name 'extras' | sed 's/\.\///g'`
 for filename in ${LINKS}; do
     temp_file="${HOME}/.${filename}"
     orig_file=`pwd`/${filename}
