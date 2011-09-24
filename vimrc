@@ -18,7 +18,7 @@ if filereadable(expand("~/.vimrc_local"))
   source ~/.vimrc_local
 endif
 
-set number
+"set number
 
 " Invisible characters *******************************************************
 set listchars=trail:.,tab:>-,eol:$
@@ -71,12 +71,14 @@ endif
 
 if has("gui_running")
     " removes the toolbar in macvim
-    set background=dark
     set guioptions=egt
     set guioptions-=mrT
     set guifont=Monaco:h12
-    colorscheme ir_black
+    set background=light
+else
+    set background=dark
 endif
+colorscheme solarized
 
 " Sudo file if you must
 cmap w!! %!sudo tee > /dev/null %
