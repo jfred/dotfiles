@@ -12,7 +12,7 @@ include /usr/local/share/doc/task/rc/dark-256.theme
 data.location=/Users/jfred/.tasks
 journal.time=on
 
-merge.default.uri=/Users/jfred/Dropbox/tasks/
+merge.default.uri=/Users/jfred/Sync/tasks/
 
 alias.burn=burndown.daily
 alias.rm=delete
