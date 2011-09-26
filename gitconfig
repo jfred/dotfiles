@@ -4,6 +4,7 @@
     aa = add --all
     st = status
     dh = diff HEAD
+    dd = diff -b -w --word-diff-regex=. --color-words
     lg = log --graph --pretty=format:'%Cred%h%Creset : %C(yellow)%d%Creset %s %Cgreen(%an %cr)%Creset' --abbrev-commit --date=relative
     type = cat-file -t
     dump = cat-file -p
