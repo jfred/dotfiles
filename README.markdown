@@ -16,3 +16,11 @@ OSX Specifics
 3. install zsh, git, python, ruby, etc via brew
 
     ./extras/osx.sh
+
+Other
+-----
+
+SSH - enable connection sharing - in ~/.ssh/config add
+
+    ControlMaster auto
+    ControlPath /tmp/ssh_%h_%p_%r
