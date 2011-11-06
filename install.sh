@@ -22,7 +22,7 @@ for filename in ${LINKS}; do
     elif [ -e $temp_file ]; then
         echo "${filename} - already exists"
     else
-        #ln -s $orig_file $temp_file
+        ln -s $orig_file $temp_file
         echo "$temp_file - linked"
     fi
 done
