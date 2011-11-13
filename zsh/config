@@ -1,6 +1,10 @@
 autoload colors
 colors
 
+# bash style words
+autoload -U select-word-style
+select-word-style bash
+
 # term colors
 export CLICOLOR=1
 export LSCOLORS=GxFxCxDxBxegedabagacad
