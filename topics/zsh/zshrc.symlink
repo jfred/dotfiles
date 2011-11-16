@@ -1,7 +1,13 @@
 # load system specific
 [[ -f ~/.localrc ]] && . ~/.localrc
 
-. ~/.zsh/config
-. ~/.zsh/aliases
-. ~/.zsh/functions
-. ~/.zsh/completion
+export DOTFILES=$HOME/Code/dotfiles
+
+for config_file ($DOTFILES/**/*.zsh) source $config_file
+
+autoload -U compinit
+compinit
+
+# matches case insensitive for lowercase
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
+
