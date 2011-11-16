@@ -1,25 +1,21 @@
 #!/usr/bin/env bash
+set -e
 
-if [ $1 ]; then
-verbose() {
-    echo $1
-}
-else
-verbose(){
-    echo $1 > /dev/null
-}
-fi
-
-LINKS=`find . -d 1 ! -name '*.sh' ! -name '.git*' ! -name '*.markdown' ! -name 'extras' | sed 's/\.\///g'`
-for filename in ${LINKS}; do
-    temp_file="${HOME}/.${filename}"
-    orig_file=`pwd`/${filename}
-    if [ -L $temp_file ]; then
-        verbose "${filename} - already a link"
-    elif [ -e $temp_file ]; then
+link(){
+    filename=`echo $1 | sed 's/\.\///'`
+    link_file="${HOME}/.`echo ${filename} | sed 's/.*\/\([a-zA-Z]*\).symlink/\1/'`"
+    orig_file="`pwd`/${filename}"
+    if [ -L $link_file ]; then
+        echo "${filename} - already a link"
+    elif [ -e $link_file ]; then
         echo "${filename} - already exists"
     else
-        ln -s $orig_file $temp_file
-        echo "$temp_file - linked"
+        ln -s $orig_file $link_file
+        echo "$orig_file linked as $link_file"
     fi
+}
+
+LINKS=`find . -name '*.symlink'`
+for filename in ${LINKS}; do
+    link "$filename"
 done
