@@ -9,9 +9,6 @@ select-word-style bash
 export CLICOLOR=1
 export LSCOLORS=GxFxCxDxBxegedabagacad
 
-#export PS1='%m:%3~$(vcs_info_for_prompt)%(?..[%?])%# '
-#export PYTHONPATH=.:${PYTHONPATH}
-
 fpath=(~/.zsh/functions $fpath)
 autoload -U ~/.zsh/functions/*(:t)
 
@@ -21,10 +18,10 @@ HISTSIZE=1000
 SAVEHIST=1000
 HISTFILE=~/.history
 
-# zgitinit and prompt_wunjo_setup must be somewhere in your $fpath, see README for more.
 setopt promptsubst
 
 # Load the prompt theme system
-autoload -U promptinit
-promptinit
-prompt jfred
+#autoload -U promptinit
+#promptinit
+# zgitinit and prompt_wunjo_setup must be somewhere in your $fpath, see README for more.
+#prompt jfred
