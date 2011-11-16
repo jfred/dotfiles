@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-git submodule init
-git submodule update
-
 if [ $1 ]; then
 verbose() {
     echo $1
