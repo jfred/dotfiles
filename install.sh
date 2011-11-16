@@ -15,6 +15,7 @@ link(){
     fi
 }
 
+# Create links
 LINKS=`find . -name '*.symlink'`
 for filename in ${LINKS}; do
     link "$filename"

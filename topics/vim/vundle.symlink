@@ -1,0 +1,22 @@
+Bundle 'gmarik/vundle'
+
+" original repos on github
+Bundle 'Lokaltog/vim-easymotion'
+Bundle 'altercation/vim-colors-solarized'
+Bundle 'mileszs/ack.vim'
+Bundle 'nvie/vim-togglemouse'
+Bundle 'robgleeson/hammer.vim'
+Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
+Bundle 'scrooloose/nerdcommenter'
+Bundle 'scrooloose/nerdtree'
+Bundle 'tpope/vim-fugitive'
+
+" vim-scripts repos
+Bundle 'L9'
+Bundle 'FuzzyFinder'
+Bundle 'taglist.vim'
+Bundle 'rails.vim'
+Bundle 'ShowMarks'
+Bundle 'JSON.vim'
+Bundle 'python_fold'
+
