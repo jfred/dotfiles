@@ -2,7 +2,7 @@
     ci = commit
     co = checkout
     aa = add --all
-    st = status --short
+    st = status -sb
     dh = diff HEAD
     dd = diff -b -w --word-diff-regex=.
     lg = log --graph --pretty=format:'%Cred%h%Creset : %C(yellow)%d%Creset %s %Cgreen(%an %cr)%Creset' --abbrev-commit --date=relative
