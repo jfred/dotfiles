@@ -20,3 +20,9 @@ LINKS=`find . -name '*.symlink'`
 for filename in ${LINKS}; do
     link "$filename"
 done
+
+# Run installs
+LINKS=`find topics -name 'install.sh'`
+for filename in ${LINKS}; do
+    $filename
+done

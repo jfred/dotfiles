@@ -3,6 +3,13 @@ set -e
 
 mkdir -p ~/.vim/bundle
 
-git clone http://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
+if [ ! -d ~/.vim/bundle/vundle ]; then
+    git clone http://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
+fi
 
-vim -c 'BundleInstall'
+echo ""
+echo "*************************************************************"
+echo "* About to setup vundle (quit vim ':qa!') after it finishes *"
+echo "*************************************************************"
+sleep 2
+vim -u topics/vim/vimrc_load -c 'BundleInstall'
