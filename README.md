@@ -16,6 +16,9 @@ After clone run:
 
     ./install.sh
 
+You can allso call `./install.sh` with `-i` (or `--interactive`) to confirm
+each step of the install process.
+
 OSX Specifics
 -------------
 
@@ -35,3 +38,4 @@ SSH - enable connection sharing - in ~/.ssh/config add
 
     ControlMaster auto
     ControlPath /tmp/ssh_%h_%p_%r
+
