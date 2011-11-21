@@ -17,7 +17,6 @@
     name = Joshua Frederick
     email = josh@jfred.net
 [core]
-    editor = gvim -v
     excludesfile = /Users/jfred/.gitignore
 [advice]
 	statusHints = false
