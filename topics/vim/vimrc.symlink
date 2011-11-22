@@ -160,6 +160,10 @@ if filereadable($VIRTUAL_ENV . '/bin/activate_this.py')
     python execfile(activate_this, dict(__file__=activate_this))
 endif
 
+if has("gui_running") 
+    highlight SpellBad term=underline gui=undercurl guisp=Orange 
+endif 
+
 " ruby
 au FileType ruby setl sw=2 sts=2 et
 
