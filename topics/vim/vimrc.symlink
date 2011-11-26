@@ -164,6 +164,10 @@ if has("gui_running")
     highlight SpellBad term=underline gui=undercurl guisp=Orange 
 endif 
 
+" preview rst
+command Rst :silent !rst2html.py % > /tmp/rstprev.html && open /tmp/rstprev.html
+map <C-P><C-r> :Rst<CR>
+
 " ruby
 au FileType ruby setl sw=2 sts=2 et
 
