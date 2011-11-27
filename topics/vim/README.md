@@ -4,6 +4,11 @@
 
 Still need to setup a single bootstrap function.
 
+## Issues
+
+On OS X, jslint will try to use the system jsc which fails. Set `JS_CMD` to
+an alternate js command (etc. node) in the install specific `~/.localrc`
+
 ## Key-mappings
 
 `,` is `<Leader>`

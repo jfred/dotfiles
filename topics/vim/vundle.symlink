@@ -20,4 +20,5 @@ Bundle 'ShowMarks'
 Bundle 'JSON.vim'
 Bundle 'python_fold'
 Bundle 'pyflakes.vim'
+Bundle 'jslint.vim'
 
