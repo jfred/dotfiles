@@ -26,7 +26,7 @@ confirm(){
 
 mklink(){
     filename=`echo $1 | sed 's/\.\///'`
-    link_file="${HOME}/.`echo ${filename} | sed 's/.*\/\([a-zA-Z]*\).symlink/\1/'`"
+    link_file="${HOME}/.`echo ${filename} | sed 's/.*\/\([a-z_A-Z]*\).symlink/\1/'`"
     orig_file="`pwd`/${filename}"
     # if the link already exists and pointing to the right place - continue
     if [ -L $link_file ]; then
