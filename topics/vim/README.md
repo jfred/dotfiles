@@ -63,6 +63,8 @@ an alternate js command (etc. node) in the install specific `~/.localrc`
 
 `F9` - Retag current directory (using ctags)
 
-##### Pyflakes
+##### Python
 
 `F6` - Toggle Pyflakes use of quickfix windows
+
+`,8` - Run pep8 against current file (requires pep8 - pip install pep8)
