@@ -172,7 +172,7 @@ function! TogglePyflakes()
     endif
     PyflakesUpdate
 endfunction
-map <silent> <F6> :TogglePyflakes<CR>
+map <silent> <F6> :call TogglePyflakes()<CR>
 
 
 " preview rst
