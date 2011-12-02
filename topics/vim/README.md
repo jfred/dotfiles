@@ -62,3 +62,7 @@ an alternate js command (etc. node) in the install specific `~/.localrc`
 `F8` - Show Tag List
 
 `F9` - Retag current directory (using ctags)
+
+##### Pyflakes
+
+`F6` - Toggle Pyflakes use of quickfix windows

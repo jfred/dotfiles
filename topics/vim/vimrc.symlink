@@ -73,6 +73,7 @@ if has("gui_running")
     " removes the toolbar in macvim
     set guioptions=egt
     set guioptions-=mrT
+
 endif
 set background=dark
 
@@ -160,9 +161,19 @@ if filereadable($VIRTUAL_ENV . '/bin/activate_this.py')
     python execfile(activate_this, dict(__file__=activate_this))
 endif
 
-if has("gui_running") 
-    highlight SpellBad term=underline gui=undercurl guisp=Orange 
-endif 
+" Pyflakes uses quickfix - sometimes it's nice to have other things use 
+" quick fix
+let g:pyflakes_use_quickfix = 1
+function! TogglePyflakes()
+    if g:pyflakes_use_quickfix == 0
+        let g:pyflakes_use_quickfix = 1
+    else
+        let g:pyflakes_use_quickfix = 0
+    endif
+    PyflakesUpdate
+endfunction
+map <silent> <F6> :TogglePyflakes<CR>
+
 
 " preview rst
 command Rst :silent !rst2html.py % > /tmp/rstprev.html && open /tmp/rstprev.html
@@ -205,4 +216,3 @@ hi link EasyMotionTarget ErrorMsg
 if filereadable(expand("~/.vimrc_local"))
   source ~/.vimrc_local
 endif
-
