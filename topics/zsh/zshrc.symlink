@@ -1,7 +1,8 @@
-# load system specific
-[[ -f ~/.localrc ]] && . ~/.localrc
+# load config
+source ~/.dotrc
 
-export DOTFILES=$HOME/Code/dotfiles
+# load system specific
+[[ -f ~/.localrc ]] && source ~/.localrc
 
 for config_file ($DOTFILES/**/*.zsh) source $config_file
 

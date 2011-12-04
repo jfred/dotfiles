@@ -51,6 +51,11 @@ mklink(){
     echo "$orig_file linked as $link_file"
 }
 
+# Create base config
+if [ ! -f ~/.dotrc ]; then
+    echo "export DOTFILES=`pwd`" >> ~/.dotrc
+fi
+
 # Create links
 LINKS=`find . -name '*.symlink'`
 for filename in ${LINKS}; do
