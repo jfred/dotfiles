@@ -1,7 +1,4 @@
-# load config
-source ~/.dotrc
-
-# load system specific
+# load config and system specific
 [[ -f ~/.localrc ]] && source ~/.localrc
 
 for config_file ($DOTFILES/**/*.zsh) source $config_file

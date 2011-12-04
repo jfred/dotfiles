@@ -52,8 +52,8 @@ mklink(){
 }
 
 # Create base config
-if [ ! -f ~/.dotrc ]; then
-    echo "export DOTFILES=`pwd`" >> ~/.dotrc
+if [ ! -f ~/.localrc ]; then
+    echo "export DOTFILES=`pwd`" >> ~/.localrc
 fi
 
 # Create links
