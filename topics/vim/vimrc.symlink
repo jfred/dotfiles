@@ -1,6 +1,6 @@
 set nocompatible
 
-"filetype off
+set encoding=utf-8
 
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
@@ -98,7 +98,7 @@ else
 endif " has("autocmd")
 
 " Navigation *****************************************************************
-" map <Leader>p <C-^>
+map <Leader>p <C-^>
 " Easy window navigation
 map <C-h> <C-w>h
 map <C-j> <C-w>j
