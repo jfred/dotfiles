@@ -161,21 +161,8 @@ if filereadable($VIRTUAL_ENV . '/bin/activate_this.py')
     python execfile(activate_this, dict(__file__=activate_this))
 endif
 
-" Pyflakes uses quickfix - sometimes it's nice to have other things use 
-" quick fix
-let g:pyflakes_use_quickfix = 1
-function! TogglePyflakes()
-    if g:pyflakes_use_quickfix == 0
-        let g:pyflakes_use_quickfix = 1
-    else
-        let g:pyflakes_use_quickfix = 0
-    endif
-    PyflakesUpdate
-endfunction
-map <silent> <F6> :call TogglePyflakes()<CR>
-
-" PEP8
-let g:pep8_map='<leader>8'
+autocmd BufWritePost *.py call Pyflakes()
+autocmd BufWritePost *.py call Pep8()
 
 " preview rst
 command Rst :silent !rst2html.py % > /tmp/rstprev.html && open /tmp/rstprev.html
