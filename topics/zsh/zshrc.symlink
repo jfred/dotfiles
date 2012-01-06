@@ -3,6 +3,8 @@
 
 for config_file ($DOTFILES/**/*.zsh) source $config_file
 
+for bin ($DOTFILES/**/bin) export PATH=$PATH:$bin
+
 autoload -U compinit
 compinit
 
