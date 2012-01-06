@@ -16,10 +16,8 @@ Bundle 'tpope/vim-fugitive'
 " vim-scripts repos
 Bundle 'L9'
 Bundle 'FuzzyFinder'
-Bundle 'taglist.vim'
 Bundle 'rails.vim'
 Bundle 'ShowMarks'
 Bundle 'JSON.vim'
-Bundle 'python_fold'
 Bundle 'jslint.vim'
 
