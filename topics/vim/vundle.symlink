@@ -12,6 +12,7 @@ Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'scrooloose/nerdtree'
 Bundle 'tpope/vim-fugitive'
+Bundle 'Lokaltog/vim-powerline'
 
 " vim-scripts repos
 Bundle 'L9'
@@ -20,4 +21,3 @@ Bundle 'rails.vim'
 Bundle 'ShowMarks'
 Bundle 'JSON.vim'
 Bundle 'jslint.vim'
-
