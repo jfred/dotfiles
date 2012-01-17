@@ -1,23 +1,36 @@
 Bundle 'gmarik/vundle'
 
-" original repos on github
+" fundemental
+Bundle 'L9'
+
+" movement
 Bundle 'Lokaltog/vim-easymotion'
-Bundle 'altercation/vim-colors-solarized'
-Bundle 'mileszs/ack.vim'
 Bundle 'nvie/vim-togglemouse'
-Bundle 'nvie/vim-pyflakes'
-Bundle 'nvie/vim-pep8'
-Bundle 'robgleeson/hammer.vim'
-Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
-Bundle 'scrooloose/nerdcommenter'
-Bundle 'scrooloose/nerdtree'
-Bundle 'tpope/vim-fugitive'
+
+" Look and feel
+Bundle 'altercation/vim-colors-solarized'
 Bundle 'Lokaltog/vim-powerline'
 
-" vim-scripts repos
-Bundle 'L9'
+" Finding
+Bundle 'scrooloose/nerdtree'
+Bundle 'mileszs/ack.vim'
 Bundle 'FuzzyFinder'
-Bundle 'rails.vim'
 Bundle 'ShowMarks'
+
+" general code
+Bundle 'tpope/vim-fugitive'
+Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
+Bundle 'scrooloose/nerdcommenter'
+Bundle 'robgleeson/hammer.vim'
 Bundle 'JSON.vim'
+
+" javascript
 Bundle 'jslint.vim'
+
+" python
+Bundle 'nvie/vim-pyflakes'
+Bundle 'nvie/vim-pep8'
+
+" rails
+Bundle 'rails.vim'
+
