@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 INTER=1
 if [ ! "_$1" == "_" ]; then
     if [ "_$1" == "_-i" ]; then
@@ -26,7 +27,7 @@ confirm(){
 
 mklink(){
     filename=`echo $1 | sed 's/\.\///'`
-    link_file="${HOME}/.`echo ${filename} | sed 's/.*\/\([a-z_A-Z]*\).symlink/\1/'`"
+    link_file="${HOME}/.`echo ${filename} | sed 's/.*\/\([a-z_.A-Z]*\).symlink/\1/'`"
     orig_file="`pwd`/${filename}"
     # if the link already exists and pointing to the right place - continue
     if [ -L $link_file ]; then
@@ -47,6 +48,7 @@ mklink(){
             return 1
         fi
     fi
+    echo ln -fs $orig_file $link_file
     ln -fs $orig_file $link_file
     echo "$orig_file linked as $link_file"
 }
