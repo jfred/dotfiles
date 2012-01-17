@@ -161,8 +161,15 @@ if filereadable($VIRTUAL_ENV . '/bin/activate_this.py')
     python execfile(activate_this, dict(__file__=activate_this))
 endif
 
-autocmd BufWritePost *.py call Pyflakes()
-autocmd BufWritePost *.py call Pep8()
+function! Pycheck()
+    let filename = expand('%:t:r')
+    if match(filename, 'test_.*')
+        call Pyflakes()
+        call Pep8()
+    endif
+endfunction
+
+autocmd BufWritePost *.py call Pycheck()
 
 " preview rst
 command Rst :silent !rst2html.py % > /tmp/rstprev.html && open /tmp/rstprev.html
