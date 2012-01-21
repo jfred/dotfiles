@@ -11,11 +11,23 @@ set-option -g mouse-select-pane on
 # Bindings for C-a a 
 bind-key a send-prefix
 
+# copy and paste
+setw -g mode-keys vi
+unbind [
+bind Escape copy-mode
+unbind p
+bind p paste-buffer
+bind-key -t vi-copy 'v' begin-selection
+bind-key -t vi-copy 'y' copy-selection
+
 # Set status bar
 set -g status-bg black
 set -g status-fg green
 set -g status-left ' '
 set -g status-right ' '
+
+set-option -g pane-active-border-fg blue
+set-option -g pane-active-border-bg cyan
 
 # Highlight active windows
 set-window-option -g window-status-current-bg blue
