@@ -10,10 +10,7 @@ source ~/.vundle
 filetype plugin on
 
 let mapleader = ","
-"Why leave the home keys
-
 inoremap <C-J> <Esc>
-nnoremap ; :
 
 " defaults *******************************************************************
 let ctags_cmd='/usr/local/bin/ctags'
