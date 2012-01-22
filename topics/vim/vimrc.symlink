@@ -112,10 +112,6 @@ map <Leader>/ <plug>NERDCommenterToggle
 map <Leader>[ <plug>NERDCommenterAlignLeft
 map <Leader>] <plug>NERDCommenterUncomment
 
-" NERDTree
-let NERDTreeIgnore=['\.pyc']
-nmap <silent> <Leader>nt :NERDTreeToggle<CR>
-
 " File search ****************************************************************
 set incsearch         " do incremental searching
 set nohlsearch        " turn off highlight searches, but:
