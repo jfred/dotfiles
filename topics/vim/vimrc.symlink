@@ -204,6 +204,9 @@ nmap <Leader>jt <Esc>:%!python -m json.tool<CR><Esc>:set filetype=json<CR>
 map N Nzz
 map n nzz
 
+" Redraw (sometimes ctrl-l doesn't do what I expect)
+map <C-l> :redraw!<CR>
+
 " prevent falling back on bad habits
 " unmap arrow keys
 nmap <right> <nop>
