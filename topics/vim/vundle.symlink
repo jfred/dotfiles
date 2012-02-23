@@ -19,6 +19,7 @@ Bundle 'ShowMarks'
 
 " general code
 Bundle 'tpope/vim-fugitive'
+Bundle 'int3/vim-extradite'
 Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'robgleeson/hammer.vim'
