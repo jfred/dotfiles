@@ -12,6 +12,7 @@ Bundle 'altercation/vim-colors-solarized'
 Bundle 'Lokaltog/vim-powerline'
 
 " Finding
+Bundle 'scrooloose/nerdtree'
 Bundle 'mileszs/ack.vim'
 Bundle 'FuzzyFinder'
 Bundle 'ShowMarks'
