@@ -22,6 +22,7 @@ Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'robgleeson/hammer.vim'
 Bundle 'JSON.vim'
+Bundle 'msanders/snipmate.vim'
 
 " javascript
 Bundle 'jslint.vim'
