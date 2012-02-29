@@ -18,6 +18,7 @@ Bundle 'FuzzyFinder'
 Bundle 'ShowMarks'
 
 " general code
+Bundle 'colorizer'
 Bundle 'tpope/vim-fugitive'
 Bundle 'tpope/vim-surround'
 Bundle 'int3/vim-extradite'

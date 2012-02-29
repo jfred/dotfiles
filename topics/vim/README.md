@@ -25,6 +25,8 @@ an alternate js command (etc. node) in the install specific `~/.localrc`
 
 `,nt` - Toggle NERDTree (filebrowser)
 
+`,tc` - Toggle 'colorizer' (highlight #rgb and #rrggbb colors)
+
 ##### Move between splits
 
 `Ctrl` + `h` - Move to left split
