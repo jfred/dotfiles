@@ -100,7 +100,8 @@ map <Leader>p <C-^>
 map <C-h> <C-w>h
 map <C-j> <C-w>j
 map <C-k> <C-w>k
-map <C-l> <C-w>l
+" ctrl-l is normally mapped as redraw so now I redraw and window naviagte
+map <C-l> <C-w>l:redraw!<CR>
 
 " NERDCommenter
 " let NERDCreateDefaultMappings=0
@@ -207,9 +208,6 @@ nmap <Leader>jt <Esc>:%!python -m json.tool<CR><Esc>:set filetype=json<CR>
 " search will center on the line it's found in.
 map N Nzz
 map n nzz
-
-" Redraw (sometimes ctrl-l doesn't do what I expect)
-map <C-l> :redraw!<CR>
 
 " prevent falling back on bad habits
 " unmap arrow keys
