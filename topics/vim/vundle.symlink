@@ -38,3 +38,5 @@ Bundle 'nvie/vim-pep8'
 " rails
 Bundle 'rails.vim'
 
+" go
+Bundle 'jfred/vim-golang'
