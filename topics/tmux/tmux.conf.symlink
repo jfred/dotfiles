@@ -1,61 +1,80 @@
-# Re-assigning C-b to C-a
-set-option -g prefix C-a
+# Use something easier to type as the prefix.
+set -g prefix C-a
+unbind C-b
+bind C-a send-prefix
 
-# some screen habits
+# Relax!
+set -sg escape-time 0
+set -sg repeat-time 600
+
+# Less stretching to get to the first item.
+set -g base-index 1
+setw -g pane-base-index 1
+
+# Screen habits
 bind C-a next-window
+bind a send-keys C-a
 
-# mouse
-setw -g mode-mouse on
-set-option -g mouse-select-pane on
+# Reload the config.
+bind r source-file ~/.tmux.conf \; display "Reloaded ~/.tmux.conf"
 
-# Bindings for C-a a 
-bind-key a send-prefix
+# Saner splitting.
+bind v split-window -h
+bind s split-window -v
 
-# copy and paste
+# Pane movement
+bind h select-pane -L
+bind j select-pane -D
+bind k select-pane -U
+bind l select-pane -R
+
+# Pane resizing
+bind -r Left  resize-pane -L 2
+bind -r Down  resize-pane -D 2
+bind -r Up    resize-pane -U 2
+bind -r Right resize-pane -R 2
+
+# Window movement
+bind -r , select-window -t :-
+bind -r . select-window -t :+
+
+# 256 colors please
+set -g default-terminal "screen-256color"
+
+# Activity
+setw -g monitor-activity on
+set -g visual-activity off
+
+# Autorename sanely.
+setw -g automatic-rename on
+
+# Better name management
+bind c new-window \; command-prompt "rename-window '%%'"
+bind C new-window
+bind , command-prompt "rename-window '%%'"
+
+# Copy mode
 setw -g mode-keys vi
-unbind [
-bind Escape copy-mode
+bind [ copy-mode
 unbind p
 bind p paste-buffer
-bind-key -t vi-copy 'v' begin-selection
-bind-key -t vi-copy 'y' copy-selection
+bind -t vi-copy v begin-selection
+bind -t vi-copy y copy-selection
 
-# Set status bar
-set -g status-bg black
-set -g status-fg green
-set -g status-left ' '
-set -g status-right ' '
+# Status line - from https://github.com/zolrath/wemux/wiki/Status-Line
+set -g status-left-length 32
+set -g status-right-length 150
 
-set-option -g pane-active-border-fg blue
-set-option -g pane-active-border-bg cyan
+set -g status-fg white
+set -g status-bg colour234
+set -g window-status-activity-attr bold
+set -g pane-border-fg colour245
+set -g pane-active-border-fg colour39
+set -g message-fg colour16
+set -g message-bg colour221
+set -g message-attr bold
 
-# Highlight active windows
-set-window-option -g window-status-current-bg blue
-setw -g window-status-current-fg white
-
-# panes
-bind-key k select-pane -U
-bind-key j select-pane -D
-bind-key h select-pane -L
-bind-key l select-pane -R
-
-bind-key K resize-pane -U 5
-bind-key J resize-pane -D 5
-bind-key H resize-pane -L 5
-bind-key L resize-pane -R 5
-
-# Set window notifications
-setw -g monitor-activity on
-set -g visual-activity on
-
-# Allow tmux to pass trough Ctrl, Alt and Shift modifiers
-setw -g xterm-keys on
-
-# Bindings for vertical + horizontal splits
-unbind %
-bind | split-window -h
-bind \ split-window -h
-bind - split-window -v
-
-# Reload
-bind-key r source-file ~/.tmux.conf
+set -g status-left '#[fg=colour235,bg=colour252,bold] ❐ #S #[fg=colour252,bg=colour238,nobold]⮀#[fg=colour245,bg=colour238,bold] #(whoami) #[fg=colour238,bg=colour234,nobold]⮀'
+set -g window-status-format "#[fg=white,bg=colour234] #I #W "
+set -g window-status-current-format "#[fg=colour234,bg=colour39]⮀#[fg=colour25,bg=colour39,noreverse,bold] #I ⮁ #W #[fg=colour39,bg=colour234,nobold]⮀"
+set -g status-right "#(wemux status_users)"
