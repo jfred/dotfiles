@@ -11,6 +11,9 @@ Bundle 'nvie/vim-togglemouse'
 Bundle 'altercation/vim-colors-solarized'
 Bundle 'Lokaltog/vim-powerline'
 
+" Tmux
+Bundle "benmills/vimux"
+
 " Finding
 Bundle 'scrooloose/nerdtree'
 Bundle 'mileszs/ack.vim'
