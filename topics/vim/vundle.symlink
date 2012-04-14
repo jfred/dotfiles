@@ -9,6 +9,7 @@ Bundle 'nvie/vim-togglemouse'
 
 " Look and feel
 Bundle 'altercation/vim-colors-solarized'
+Bundle 'nanotech/jellybeans.vim'
 Bundle 'Lokaltog/vim-powerline'
 
 " Tmux
