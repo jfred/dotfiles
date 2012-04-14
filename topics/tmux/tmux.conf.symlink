@@ -18,10 +18,6 @@ bind a send-keys C-a
 # Reload the config.
 bind r source-file ~/.tmux.conf \; display "Reloaded ~/.tmux.conf"
 
-# Saner splitting.
-bind v split-window -h
-bind s split-window -v
-
 # Pane movement
 bind h select-pane -L
 bind j select-pane -D
