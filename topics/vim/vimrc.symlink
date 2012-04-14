@@ -187,6 +187,7 @@ function! DoMake(...)
     cfirst
   endif
   let &makeprg = savemp
+  redraw!
 endfunction
 
 autocmd BufWritePost *.py Pycheck
