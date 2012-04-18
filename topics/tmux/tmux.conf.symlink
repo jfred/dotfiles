@@ -12,7 +12,7 @@ set -g base-index 1
 setw -g pane-base-index 1
 
 # Screen habits
-bind C-a next-window
+bind C-a last-window
 bind a send-keys C-a
 
 # Reload the config.
@@ -60,6 +60,12 @@ unbind p
 bind p paste-buffer
 bind -t vi-copy v begin-selection
 bind -t vi-copy y copy-selection
+
+# Mouse
+set-option -g mouse-select-pane on
+set-option -g mouse-resize-pane on
+set-option -g mouse-select-window on
+set-window-option -g mode-mouse on
 
 # Status line - from https://github.com/zolrath/wemux/wiki/Status-Line
 set -g status-left-length 32
