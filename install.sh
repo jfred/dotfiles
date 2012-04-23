@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-set -e
 INTER=1
 if [ ! "_$1" == "_" ]; then
     if [ "_$1" == "_-i" ]; then
