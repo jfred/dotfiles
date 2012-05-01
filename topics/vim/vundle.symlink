@@ -38,6 +38,7 @@ Bundle 'jslint.vim'
 " python
 Bundle 'mitechie/pyflakes-pathogen'
 Bundle 'vim-scripts/pep8'
+Bundle 'klen/rope-vim'
 
 " rails
 Bundle 'rails.vim'

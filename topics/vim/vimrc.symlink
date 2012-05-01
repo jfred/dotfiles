@@ -150,6 +150,11 @@ endif
 let g:pyflakes_use_quickfix = 0
 let g:pep8_map='<leader>8'
 
+" rope
+let g:ropevim_guess_project=1
+let g:ropevim_vim_completion=1
+let ropevim_enable_shortcuts=1
+
 " preview rst
 command Rst :silent !rst2html.py % > /tmp/rstprev.html && open /tmp/rstprev.html
 map <C-P><C-r> :Rst<CR>
