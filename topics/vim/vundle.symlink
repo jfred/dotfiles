@@ -36,8 +36,8 @@ Bundle 'msanders/snipmate.vim'
 Bundle 'jslint.vim'
 
 " python
-Bundle 'nvie/vim-pyflakes'
-Bundle 'nvie/vim-pep8'
+Bundle 'mitechie/pyflakes-pathogen'
+Bundle 'vim-scripts/pep8'
 
 " rails
 Bundle 'rails.vim'

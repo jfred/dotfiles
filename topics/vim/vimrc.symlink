@@ -136,61 +136,19 @@ nmap <Leader>N :set invnumber<CR>
 set tags=tags,.tags,/
 
 execute "map <F9> :!".ctags_cmd." -f '.tags' --exclude='build' --extra=+f -R .<CR>"
-execute "let Tlist_Ctags_Cmd='".ctags_cmd."'"
-
-nnoremap <silent> <F8> :Tlist<CR>
-let Tlist_Exit_OnlyWindow = 1     " exit if taglist is last window open
-let Tlist_Show_One_File = 1       " Only show tags for current buffer
-let Tlist_Enable_Fold_Column = 0  " no fold column (only showing one file)
-
-" completion
-"let g:SuperTabDefaultCompletionType = "<C-X><C-O>"
-let g:SuperTabDefaultCompletionType = "context"
-set completeopt=menu
-
-" MiniBuffer
-let g:miniBufExplMapCTabSwitchBufs = 1
-let g:miniBufExplMapWindowNavVim = 1 
 
 " python - virtual env ********************************************************
 if filereadable($VIRTUAL_ENV . '/bin/activate_this.py')
-    python import os
-    python activate_this = os.environ['VIRTUAL_ENV'] + '/bin/activate_this.py'
-    python execfile(activate_this, dict(__file__=activate_this))
+python << EOF
+import os, sys
+sys.path.insert(0, os.environ['VIRTUAL_ENV'])
+activate_this = os.environ['VIRTUAL_ENV'] + '/bin/activate_this.py'
+execfile(activate_this, dict(__file__=activate_this))
+EOF
 endif
 
-"function! Pycheck()
-"    let filename = expand('%:t:r')
-"    if match(filename, 'test_.*')
-"        call Pyflakes()
-"        call Pep8()
-"    endif
-"endfunction
-
-" Do make with different makeprg settings.
-" Error lists from each makeprg are combined into one quickfix list.
-command! Pycheck call DoMake('pyflakes', 'pep8')
-function! DoMake(...)
-  update  " save any changes because makeprg checks the file on disk
-  let savemp = &makeprg
-  let qflist = []
-  for prg in a:000
-    let &makeprg = prg . ' %'
-    silent make!
-    let qflist += getqflist()
-  endfor
-  if empty(qflist)
-    cclose
-  else
-    call setqflist(qflist)
-    copen
-    cfirst
-  endif
-  let &makeprg = savemp
-  redraw!
-endfunction
-
-autocmd BufWritePost *.py Pycheck
+let g:pyflakes_use_quickfix = 0
+let g:pep8_map='<leader>8'
 
 " preview rst
 command Rst :silent !rst2html.py % > /tmp/rstprev.html && open /tmp/rstprev.html
@@ -248,3 +206,5 @@ hi link EasyMotionTarget ErrorMsg
 if filereadable(expand("~/.vimrc_local"))
   source ~/.vimrc_local
 endif
+
+highlight SpellBad cterm=underline,bold ctermbg=1 ctermfg=7
