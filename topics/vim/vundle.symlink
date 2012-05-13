@@ -28,7 +28,7 @@ Bundle 'tpope/vim-surround'
 Bundle 'int3/vim-extradite'
 Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
 Bundle 'scrooloose/nerdcommenter'
-Bundle 'robgleeson/hammer.vim'
+Bundle 'matthias-guenther/hammer.vim'
 Bundle 'JSON.vim'
 Bundle 'msanders/snipmate.vim'
 
