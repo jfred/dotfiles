@@ -153,6 +153,7 @@ let g:pep8_map='<leader>8'
 " rope
 let g:ropevim_guess_project=1
 let g:ropevim_vim_completion=1
+let g:ropevim_extended_complete=1
 let ropevim_enable_shortcuts=1
 
 " preview rst
