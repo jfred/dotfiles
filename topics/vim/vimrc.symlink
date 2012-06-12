@@ -90,7 +90,6 @@ if has("autocmd")
     \   exe "normal! g`\"" |
     \ endif
   augroup END
-else
 
 endif " has("autocmd")
 
@@ -147,8 +146,9 @@ execfile(activate_this, dict(__file__=activate_this))
 EOF
 endif
 
-let g:pyflakes_use_quickfix = 0
-let g:pep8_map='<leader>8'
+autocmd BufReadPost *.py call Flake8()
+au FileType python map <buffer> <F8> :call Flake8()<CR>
+let g:flake8_ignore="E501"
 
 " rope
 let g:ropevim_guess_project=1
