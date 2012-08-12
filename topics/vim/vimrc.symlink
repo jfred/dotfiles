@@ -146,9 +146,9 @@ execfile(activate_this, dict(__file__=activate_this))
 EOF
 endif
 
-autocmd BufReadPost *.py call Flake8()
-au FileType python map <buffer> <F8> :call Flake8()<CR>
-let g:flake8_ignore="E501"
+" Syntax Errors
+let g:syntastic_check_on_open=1
+let g:syntastic_enable_balloons=1
 
 " rope
 let g:ropevim_guess_project=1
