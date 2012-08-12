@@ -13,7 +13,7 @@ Bundle 'Zenburn'
 
 " Files
 Bundle 'scrooloose/nerdtree'
-Bundle 'FuzzyFinder'
+Bundle 'kien/ctrlp.vim'
 Bundle 'ShowMarks'
 Bundle 'majutsushi/tagbar'
 
