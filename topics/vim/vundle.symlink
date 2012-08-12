@@ -11,10 +11,11 @@ Bundle 'Lokaltog/vim-powerline'
 Bundle 'altercation/vim-colors-solarized'
 Bundle 'Zenburn'
 
-" Finding
+" Files
 Bundle 'scrooloose/nerdtree'
 Bundle 'FuzzyFinder'
 Bundle 'ShowMarks'
+Bundle 'majutsushi/tagbar'
 
 " general code
 Bundle 'tpope/vim-fugitive'

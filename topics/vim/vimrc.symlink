@@ -134,6 +134,7 @@ nmap <Leader>N :set invnumber<CR>
 " tags ***********************************************************************
 set tags=tags,.tags,/
 
+nmap <F8> :TagbarToggle<CR>
 execute "map <F9> :!".ctags_cmd." -f '.tags' --exclude='build' --extra=+f -R .<CR>"
 
 " python - virtual env ********************************************************
