@@ -35,7 +35,7 @@ bind -r , select-window -t :-
 bind -r . select-window -t :+
 
 # 256 colors please
-set -g default-terminal "screen-256color"
+set -g default-terminal "xterm-256color"
 
 # Activity
 setw -g monitor-activity on
