@@ -11,6 +11,8 @@ set -sg repeat-time 600
 set -g base-index 1
 setw -g pane-base-index 1
 
+bind m command-prompt -p "move window to:"  "run-shell 'tmux.number.sh %%'"
+
 # Screen habits
 bind C-a last-window
 bind a send-keys C-a
