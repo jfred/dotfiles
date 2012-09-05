@@ -10,6 +10,7 @@ Bundle 'nvie/vim-togglemouse'
 Bundle 'Lokaltog/vim-powerline'
 Bundle 'altercation/vim-colors-solarized'
 Bundle 'Zenburn'
+Bundle 'chriskempson/base16-vim'
 
 " Files
 Bundle 'scrooloose/nerdtree'
