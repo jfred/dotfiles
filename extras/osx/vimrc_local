@@ -1,3 +1,6 @@
-set guifont=Anonymous\ Pro:h14
-let g:solarized_termtrans = 1
-colorscheme solarized
+set background=dark
+
+let base16colorspace = '256'
+colorscheme base16-default
+
+let g:Powerline_symbols = 'fancy'
