@@ -27,6 +27,9 @@ Bundle 'scrooloose/nerdcommenter'
 Bundle 'msanders/snipmate.vim'
 Bundle 'scrooloose/syntastic'
 
+" go
+Bundle 'jfred/vim-golang'
+
 " python
 Bundle 'klen/rope-vim'
 
