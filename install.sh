@@ -66,8 +66,12 @@ done
 # Run installs
 LINKS=`find topics -name 'install.sh'`
 for filename in ${LINKS}; do
-    confirm "Execute ${filename}? (y/N)"
-    if [ $? -eq 0 ]; then
+    if [ ${INTER} -eq 0 ]; then
+        confirm "Execute ${filename}? (y/N)"
+        if [ $? -eq 0 ]; then
+            ${filename}
+        fi
+    else
         ${filename}
     fi
 done

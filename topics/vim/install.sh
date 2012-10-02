@@ -7,4 +7,4 @@ if [ ! -d ~/.vim/bundle/vundle ]; then
     git clone http://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
 fi
 
-vim -u topics/vim/vimrc_load +BundleInstall +BundleClean +qa!
+vim -u topics/vim/vimrc_load +BundleInstall! +BundleClean +qa!
