@@ -91,6 +91,10 @@ if has("autocmd")
     \ endif
   augroup END
 
+  autocmd Filetype java setlocal omnifunc=javacomplete#Complete
+  set completeopt=menuone,menu,longest
+  let g:SuperTabDefaultCompletionType = "<C-X><C-O>"
+
 endif " has("autocmd")
 
 " Navigation *****************************************************************
@@ -110,7 +114,7 @@ map <Leader>[ <plug>NERDCommenterAlignLeft
 map <Leader>] <plug>NERDCommenterUncomment
 
 " NERDTree
-let NERDTreeIgnore=['\.pyc']
+let NERDTreeIgnore=['\.pyc', '\.class']
 nmap <silent> <Leader>nt :NERDTreeToggle<CR>
 
 " CtrlP

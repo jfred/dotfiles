@@ -26,9 +26,13 @@ Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'msanders/snipmate.vim'
 Bundle 'scrooloose/syntastic'
+Bundle 'ervandew/supertab'
 
 " go
 Bundle 'jfred/vim-golang'
+
+" java
+Bundle 'vim-scripts/javacomplete'
 
 " python
 Bundle 'klen/rope-vim'
