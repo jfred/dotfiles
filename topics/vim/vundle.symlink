@@ -39,3 +39,6 @@ Bundle 'klen/rope-vim'
 
 " rails
 Bundle 'rails.vim'
+
+" webdev
+Bundle 'kchmck/vim-coffee-script'
