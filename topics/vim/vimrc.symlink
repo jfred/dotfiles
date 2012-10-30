@@ -46,7 +46,7 @@ set foldlevelstart=20 " Don't start folded
 set history=1000      " keep 50 lines of command line history
 set undolevels=1000
 set wildmode=list:longest 
-set wildignore=*.swp,*.bak,*.pyc,*.class
+set wildignore=*.swp,*.bak,*.pyc,*.class,target
 
 set nobackup          " do not keep a backup file, use versions instead
 set noswapfile
