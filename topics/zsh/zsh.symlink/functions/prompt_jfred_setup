@@ -1,19 +1,17 @@
 # my prompt
-prompt_derfj_help() {
+prompt_jfred_help() {
     cat <<'EOF'
-
-    prompt derfj [color1] [color2] [color3]
+    prompt jfred [color1] [color2] [color3]
 
     defaults green white yellow
-
 EOF
 }
 
-prompt_derfj_precmd() {
+prompt_jfred_precmd() {
     vcs_info
 }
 
-prompt_derfj_setup() {
+prompt_jfred_setup() {
     # prompt colors
     local -a pcc
 
@@ -49,7 +47,7 @@ prompt_derfj_setup() {
     RPROMPT=""
     export PROMPT RPROMPT
 
-    add-zsh-hook precmd prompt_derfj_precmd
+    add-zsh-hook precmd prompt_jfred_precmd
 }
 
 function +vi-git-since_last_commit {
@@ -88,6 +86,6 @@ function +vi-git-untracked(){
     fi
 }
 
-prompt_derfj_setup "$@"
+prompt_jfred_setup "$@"
 
 # vim:set ft=zsh:
