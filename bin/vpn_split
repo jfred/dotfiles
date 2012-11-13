@@ -1,0 +1,11 @@
+#!/bin/bash
+set -e
+die () {
+    echo >&2 "$@"
+    exit 1
+}
+
+[ "$#" -eq 2 ] || die "usage: $0 [local gateway] [remote network]"
+
+sudo route -nv add -net $2 -interface utun0
+sudo route change default $1
