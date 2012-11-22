@@ -5,7 +5,8 @@
     st = status -sb
     dh = diff HEAD
     dd = diff -b -w --word-diff-regex=.
-    lg = log --graph --pretty=format:'%Cred%h%Creset : %C(yellow)%d%Creset %s %Cgreen(%an %cr)%Creset' --abbrev-commit --date=relative
+    lg = log --graph --pretty=format:'%C(red)%h%C(reset) : %C(yellow)%d%C(reset) %s %C(green)(%an %cr)%C(reset)' --abbrev-commit --date=relative
+    ll = log --pretty=format:'%C(red)%h%C(yellow)%d %C(reset)%s%C(green) [%cn]' --stat
     type = cat-file -t
     dump = cat-file -p
 [color]
