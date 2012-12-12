@@ -1,0 +1,34 @@
+#!/bin/bash
+
+die () {
+    echo >&2 "$@"
+    exit 1
+}
+
+[ "$#" -gt 0 ] || die "usage $0 [-i] [MATCH=color] [MATCH=color] ..."
+
+red=$(tput setaf 1)
+green=$(tput setaf 2)
+yellow=$(tput setaf 3)
+blue=$(tput setaf 4)
+
+reset=$(tput sgr0)
+
+SED_OPTIONS='g'
+
+for var in $@; do
+    if [[ "$var" == "-i" ]]; then
+        SED_OPTIONS="i$SED_OPTIONS"
+    fi
+
+    set -- "$var"
+    IFS="="; declare -a arr=($*)
+
+    match=${arr[0]}
+    color=${arr[1]}
+
+    rules="$rules;s/\(.*$match.*\)/${!color}\1$reset/$SED_OPTIONS"
+done
+
+echo $rules
+sed -e "$rules"
