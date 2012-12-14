@@ -5,8 +5,6 @@ colors
 autoload -U select-word-style
 select-word-style bash
 
-bindkey -e
-
 # term colors
 export CLICOLOR=1
 export LSCOLORS=GxFxCxDxBxegedabagacad
