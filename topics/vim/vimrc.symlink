@@ -52,52 +52,44 @@ set nobackup          " do not keep a backup file, use versions instead
 set noswapfile
 
 if has('mouse')
-  set mouse=a
+    set mouse=a
 endif
 
 " Switch syntax highlighting on, when the terminal has colors
 if &t_Co > 2 || has("gui_running")
-  syntax on
+    set t_Co=256
+    syntax on
 endif
-
-if exists('+colorcolumn')
-    set colorcolumn=80,120
-    highlight ColorColumn guibg=#222222 ctermbg=246
-endif
-
 
 if has("gui_running")
     " removes the toolbar in macvim
     set guioptions=egt
     set guioptions-=mrT
-
 endif
-set background=dark
 
 " Sudo file if you must
 cmap w!! %!sudo tee > /dev/null %
 
 " Only do this part when compiled with support for autocommands.
 if has("autocmd")
-  " Enable file type detection.
-  filetype plugin indent on
-  " Put these in an autocmd group, so that we can delete them easily.
-  augroup vimrcEx
-  au!
-  " When editing a file, always jump to the last known cursor position.
-  autocmd BufReadPost *
+    " Enable file type detection.
+    filetype plugin indent on
+    " Put these in an autocmd group, so that we can delete them easily.
+    augroup vimrcEx
+    au!
+    " When editing a file, always jump to the last known cursor position.
+    autocmd BufReadPost *
     \ if line("'\"") > 1 && line("'\"") <= line("$") |
     \   exe "normal! g`\"" |
     \ endif
-  augroup END
+    augroup END
 
-  autocmd Filetype java setlocal omnifunc=javacomplete#Complete
-  set completeopt=menuone,menu,longest
-  autocmd Filetype java let g:SuperTabDefaultCompletionType = "<C-X><C-O>"
+    autocmd Filetype java setlocal omnifunc=javacomplete#Complete
+    set completeopt=menuone,menu,longest
+    autocmd Filetype java let g:SuperTabDefaultCompletionType = "<C-X><C-O>"
 
-  " coffesciprt
-  autocmd Filetype coffee setlocal softtabstop=2 shiftwidth=2 tabstop=2
-
+    " coffesciprt
+    autocmd Filetype coffee setlocal softtabstop=2 shiftwidth=2 tabstop=2
 endif " has("autocmd")
 
 " Navigation *****************************************************************
@@ -120,10 +112,6 @@ map <Leader>/ <plug>NERDCommenterToggle
 map <Leader>[ <plug>NERDCommenterAlignLeft
 map <Leader>] <plug>NERDCommenterUncomment
 
-" NERDTree
-let NERDTreeIgnore=['\.pyc', '\.class']
-nmap <silent> <Leader>nt :NERDTreeToggle<CR>
-
 " CtrlP
 map <Leader>f :CtrlP<CR>
 map <Leader>b :CtrlPBuffer<CR>
@@ -137,6 +125,7 @@ set nohlsearch        " turn off highlight searches, but:
 " Turn hlsearch off/on with CTRL-N
 map <silent> <C-N> :set invhlsearch<CR>
 
+set invnumber
 nmap <Leader>N :set invnumber<CR>
 
 " tags ***********************************************************************
@@ -196,9 +185,22 @@ imap <down> <nop>
 " Showmarks
 let g:showmarks_enable=0
 
+" Style
+set background=dark
+try
+    colorscheme xoria256
+catch /^Vim\%((\a\+)\)\=:E185/
+    colorscheme desert
+endtry
+
+if exists('+colorcolumn')
+    set colorcolumn=80,120
+    highlight ColorColumn guibg=#373737 ctermbg=235
+endif
+
+highlight SpellBad cterm=underline,bold ctermbg=1 ctermfg=7
+
 " system specific ************************************************************
 if filereadable(expand("~/.vimrc_local"))
   source ~/.vimrc_local
 endif
-
-highlight SpellBad cterm=underline,bold ctermbg=1 ctermfg=7

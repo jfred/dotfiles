@@ -3,30 +3,25 @@ Bundle 'gmarik/vundle'
 " utils
 Bundle 'L9'
 
-" movement
-Bundle 'nvie/vim-togglemouse'
-
 " Look and feel
 Bundle 'Lokaltog/vim-powerline'
-Bundle 'altercation/vim-colors-solarized'
-Bundle 'Zenburn'
-Bundle 'chriskempson/base16-vim'
+Bundle 'xoria256.vim'
 
 " Files
-Bundle 'scrooloose/nerdtree'
 Bundle 'kien/ctrlp.vim'
 Bundle 'ShowMarks'
-Bundle 'majutsushi/tagbar'
 
 " general code
+Bundle 'majutsushi/tagbar'
 Bundle 'tpope/vim-fugitive'
 Bundle 'tpope/vim-surround'
-Bundle 'int3/vim-extradite'
-Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
 Bundle 'scrooloose/nerdcommenter'
-Bundle 'msanders/snipmate.vim'
 Bundle 'scrooloose/syntastic'
 Bundle 'ervandew/supertab'
+
+" code snippets
+Bundle 'msanders/snipmate.vim'
+Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
 
 " go
 Bundle 'jfred/vim-golang'
@@ -36,9 +31,6 @@ Bundle 'vim-scripts/javacomplete'
 
 " python
 Bundle 'klen/rope-vim'
-
-" rails
-Bundle 'rails.vim'
 
 " webdev
 Bundle 'kchmck/vim-coffee-script'
