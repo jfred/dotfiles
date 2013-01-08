@@ -12,6 +12,7 @@ Bundle 'kien/ctrlp.vim'
 Bundle 'ShowMarks'
 
 " general code
+Bundle 'tpope/vim-sleuth'
 Bundle 'majutsushi/tagbar'
 Bundle 'tpope/vim-fugitive'
 Bundle 'tpope/vim-surround'
