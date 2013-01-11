@@ -25,8 +25,11 @@ bind l:ctrl;alt;shift corner bottom-right resize:screenSizeX/2;screenSizeY/2
 
 bind m:ctrl;cmd;shift corner top-left     resize:screenSizeX;screenSizeY
 
-bind h:cmd;alt corner top-left  resize:screenSizeX/3;screenSizeY
-bind l:cmd;alt corner top-right resize:screenSizeX/3;screenSizeY
+bind h:cmd;alt corner top-left  resize:(3*screenSizeX/5);screenSizeY
+bind l:cmd;alt corner top-right resize:(2*screenSizeX/5);screenSizeY
+
+bind h:ctrl;alt corner top-left  resize:(2*screenSizeX/5);screenSizeY
+bind l:ctrl;alt corner top-right resize:(3*screenSizeX/5);screenSizeY
 
 
 # Nudge Bindings
