@@ -10,6 +10,7 @@ Bundle 'xoria256.vim'
 " Files
 Bundle 'kien/ctrlp.vim'
 Bundle 'ShowMarks'
+Bundle 'scrooloose/nerdtree'
 
 " general code
 Bundle 'tpope/vim-sleuth'

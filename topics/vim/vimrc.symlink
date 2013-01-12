@@ -112,6 +112,10 @@ map <Leader>/ <plug>NERDCommenterToggle
 map <Leader>[ <plug>NERDCommenterAlignLeft
 map <Leader>] <plug>NERDCommenterUncomment
 
+" NERDTree
+let NERDTreeIgnore=['\.pyc', '\.class']
+nmap <silent> <Leader>nt :NERDTreeToggle<CR>
+
 " CtrlP
 map <Leader>f :CtrlP<CR>
 map <Leader>b :CtrlPBuffer<CR>
