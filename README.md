@@ -19,6 +19,15 @@ After clone run:
 You can allso call `./install.sh` with `-i` (or `--interactive`) to confirm
 each step of the install process.
 
+Disabling 'Topics'
+------------------
+
+If you want to disable any 'topics' set DOT\_EXCLUDE to match the topic names.
+
+The following example would disable java and vagrant:
+
+    DOT_EXCLUDE='(java|vagrant)'
+
 OSX Specifics
 -------------
 

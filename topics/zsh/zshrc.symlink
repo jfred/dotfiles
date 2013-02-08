@@ -1,13 +1,27 @@
+# Override in ~/.localrc to disable modules
+# The following example would disable java and vagrant
+#     DOT_EXCLUDE='(java|vagrant)' 
+DOT_EXCLUDE='_no_matches_'
 # load config and system specific
 [[ -f ~/.localrc ]] && source ~/.localrc
+setopt extendedglob
 
-for config_file ($DOTFILES/**/*.zsh) source $config_file
+export PATH=$PATH:$DOTFILES/bin
 
-for bin ($DOTFILES/**/bin) export PATH=$PATH:$bin
+# load all zsh and bin for enabled topics
+for config_file ($DOTFILES/**/*.zsh) do
+    if [[ ! $config_file =~ $DOT_EXCLUDE ]]; then
+        source $config_file
+    fi
+done
+for bin ($DOTFILES/**/bin); do
+    if [[ ! $bin =~ $DOT_EXCLUDE ]]; then
+        export PATH=$PATH:$bin
+    fi
+done
 
 autoload -U compinit
 compinit
 
 # matches case insensitive for lowercase
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
-
