@@ -1,0 +1,11 @@
+#!/bin/bash
+jmx_host=$1
+proxy_host=${2:-gateway}
+jmx_port=${3:-6060}
+proxy_port=${4:-8123}
+
+echo "connecting jconsole to $jmx_host:$jmx_port via SOCKS proxy $proxy_host using local port $proxy_port"
+ssh -f -ND $proxy_port $proxy_host
+jconsole -J-DsocksProxyHost=localhost -J-DsocksProxyPort=${proxy_port} service:jmx:rmi:///jndi/rmi://${jmx_host}:${jmx_port}/jmxrmi
+
+kill $(ps ax | grep "[s]sh -f -ND $proxy_port" | awk '{print $1}')
