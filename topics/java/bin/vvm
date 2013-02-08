@@ -6,13 +6,11 @@ proxy_port=${4:-8123}
 
 echo "connecting visualvm to $jmx_host:$jmx_port via SOCKS proxy $proxy_host using local port $proxy_port"
 ssh -f -ND $proxy_port $proxy_host
-trap kill_ssh SIGINT
 
 virtualvm=virtualvm
 if [ $(uname) = "Darwin" ]; then
     virtualvm=/Applications/VisualVM.app/Contents/MacOS/visualvm
 fi
 ${virtualvm} -J-Dnetbeans.system_socks_proxy=localhost:${proxy_port} -J-Djava.net.useSystemProxies=true --openjmx service:jmx:rmi:///jndi/rmi://${jmx_host}:${jmx_port}/jmxrmi
-
 
 kill $(ps ax | grep "[s]sh -f -ND $proxy_port" | awk '{print $1}')
