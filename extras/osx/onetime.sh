@@ -36,6 +36,9 @@ defaults write com.apple.frameworks.diskimages auto-open-rw-root -bool true
 # Avoid creating .DS_Store files on network volumes
 defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
 
+# Finder: no desktop
+defaults write com.apple.finder CreateDesktop -bool false
+
 # Finder: disable window animations and Get Info animations
 defaults write com.apple.finder DisableAllAnimations -bool true
 
