@@ -20,6 +20,7 @@ Bundle 'tpope/vim-surround'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'scrooloose/syntastic'
 Bundle 'ervandew/supertab'
+Bundle 'airblade/vim-gitgutter'
 
 " code snippets
 Bundle 'msanders/snipmate.vim'
