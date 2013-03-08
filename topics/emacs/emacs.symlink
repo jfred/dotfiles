@@ -12,13 +12,15 @@
 (require 'package)
 (package-initialize)
 
-(setq package-archives
-  '(("ELPA" . "http://tromey.com/elpa/")
+(setq package-archives '(
+    ("ELPA" . "http://tromey.com/elpa/")
     ("gnu" . "http://elpa.gnu.org/packages/")
-    ("marmalade" . "http://marmalade-repo.org/packages/")))
+    ("marmalade" . "http://marmalade-repo.org/packages/")
+    ("org" . "http://orgmode.org/elpa/")
+  ))
 
 (defvar prelude-packages
-  '(evil evil-leader evil-numbers))
+  '(org-plus-contrib evil evil-leader evil-numbers))
 
 (defun prelude-packages-installed-p ()
   (loop for p in prelude-packages
@@ -39,9 +41,11 @@
 
 ;; org-mode configuration
 ;; enable org-mode
-(require 'org)
+(require 'org-install)
 ;;make org-mode work with files ending in .org
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
+(define-key global-map "\C-cl" 'org-store-link)
+(define-key global-map "\C-ca" 'org-agenda)
 
 ;; enable evil-mode
 (evil-mode 1)
@@ -51,3 +55,5 @@
 (xterm-mouse-mode t)
 (defun track-mouse (e)) 
 (setq mouse-sel-mode t)
+
+(if (file-exists-p "~/.emacs.local") (load "~/.emacs.local"))
