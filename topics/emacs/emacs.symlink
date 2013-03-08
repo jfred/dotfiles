@@ -1,0 +1,53 @@
+;; -*- mode: elisp -*-
+
+;; disable the splash screen (to enable it agin, replace the t with 0)
+(setq inhibit-splash-screen t)
+
+;; enable syntax highlighting
+(global-font-lock-mode t)
+(transient-mark-mode 1)
+
+;; package manager
+(require 'cl)
+(require 'package)
+(package-initialize)
+
+(setq package-archives
+  '(("ELPA" . "http://tromey.com/elpa/")
+    ("gnu" . "http://elpa.gnu.org/packages/")
+    ("marmalade" . "http://marmalade-repo.org/packages/")))
+
+(defvar prelude-packages
+  '(evil evil-leader evil-numbers))
+
+(defun prelude-packages-installed-p ()
+  (loop for p in prelude-packages
+        when (not (package-installed-p p)) do (return nil)
+        finally (return t)))
+
+(unless (prelude-packages-installed-p)
+  ;; check for new packages (package versions)
+  (message "%s" "Emacs Prelude is now refreshing its package database...")
+  (package-refresh-contents)
+  (message "%s" " done.")
+  ;; install the missing packages
+  (dolist (p prelude-packages)
+    (when (not (package-installed-p p))
+      (package-install p))))
+
+(provide 'prelude-packages)
+
+;; org-mode configuration
+;; enable org-mode
+(require 'org)
+;;make org-mode work with files ending in .org
+(add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
+
+;; enable evil-mode
+(evil-mode 1)
+
+;; mouse
+(require 'mouse)
+(xterm-mouse-mode t)
+(defun track-mouse (e)) 
+(setq mouse-sel-mode t)
