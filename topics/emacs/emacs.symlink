@@ -3,6 +3,9 @@
 ;; disable the splash screen (to enable it agin, replace the t with 0)
 (setq inhibit-splash-screen t)
 
+;; setup backup directory - hate the blah~ files
+(setq backup-directory-alist `(("." . "~/.saves")))
+
 ;; enable syntax highlighting
 (global-font-lock-mode t)
 (transient-mark-mode 1)
@@ -20,7 +23,9 @@
   ))
 
 (defvar prelude-packages
-  '(org-plus-contrib evil evil-leader evil-numbers))
+  '(org-plus-contrib
+    evil evil-leader evil-numbers
+    ))
 
 (defun prelude-packages-installed-p ()
   (loop for p in prelude-packages
