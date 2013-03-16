@@ -21,6 +21,7 @@ Bundle 'scrooloose/nerdcommenter'
 Bundle 'scrooloose/syntastic'
 Bundle 'ervandew/supertab'
 Bundle 'airblade/vim-gitgutter'
+Bundle 'benmills/vimux'
 
 " code snippets
 Bundle 'msanders/snipmate.vim'

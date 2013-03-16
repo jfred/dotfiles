@@ -189,6 +189,11 @@ imap <down> <nop>
 " Showmarks
 let g:showmarks_enable=0
 
+" Vimux
+let g:VimuxUseNearestPane = 1
+map <Leader>vp :VimuxPromptCommand<CR>
+map <Leader>vl :VimuxRunLastCommand<CR>
+
 " Style
 set background=dark
 try
