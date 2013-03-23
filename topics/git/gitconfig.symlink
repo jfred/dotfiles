@@ -1,7 +1,7 @@
 [alias]
     ci = commit
     co = checkout
-    aa = add --all
+    aa = add --all .
     st = status -sb
     dh = diff HEAD
     dd = diff -b -w --word-diff-regex=.
