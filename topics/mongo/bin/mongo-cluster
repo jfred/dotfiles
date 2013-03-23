@@ -1,5 +1,5 @@
 #/usr/bin/env bash
-# util script for startup up a local mongo replica set
+# util script for startup up a local mongo cluster
 
 set -e
 
