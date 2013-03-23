@@ -1,0 +1,79 @@
+#/usr/bin/env bash
+# util script for startup up a local mongo replica set
+
+set -e
+
+PREFIX=/opt/mongo
+
+case $1 in 
+
+create)
+    LOCAL=`dirname $0`
+
+    # start rs0 / shard 1
+    mkdir -p $PREFIX/rs0-0 $PREFIX/rs0-1 $PREFIX/rs0-2
+    mongod --port 27020 --dbpath $PREFIX/rs0-0 --replSet rs0 --fork --logpath $PREFIX/rs0-0.log
+    mongod --port 27021 --dbpath $PREFIX/rs0-1 --replSet rs0 --fork --logpath $PREFIX/rs0-1.log
+    mongod --port 27022 --dbpath $PREFIX/rs0-2 --replSet rs0 --fork --logpath $PREFIX/rs0-2.log
+
+    mongo --port 27020 $LOCAL/config-rs0.js
+
+    # start rs1 / shard 2
+    mkdir -p $PREFIX/rs1-0 $PREFIX/rs1-1 $PREFIX/rs1-2
+    mongod --port 27030 --dbpath $PREFIX/rs1-0 --replSet rs1 --fork --logpath $PREFIX/rs1-0.log
+    mongod --port 27031 --dbpath $PREFIX/rs1-1 --replSet rs1 --fork --logpath $PREFIX/rs1-1.log
+    mongod --port 27032 --dbpath $PREFIX/rs1-2 --replSet rs1 --fork --logpath $PREFIX/rs1-2.log
+
+    mongo --port 27030 $LOCAL/config-rs1.js
+
+    # Create config db
+    mkdir -p $PREFIX/configdb
+    mongod --configsvr --port 27019 --dbpath $PREFIX/configdb --logpath $PREFIX/configsvr.log --fork
+
+    # start mongos
+    mongos --configdb 127.0.0.1:27019 --logpath $PREFIX/mongos.log --fork
+    
+    until (mongo --port 27020 rs-check.js > /dev/null); do
+        echo "waiting for replset r0 to be initialized"
+        sleep 5
+    done
+    mongo --port 27017 --eval 'tojson(sh.addShard("rs0/127.0.0.1:27020"));'
+    until (mongo --port 27020 rs-check.js > /dev/null); do
+        echo "waiting for replset r1 to be initialized"
+        sleep 5
+    done
+    mongo --port 27017 --eval 'tojson(sh.addShard("rs1/127.0.0.1:27030"));'
+    ;;
+
+start)
+    # start shard 1
+    mongod --port 27020 --dbpath $PREFIX/rs0-0 --replSet rs0 --fork --logpath $PREFIX/rs0-0.log
+    mongod --port 27021 --dbpath $PREFIX/rs0-1 --replSet rs0 --fork --logpath $PREFIX/rs0-1.log
+    mongod --port 27022 --dbpath $PREFIX/rs0-2 --replSet rs0 --fork --logpath $PREFIX/rs0-2.log
+
+    # start shard 2
+    mongod --port 27030 --dbpath $PREFIX/rs1-0 --replSet rs1 --fork --logpath $PREFIX/rs1-0.log
+    mongod --port 27031 --dbpath $PREFIX/rs1-1 --replSet rs1 --fork --logpath $PREFIX/rs1-1.log
+    mongod --port 27032 --dbpath $PREFIX/rs1-2 --replSet rs1 --fork --logpath $PREFIX/rs1-2.log
+
+    # start configsvr
+    mongod --configsvr --port 27019 --dbpath $PREFIX/configdb --logpath $PREFIX/configsvr.log --fork
+
+    # start mongos
+    mongos --configdb 127.0.0.1:27019 --logpath $PREFIX/mongos.log --fork
+
+    ;;
+
+status)
+    mongo --port 27017 admin --eval 'print(tojson(db.runCommand({listShards: 1})));'
+    ;;
+
+stop)
+    for port in 27030 27031 27032 27020 27021 27022 27019 27017; do
+        mongo --port $port admin --eval 'db.shutdownServer({shutdown:1, force: true});'
+    done
+    ;;
+*)
+    echo "Usage : $0 [create|start|stop|status]"
+    exit 1
+esac
