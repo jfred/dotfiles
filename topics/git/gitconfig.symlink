@@ -9,6 +9,7 @@
     ll = log --pretty=format:'%C(red)%h%C(yellow)%d %C(reset)%s%C(green) [%cn]' --stat
     type = cat-file -t
     dump = cat-file -p
+    find = "!git ls-files | grep -i"
 [color]
     diff = auto
     branch = auto
