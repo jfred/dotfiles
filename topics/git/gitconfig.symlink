@@ -19,7 +19,7 @@
     name = Joshua Frederick
     email = josh@jfred.net
 [core]
-    excludesfile = /Users/jfred/.gitignore
+    excludesfile = ~/.gitignore
 [advice]
 	statusHints = false
 [diff]
