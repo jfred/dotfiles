@@ -88,8 +88,6 @@ if has("autocmd")
     set completeopt=menuone,menu,longest
     autocmd Filetype java let g:SuperTabDefaultCompletionType = "<C-X><C-O>"
 
-    " coffesciprt
-    autocmd Filetype coffee setlocal softtabstop=2 shiftwidth=2 tabstop=2
 endif " has("autocmd")
 
 " Navigation *****************************************************************
@@ -163,6 +161,10 @@ command Rst :silent !rst2html.py % > /tmp/rstprev.html && open /tmp/rstprev.html
 
 " ruby
 au FileType ruby setl sw=2 sts=2 et
+" go
+au FileType go setl sw=4 sts=4 et!
+" coffee
+au FileType coffee setl sw=2 sts=2 et
 
 " Status line
 set laststatus=2

@@ -22,13 +22,14 @@ Bundle 'scrooloose/syntastic'
 Bundle 'ervandew/supertab'
 Bundle 'airblade/vim-gitgutter'
 Bundle 'benmills/vimux'
+Bundle 'AutoClose'
 
 " code snippets
 Bundle 'msanders/snipmate.vim'
 Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
 
 " go
-Bundle 'jfred/vim-golang'
+Bundle 'jnwhiteh/vim-golang'
 
 " java
 Bundle 'vim-scripts/javacomplete'
