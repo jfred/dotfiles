@@ -57,6 +57,10 @@ bind c new-window \; command-prompt "rename-window '%%'"
 bind C new-window
 bind , command-prompt "rename-window '%%'"
 
+# zoom / maximize
+unbind x
+bind x run ". ~/.tmux/zoom"
+
 # Copy mode
 setw -g mode-keys vi
 bind [ copy-mode
