@@ -4,6 +4,7 @@
 (setq inhibit-splash-screen t)
 
 ;; setup backup directory - hate the blah~ files
+(setq make-backup-files nil)
 (setq backup-directory-alist `(("." . "~/.saves")))
 
 ;; enable syntax highlighting
@@ -47,13 +48,22 @@
 ;; org-mode configuration
 ;; enable org-mode
 (require 'org-install)
-;;make org-mode work with files ending in .org
-(add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
-(define-key global-map "\C-cl" 'org-store-link)
-(define-key global-map "\C-ca" 'org-agenda)
+(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode)) ; not needed since Emacs 22.2
+(add-hook 'org-mode-hook 'turn-on-font-lock) ; not needed when global-font-lock-mode is on
+(global-set-key "\C-cl" 'org-store-link)
+(global-set-key "\C-ca" 'org-agenda)
+(global-set-key "\C-cb" 'org-iswitchb)
 
 ;; enable evil-mode
 (evil-mode 1)
+;;; esc quits - via http://stackoverflow.com/questions/8483182/emacs-evil-mode-best-practice/10166400#10166400
+(define-key evil-normal-state-map [escape] 'keyboard-quit)
+(define-key evil-visual-state-map [escape] 'keyboard-quit)
+(define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
 
 ;; mouse
 (require 'mouse)
