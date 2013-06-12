@@ -3,4 +3,8 @@ function node-docs {
     open "http://nodejs.org/docs/$(node --version)/api/all.html#all_$link"
 }
 
+function nodepath {
+    export PATH="./node_modules/.bin:${PATH}"
+}
+
 eval "$(npm completion 2>/dev/null)"
