@@ -44,7 +44,7 @@ bind-key ) swap-window -t +
 bind-key ( swap-window -t -
 
 # 256 colors please
-# set -g default-terminal "xterm-256color"
+#set -g default-terminal "xterm-256color"
 set -g default-terminal "screen-256color"
 
 # Activity
