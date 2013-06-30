@@ -115,11 +115,23 @@ map <Leader>] <plug>NERDCommenterUncomment
 let NERDTreeIgnore=['\.pyc', '\.class']
 nmap <silent> <Leader>nt :NERDTreeToggle<CR>
 
-" CtrlP
-map <Leader>f :CtrlP<CR>
-map <Leader>b :CtrlPBuffer<CR>
-map <Leader>t :CtrlPTag<CR>
-map <Leader>T :CtrlPBufTag<CR>
+" Nav
+let g:unite_source_history_yank_enable = 1
+call unite#filters#matcher_default#use(['matcher_fuzzy'])
+nnoremap <leader>F :Unite -no-split -buffer-name=files  file<cr>
+nnoremap <leader>y :Unite -no-split -buffer-name=yank   history/yank<cr>
+nnoremap <leader>b :Unite -no-split -buffer-name=buffer buffer<cr>
+nnoremap <leader>f :Unite -no-split -buffer-name=files  -start-insert file_rec/async:!<cr>
+
+" Custom mappings for the unite buffer
+autocmd FileType unite call s:unite_settings()
+function! s:unite_settings()
+  " Play nice with supertab
+  let b:SuperTabDisabled=1
+  " Enable navigation with control-j and control-k in insert mode
+  imap <buffer> <C-j>   <Plug>(unite_select_next_line)
+  imap <buffer> <C-k>   <Plug>(unite_select_previous_line)
+endfunction
 
 " File search ****************************************************************
 set incsearch         " do incremental searching

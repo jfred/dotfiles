@@ -8,9 +8,9 @@ Bundle 'Lokaltog/vim-powerline'
 Bundle 'xoria256.vim'
 
 " Files
-Bundle 'kien/ctrlp.vim'
-Bundle 'ShowMarks'
-Bundle 'scrooloose/nerdtree'
+Bundle 'Shougo/vimproc.vim'
+Bundle 'Shougo/vimfiler.vim'
+Bundle 'Shougo/unite.vim'
 
 " general code
 Bundle 'tpope/vim-sleuth'
@@ -21,8 +21,6 @@ Bundle 'scrooloose/nerdcommenter'
 Bundle 'scrooloose/syntastic'
 Bundle 'ervandew/supertab'
 Bundle 'airblade/vim-gitgutter'
-Bundle 'benmills/vimux'
-Bundle 'AutoClose'
 
 " code snippets
 Bundle 'msanders/snipmate.vim'
