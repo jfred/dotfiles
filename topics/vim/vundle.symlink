@@ -29,6 +29,9 @@ Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
 " go
 Bundle 'jnwhiteh/vim-golang'
 
+" node/js
+Bundle 'digitaltoad/vim-jade'
+
 " java
 Bundle 'vim-scripts/javacomplete'
 
