@@ -91,6 +91,10 @@ if has("autocmd")
 
 endif " has("autocmd")
 
+let g:airline_powerline_fonts=1
+let g:airline_theme='badwolf'
+set ttimeoutlen=50
+
 " Navigation *****************************************************************
 map <Leader>p <C-^>
 " Easy window navigation

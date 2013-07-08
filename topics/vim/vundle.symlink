@@ -4,7 +4,7 @@ Bundle 'gmarik/vundle'
 Bundle 'L9'
 
 " Look and feel
-Bundle 'Lokaltog/vim-powerline'
+Bundle 'bling/vim-airline'
 Bundle 'xoria256.vim'
 
 " Files
