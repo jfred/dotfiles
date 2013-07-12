@@ -11,6 +11,7 @@ Bundle 'xoria256.vim'
 Bundle 'Shougo/vimproc.vim'
 Bundle 'Shougo/vimfiler.vim'
 Bundle 'Shougo/unite.vim'
+Bundle 'scrooloose/nerdtree'
 
 " general code
 Bundle 'tpope/vim-sleuth'
