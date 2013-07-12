@@ -11,6 +11,8 @@ set -sg repeat-time 600
 set -g base-index 1
 setw -g pane-base-index 1
 
+set-option -g renumber-windows on
+
 bind m command-prompt -p "move window to:"  "run-shell 'tmux.number.sh %%'"
 
 # Screen habits
