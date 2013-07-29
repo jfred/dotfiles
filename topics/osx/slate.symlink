@@ -28,9 +28,8 @@ bind m:ctrl;cmd;shift corner top-left     resize:screenSizeX;screenSizeY
 bind h:cmd;alt corner top-left  resize:(3*screenSizeX/5);screenSizeY
 bind l:cmd;alt corner top-right resize:(2*screenSizeX/5);screenSizeY
 
-bind h:ctrl;alt corner top-left  resize:(2*screenSizeX/5);screenSizeY
-bind l:ctrl;alt corner top-right resize:(3*screenSizeX/5);screenSizeY
-
+bind j:cmd;alt corner top-left  resize:(2*screenSizeX/5);screenSizeY
+bind k:cmd;alt corner top-right resize:(3*screenSizeX/5);screenSizeY
 
 # Nudge Bindings
 bind right:shift;alt nudge +10% +0
@@ -39,11 +38,11 @@ bind up:shift;alt    nudge +0   -10%
 bind down:shift;alt  nudge +0   +10%
 
 # Throw Bindings
-bind h:ctrl;alt throw left  resize
-bind j:ctrl;alt throw down  resize
-bind k:ctrl;alt throw up    resize
-bind l:ctrl;alt throw right resize
-bind ;:ctrl;alt throw previous
+bind h:ctrl;alt throw left     resize
+bind j:ctrl;alt throw down     resize
+bind k:ctrl;alt throw up       resize
+bind l:ctrl;alt throw right    resize
+bind ;:ctrl;alt throw previous resize
 
 # Focus Bindings
 bind right:cmd    focus right
