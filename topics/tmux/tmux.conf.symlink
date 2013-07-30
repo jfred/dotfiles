@@ -42,8 +42,8 @@ bind -r Right resize-pane -R 2
 # Window movement
 bind -r , select-window -t :-
 bind -r . select-window -t :+
-bind-key ) swap-window -t +
-bind-key ( swap-window -t -
+bind ) swap-window -t +
+bind ( swap-window -t -
 
 # 256 colors please
 #set -g default-terminal "xterm-256color"
