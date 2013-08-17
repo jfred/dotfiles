@@ -12,6 +12,7 @@ Bundle 'Shougo/vimproc.vim'
 Bundle 'Shougo/vimfiler.vim'
 Bundle 'Shougo/unite.vim'
 Bundle 'scrooloose/nerdtree'
+Bundle 'benmills/vimux'
 
 " general code
 Bundle 'tpope/vim-sleuth'
@@ -20,7 +21,6 @@ Bundle 'tpope/vim-fugitive'
 Bundle 'tpope/vim-surround'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'scrooloose/syntastic'
-Bundle 'ervandew/supertab'
 Bundle 'airblade/vim-gitgutter'
 
 " code snippets
