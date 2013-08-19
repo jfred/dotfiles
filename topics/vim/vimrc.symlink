@@ -11,6 +11,8 @@ filetype plugin on
 
 let mapleader = ","
 inoremap <C-J> <Esc>
+inoremap <C-K><C-K> <ESC>:w<CR>
+nnoremap <C-K><C-K> :w<CR>
 
 " defaults *******************************************************************
 let ctags_cmd='/usr/local/bin/ctags'
