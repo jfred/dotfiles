@@ -220,6 +220,7 @@ let g:showmarks_enable=0
 let g:VimuxUseNearestPane = 1
 map <Leader>vp :VimuxPromptCommand<CR>
 map <Leader>vl :VimuxRunLastCommand<CR>
+map <Leader>vi :VimuxInspectRunner<CR>
 
 " Style
 set background=dark
