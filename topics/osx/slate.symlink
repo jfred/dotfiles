@@ -53,11 +53,11 @@ bind up:cmd;alt   focus behind
 bind down:cmd;alt focus behind
 
 # Layouts
-layout lappy 'iTerm' push left  bar-resize:screenSizeX/2
-layout lappy 'Google Chrome' push right  bar-resize:screenSizeX/2
+layout lappy 'iTerm' push left  bar-resize:screenSizeX/2 && throw 0
+layout lappy 'Google Chrome' push right  bar-resize:screenSizeX/2 && throw 0
 
-layout desk 'iTerm' push left  bar-resize:screenSizeX 2
-layout desk 'Google Chrome' push left  bar-resize:screenSizeX 1
+layout desk 'iTerm' push left bar-resize:screenSizeX 2 && throw 0
+layout desk 'Google Chrome' push left  bar-resize:screenSizeX 1 && throw 0
 
 bind 1:ctrl;cmd layout lappy
 bind 2:ctrl;cmd layout desk
