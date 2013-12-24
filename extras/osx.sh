@@ -2,7 +2,7 @@
 set -e
 
 brew update
-brew install coreutils
+brew install coreutils --default-names
 brew install zsh
 brew install git
 brew install python

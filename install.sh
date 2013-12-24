@@ -55,6 +55,10 @@ mklink(){
 # Create base config
 if [ ! -f ~/.localrc ]; then
     echo "export DOTFILES=`pwd`" >> ~/.localrc
+    platform=`uname -o`
+    if [[ $platform == 'Darwin' ]]; then
+        echo "source $DOTFILES/extras/osx/local_rc" >> ~/.localrc
+    fi
 fi
 
 # Create links
