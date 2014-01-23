@@ -6,3 +6,5 @@
 .pt
 *.class
 atlassian-ide-plugin.xml
+.ruby-gemset
+.ruby-version
