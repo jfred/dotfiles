@@ -36,6 +36,9 @@ Bundle 'digitaltoad/vim-jade'
 " java
 Bundle 'vim-scripts/javacomplete'
 
+" ruby / rails
+Bundle 'slim-template/vim-slim'
+
 " python
 Bundle 'klen/rope-vim'
 
