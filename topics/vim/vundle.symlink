@@ -32,6 +32,7 @@ Bundle 'jnwhiteh/vim-golang'
 
 " node/js
 Bundle 'digitaltoad/vim-jade'
+Bundle 'briancollins/vim-jst'
 
 " java
 Bundle 'vim-scripts/javacomplete'
