@@ -24,6 +24,7 @@ function project_editor {
         tmux send-keys "vim" "C-m"
         tmux split-window -t $SESSIONNAME:$WINDOW -v
         tmux resize-pane -D 20
+        tmux send-keys "cd ${DIRECTORY}" "C-m"
     fi
 }
 
