@@ -19,11 +19,11 @@ function project_editor {
     EDITOR=$4
     tmux new-window -t $SESSIONNAME:$WINDOW -n $NAME
     tmux send-keys "cd ${DIRECTORY}" "C-m"
-    if [ "$EDITOR" = "vim" ]
+    if [ "$EDITOR" != "" ]
     then
-        tmux send-keys "vim" "C-m"
+        tmux send-keys "$EDITOR" "C-m"
         tmux split-window -t $SESSIONNAME:$WINDOW -v
-        tmux resize-pane -D 20
+        tmux resize-pane -D 10
         tmux send-keys "cd ${DIRECTORY}" "C-m"
     fi
 }
@@ -32,15 +32,17 @@ tmux has-session -t $SESSIONNAME > /dev/null 2>&1
 
 if [ $? != 0 ]
 then
-    tmux new-session -s $SESSIONNAME -n bench -d
+    tmux new-session -s $SESSIONNAME -n bench -d 
+    SAVEIFS=$IFS
+    IFS=$(echo -en "\n\b")
 
-    # project_editor 'api' 2 '~/Code/some-directory' 'vim'
     i=2
     echo $WS_EDITORS | sed -n 1'p' | tr ',' '\n' | while read space; do
         parts=(`echo $space | tr ':' '\n'`)
-        project_editor ${parts[0]} $i ${parts[1]} ${parts[2]}
+        project_editor "${parts[0]}" $i "${parts[1]}" "${parts[2]}"
         let i++
     done
+    IFS=$SAVEIFS
     
 fi
 # switch to base window
