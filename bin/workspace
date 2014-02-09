@@ -1,0 +1,50 @@
+#!/bin/bash
+
+# .wspace file should name and define the editors
+# SESSIONNAME - the tmux session name
+# WS_EDITORS - the editor windows
+#   {WINNAME1}:{DIRECTORY1},{WINNAME2}:{DIRECTORY2}
+CONF=`pwd`/.wspace
+if [ ! -f $CONF ]
+then
+    echo "./.wspace file not found" >&2
+    exit 1
+fi
+source `pwd`/.wspace
+
+function project_editor {
+    NAME=$1
+    WINDOW=$2
+    DIRECTORY=$3
+    EDITOR=$4
+    tmux new-window -t $SESSIONNAME:$WINDOW -n $NAME
+    tmux send-keys "cd ${DIRECTORY}" "C-m"
+    if [ "$EDITOR" != "" ]
+    then
+        tmux send-keys "$EDITOR" "C-m"
+        tmux split-window -t $SESSIONNAME:$WINDOW -v
+        tmux resize-pane -D 10
+        tmux send-keys "cd ${DIRECTORY}" "C-m"
+    fi
+}
+
+tmux has-session -t $SESSIONNAME > /dev/null 2>&1
+
+if [ $? != 0 ]
+then
+    tmux new-session -s $SESSIONNAME -n bench -d 
+    SAVEIFS=$IFS
+    IFS=$(echo -en "\n\b")
+
+    i=2
+    echo $WS_EDITORS | sed -n 1'p' | tr ',' '\n' | while read space; do
+        parts=(`echo $space | tr ':' '\n'`)
+        project_editor "${parts[0]}" $i "${parts[1]}" "${parts[2]}"
+        let i++
+    done
+    IFS=$SAVEIFS
+    
+fi
+# switch to base window
+tmux select-window -t $SESSIONAME:1
+tmux attach -t $SESSIONNAME
