@@ -62,8 +62,8 @@ layout desk 'Google Chrome' push left  bar-resize:screenSizeX 1 && throw 0
 bind 1:ctrl;cmd layout lappy
 bind 2:ctrl;cmd layout desk
 
-default lappy count:1
-default desk count:2
+# default lappy count:1
+# default desk count:2
 
 
 # App Switcher
