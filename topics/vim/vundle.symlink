@@ -46,4 +46,4 @@ Bundle 'klen/rope-vim'
 " webdev
 Bundle 'kchmck/vim-coffee-script'
 Bundle 'groenewege/vim-less'
-Bundle 'skammer/vim-css-color'
+" Bundle 'skammer/vim-css-color'
