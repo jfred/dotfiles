@@ -130,9 +130,9 @@ call unite#filters#matcher_default#use(['matcher_fuzzy'])
 nnoremap <leader>F :Unite -no-split -buffer-name=files  file<cr>
 nnoremap <leader>y :Unite -no-split -buffer-name=yank   history/yank<cr>
 nnoremap <leader>b :Unite -no-split -buffer-name=buffer buffer<cr>
-nnoremap <leader>f :Unite -no-split -buffer-name=files  -start-insert file_rec/async:!<cr>
+nnoremap <leader>f :Unite -no-split -buffer-name=files  -start-insert file_rec/async<cr>
 
-let g:unite_source_file_rec_ignore_pattern = 'node_modules'
+" let g:unite_source_file_rec_ignore_pattern = '/.git/'
 
 " Custom mappings for the unite buffer
 autocmd FileType unite call s:unite_settings()
