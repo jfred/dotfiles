@@ -2,6 +2,7 @@ Bundle 'gmarik/vundle'
 
 " utils
 Bundle 'L9'
+Bundle 'christoomey/vim-tmux-navigator'
 
 " Look and feel
 Bundle 'bling/vim-airline'
