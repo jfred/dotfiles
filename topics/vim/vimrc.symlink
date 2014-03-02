@@ -14,6 +14,7 @@ inoremap <C-J> <Esc>
 " inoremap <C-K><C-K> <ESC>:w<CR>
 " nnoremap <C-K><C-K> :w<CR>
 nnoremap ; :
+nnoremap <C-D> :q<CR>
 
 " defaults *******************************************************************
 let ctags_cmd='/usr/local/bin/ctags'
