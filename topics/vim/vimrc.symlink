@@ -132,7 +132,7 @@ nnoremap <leader>y :Unite -no-split -buffer-name=yank   -start-insert history/ya
 nnoremap <leader>b :Unite -no-split -buffer-name=buffer -start-insert buffer<cr>
 nnoremap <leader>f :Unite -no-split -buffer-name=files  -start-insert file_rec/async:!<cr>
 
-let g:unite_source_file_rec_ignore_pattern = 'node_modules'
+" let g:unite_source_file_rec_ignore_pattern = '/.git/'
 
 " Use ag for search
 if executable('ag')
