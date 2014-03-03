@@ -9,6 +9,8 @@ source ~/.vundle
 
 filetype plugin on
 
+set backspace=indent,eol,start
+
 let mapleader = ","
 inoremap <C-J> <Esc>
 " inoremap <C-K><C-K> <ESC>:w<CR>
