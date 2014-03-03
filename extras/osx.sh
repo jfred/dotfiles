@@ -9,6 +9,9 @@ brew install python
 brew install ruby
 brew install --HEAD macvim
 
+# config
+brew install autoenv
+
 # tmux
 brew install tmux
 brew install reattach-to-user-namespace
