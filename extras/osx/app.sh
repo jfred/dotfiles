@@ -9,3 +9,5 @@ brew cask install slate
 
 brew cask install mou
 brew cask install google-chrome
+
+brew cask install gitx-rowanj
