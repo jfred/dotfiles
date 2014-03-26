@@ -12,6 +12,7 @@ Bundle 'xoria256.vim'
 Bundle 'Shougo/vimproc.vim'
 Bundle 'Shougo/vimfiler.vim'
 Bundle 'Shougo/unite.vim'
+Bundle 'Shougo/neomru.vim'
 Bundle 'scrooloose/nerdtree'
 Bundle 'benmills/vimux'
 
