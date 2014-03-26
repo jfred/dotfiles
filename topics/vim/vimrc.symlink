@@ -125,15 +125,27 @@ map <Leader>] <plug>NERDCommenterUncomment
 
 " NERDTree
 let NERDTreeIgnore=['\.pyc', '\.class']
-nmap <silent> <Leader>nt :e .<CR>
+nmap <silent> <Leader>nt :NERDTreeToggle<CR>
 
 " Nav
 let g:unite_source_history_yank_enable = 1
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
-nnoremap <leader>F :Unite -no-split -buffer-name=files  -start-insert file<cr>
-nnoremap <leader>y :Unite -no-split -buffer-name=yank   -start-insert history/yank<cr>
-nnoremap <leader>b :Unite -no-split -buffer-name=buffer -start-insert buffer<cr>
-nnoremap <leader>f :Unite -no-split -buffer-name=files  -start-insert file_rec/async:!<cr>
+nnoremap <Leader>F :Unite -no-split -buffer-name=files  -start-insert file<CR>
+nnoremap <Leader>y :Unite -no-split -buffer-name=yank   history/yank<CR>
+nnoremap <Leader>b :Unite -no-split -buffer-name=buffer buffer<CR>
+nnoremap <Leader>f :Unite -no-split -buffer-name=files  -start-insert file_rec/async:!<CR>
+nnoremap <Leader>r :Unite -no-split -buffer-name=files  file_mru<CR>
+nnoremap <Leader>g :Unite -no-split -buffer-name=grep   grep:.<CR>
+
+" Custom mappings for the unite buffer
+autocmd FileType unite call s:unite_settings()
+function! s:unite_settings()
+  " Play nice with supertab
+  let b:SuperTabDisabled=1
+  " Enable navigation with control-j and control-k in insert mode
+  imap <buffer> <C-j>   <Plug>(unite_select_next_line)
+  imap <buffer> <C-k>   <Plug>(unite_select_previous_line)
+endfunction
 
 " let g:unite_source_file_rec_ignore_pattern = '/.git/'
 
