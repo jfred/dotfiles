@@ -10,5 +10,5 @@ fi
 vim -u topics/vim/vimrc_load +BundleInstall! +BundleClean +qa!
 
 # post bundle installs
-pushd ~/.vim/bundle/vimproc.vim && make
-popd
+pushd ~/.vim/bundle/vimproc.vim && make && popd
+pushd ~/.vim/bundle/YouCompleteMe && ./install.sh && popd

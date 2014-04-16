@@ -24,6 +24,7 @@ Bundle 'tpope/vim-surround'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'scrooloose/syntastic'
 Bundle 'airblade/vim-gitgutter'
+Bundle 'Valloric/YouCompleteMe'
 
 " code snippets
 Bundle 'msanders/snipmate.vim'
@@ -37,7 +38,7 @@ Bundle 'digitaltoad/vim-jade'
 Bundle 'briancollins/vim-jst'
 
 " java
-Bundle 'vim-scripts/javacomplete'
+" Bundle 'vim-scripts/javacomplete'
 
 " ruby / rails
 Bundle 'slim-template/vim-slim'
