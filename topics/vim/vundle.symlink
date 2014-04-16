@@ -42,6 +42,7 @@ Bundle 'briancollins/vim-jst'
 
 " ruby / rails
 Bundle 'slim-template/vim-slim'
+Bundle 'tpope/vim-rails'
 
 " python
 Bundle 'klen/rope-vim'
