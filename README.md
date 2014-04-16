@@ -48,3 +48,12 @@ SSH - enable connection sharing - in ~/.ssh/config add
     ControlMaster auto
     ControlPath /tmp/ssh_%h_%p_%r
 
+Notes
+-----
+
+Most customizations should happen in a system specific version of `~/.localrc`.
+These vars/commands/etc will be included prior to the majority of ZSH commands.
+In the case where you need to execute something after the rest of ZSH initialization
+you can set a `DOTFILES_POST_INIT` variable in '~/.localrc'. This is a horrible
+hack and probably a security concern, but hey you are basing your dotfiles off
+mine so stop complaining.
