@@ -12,6 +12,8 @@
     fc = !git flow feature checkout
     ff = !git flow feature finish
     fp = !git flow feature publish
+    vtag = "!git tag | sort --version-sort"
+    last = "!git tag | sort --version-sort | tail -n 1"
     type = cat-file -t
     dump = cat-file -p
     find = "!git ls-files | grep -i"
