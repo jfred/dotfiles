@@ -12,6 +12,7 @@
     fc = !git flow feature checkout
     ff = !git flow feature finish
     fp = !git flow feature publish
+    frelease = "!f() { git flow release start $1 && git flow release finish $1; }; f"
     vtag = "!git tag | sort --version-sort"
     last = "!git tag | sort --version-sort | tail -n 1"
     type = cat-file -t
