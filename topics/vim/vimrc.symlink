@@ -192,6 +192,9 @@ execfile(activate_this, dict(__file__=activate_this))
 EOF
 endif
 
+" markdown
+au BufRead,BufNewFile *.md set filetype=markdown
+
 " Syntax Errors
 let g:syntastic_check_on_open=1
 let g:syntastic_enable_balloons=1
