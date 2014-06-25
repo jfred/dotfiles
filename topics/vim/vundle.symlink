@@ -24,10 +24,14 @@ Bundle 'tpope/vim-surround'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'scrooloose/syntastic'
 Bundle 'airblade/vim-gitgutter'
-Bundle 'Valloric/YouCompleteMe'
+"Bundle 'Valloric/YouCompleteMe'
 
 " code snippets
-Bundle 'msanders/snipmate.vim'
+Bundle 'MarcWeber/vim-addon-mw-utils'
+Bundle 'tomtom/tlib_vim'
+Bundle 'garbas/vim-snipmate'
+Bundle 'honza/vim-snippets'
+"Bundle 'msanders/snipmate.vim'
 Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
 
 " go
