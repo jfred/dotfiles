@@ -17,6 +17,7 @@ Bundle 'scrooloose/nerdtree'
 Bundle 'benmills/vimux'
 
 " general code
+Bundle 'rizzatti/dash.vim'
 Bundle 'tpope/vim-sleuth'
 Bundle 'majutsushi/tagbar'
 Bundle 'tpope/vim-fugitive'

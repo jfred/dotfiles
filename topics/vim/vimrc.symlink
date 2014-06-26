@@ -239,6 +239,9 @@ imap <left> <nop>
 imap <up> <nop>
 imap <down> <nop>
 
+" Dash (osx)
+map <Leader>q :Dash<CR>
+
 " Showmarks
 let g:showmarks_enable=0
 
