@@ -80,6 +80,8 @@ bind p paste-buffer
 bind -t vi-copy v begin-selection
 bind -t vi-copy y copy-selection
 
+bind -n C-k clear-history
+
 # Mouse
 set-option -g mouse-select-pane on
 set-option -g mouse-resize-pane on
