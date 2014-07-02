@@ -13,6 +13,15 @@ if [ ! "_$1" == "_" ]; then
     fi
 fi
 
+if [ -n "$DOT_EXCLUDE"]; then
+    DOT_EXCLUDE="osx"
+    platform=`uname -o`
+    if [[ $platform == 'Darwin' ]]
+    then
+        DOT_EXCLUDE="linux"
+    fi
+fi
+
 confirm(){
     echo -n "$@ "
     read ans
@@ -59,17 +68,26 @@ if [ ! -f ~/.localrc ]; then
     if [[ $platform == 'Darwin' ]]; then
         echo "source $DOTFILES/extras/osx/local_rc" >> ~/.localrc
     fi
+    echo "export DOT_EXCLUDE='${DOT_EXCLUDE}'" >> ~/.localrc
 fi
 
 # Create links
 LINKS=`find . -name '*.symlink'`
 for filename in ${LINKS}; do
+    if [[ $filename =~ $DOT_EXCLUDE ]]; then
+        # echo "Skipping ${filename}"
+        continue
+    fi
     mklink "$filename"
 done
 
 # Run installs
 LINKS=`find topics -name 'install.sh'`
 for filename in ${LINKS}; do
+    if [[ $filename =~ $DOT_EXCLUDE ]]; then
+        # echo "Skipping ${filename}"
+        continue
+    fi
     if [ ${INTER} -eq 0 ]; then
         confirm "Execute ${filename}? (y/N)"
         if [ $? -eq 0 ]; then
