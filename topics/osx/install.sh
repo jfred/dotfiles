@@ -7,3 +7,7 @@ set -e
 brew bundle Brewfile
 # install core osx apps
 brew bundle Caskfile
+
+# until there is auto install
+open "https://github.com/sdegutis/hydra"
+
