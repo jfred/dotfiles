@@ -7,7 +7,7 @@ tap caskroom/versions
 cask install quicksilver
 cask install iterm2
 
-# cask install slate
+cask install hydra
 
 
 cask install mou
