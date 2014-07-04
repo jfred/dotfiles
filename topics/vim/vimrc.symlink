@@ -12,11 +12,11 @@ filetype plugin on
 set backspace=indent,eol,start
 
 let mapleader = ","
-inoremap <C-J> <Esc>
-" inoremap <C-K><C-K> <ESC>:w<CR>
-" nnoremap <C-K><C-K> :w<CR>
+inoremap <C-j> <Esc>
+inoremap <F2> <C-o>:w<CR>
+nnoremap <F2> :w<CR>
 nnoremap ; :
-nnoremap <C-D> :q<CR>
+nnoremap <C-d> :q<CR>
 
 " defaults *******************************************************************
 let ctags_cmd='/usr/local/bin/ctags'
