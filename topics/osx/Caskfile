@@ -6,7 +6,6 @@ tap caskroom/versions
 
 cask install quicksilver
 cask install iterm2
-cask install slate
 
 cask install mou
 cask install google-chrome
