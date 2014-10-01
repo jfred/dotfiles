@@ -1,5 +1,6 @@
 *.class
 *.pyc
+*.iml
 .DS_Store
 .env
 .idea
@@ -8,4 +9,6 @@
 .ruby-gemset
 .ruby-version
 .tags
+.jruby
+.sass-cache
 atlassian-ide-plugin.xml
