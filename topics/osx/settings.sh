@@ -3,6 +3,9 @@
 # Menu bar: disable transparency
 defaults write NSGlobalDomain AppleEnableMenuBarTransparency -bool false
 
+# Disable Dashboard
+defaults write com.apple.dashboard mcx-disabled -boolean YES
+
 # Always show scrollbars
 defaults write NSGlobalDomain AppleShowScrollBars -string "Always"
 
