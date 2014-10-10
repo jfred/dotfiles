@@ -11,6 +11,8 @@ install coreutils --default-names
 install moreutils
 install gnu-sed --default-names
 
+install tree
+
 install zsh
 install git
 install python
