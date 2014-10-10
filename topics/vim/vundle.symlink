@@ -25,6 +25,7 @@ Bundle 'tpope/vim-surround'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'scrooloose/syntastic'
 Bundle 'airblade/vim-gitgutter'
+Bundle 'gregsexton/gitv'
 "Bundle 'Valloric/YouCompleteMe'
 
 " code snippets
