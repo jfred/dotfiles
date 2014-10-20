@@ -1,3 +1,6 @@
+local window = require "mjolnir.window"
+local fnutils = require "mjolnir.fnutils"
+
 ext.grid = {}
 
 ext.grid.MARGINX = 5
@@ -11,7 +14,7 @@ end
 
 function ext.grid.get(win)
   local winframe = win:frame()
-  local screenrect = win:screen():frame_without_dock_or_menu()
+  local screenrect = win:screen():frame()
   local thirdscreenwidth = screenrect.w / ext.grid.GRIDWIDTH
   local halfscreenheight = screenrect.h / 2
   return {
@@ -23,7 +26,7 @@ function ext.grid.get(win)
 end
 
 function ext.grid.set(win, grid, screen)
-  local screenrect = screen:frame_without_dock_or_menu()
+  local screenrect = screen:frame()
   local thirdscreenwidth = screenrect.w / ext.grid.GRIDWIDTH
   local halfscreenheight = screenrect.h / 2
   local newframe = {
@@ -49,7 +52,7 @@ end
 
 function ext.grid.adjustwidth(by)
   ext.grid.GRIDWIDTH = math.max(1, ext.grid.GRIDWIDTH + by)
-  hydra.alert("grid is now " .. tostring(ext.grid.GRIDWIDTH) .. " tiles wide", 1)
+  -- hydra.alert("grid is now " .. tostring(ext.grid.GRIDWIDTH) .. " tiles wide", 1)
   fnutils.map(window.visiblewindows(), ext.grid.snap)
 end
 

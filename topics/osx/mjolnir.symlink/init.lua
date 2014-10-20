@@ -1,18 +1,11 @@
+local application = require "mjolnir.application"
+local hotkey = require "mjolnir.hotkey"
+local window = require "mjolnir.window"
+local fnutils = require "mjolnir.fnutils"
+
 -- refers to grid.lua in this directory, taken from the Hydra wiki: https://github.com/sdegutis/hydra/wiki/Useful-Hydra-libraries
+ext = {}
 require "grid"
-
-hydra.alert "Hydra, at your service."
-
-pathwatcher.new(os.getenv("HOME") .. "/.hydra/", hydra.reload):start()
-autolaunch.set(true)
-
-menu.show(function()
-    return {
-      {title = "About Hydra", fn = hydra.showabout},
-      {title = "-"},
-      {title = "Quit", fn = os.exit},
-    }
-end)
 
 local mash = {"cmd", "shift", "ctrl"}
 local mashshift = {"cmd", "alt", "shift"}
@@ -49,7 +42,7 @@ hotkey.bind(mash, 'U', ext.grid.resizewindow_taller)
 hotkey.bind(mash, 'O', ext.grid.resizewindow_wider)
 hotkey.bind(mash, 'I', ext.grid.resizewindow_thinner)
 
-hotkey.bind(mash, 'X', logger.show)
-hotkey.bind(mash, "R", repl.open)
+-- hotkey.bind(mash, 'X', logger.show)
+-- hotkey.bind(mash, "R", repl.open)
 
 -- updates.check()
