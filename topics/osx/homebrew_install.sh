@@ -46,6 +46,6 @@ brew cask install iterm2
 brew cask install mou
 brew cask install google-chrome
 
-brew cask install gitx-rowanj
+brew cask install sourcetree
 
 brew cask install mjolnir
