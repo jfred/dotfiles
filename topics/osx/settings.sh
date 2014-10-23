@@ -3,6 +3,9 @@
 # Menu bar: disable transparency
 defaults write NSGlobalDomain AppleEnableMenuBarTransparency -bool false
 
+# Menu bar: dark
+defaults write NSGlobalDomain AppleInterfaceStyle Dark
+
 # Disable Dashboard
 defaults write com.apple.dashboard mcx-disabled -boolean YES
 
