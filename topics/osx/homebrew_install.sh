@@ -37,8 +37,7 @@ brew cleanup
 
 # Install native apps
 
-brew install phinze/cask/brew-cask
-brew tap caskroom/versions
+brew install caskroom/cask/brew-cask
 
 brew cask install quicksilver
 brew cask install iterm2
@@ -49,3 +48,6 @@ brew cask install google-chrome
 brew cask install sourcetree
 
 brew cask install mjolnir
+luarocks install mjolnir.hotkey
+luarocks install mjolnir.application
+
