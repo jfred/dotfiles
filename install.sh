@@ -13,12 +13,12 @@ if [ ! "_$1" == "_" ]; then
     fi
 fi
 
-if [ -n "$DOT_EXCLUDE"]; then
+platform=`uname -o 2> /dev/null || uname`
+if [ -n "$DOT_EXCLUDE" ]; then
     DOT_EXCLUDE="osx"
-    platform=`uname -o`
     if [[ $platform == 'Darwin' ]]
     then
-        DOT_EXCLUDE="linux"
+        DOT_EXCLUDE="(linux|ubuntu)"
     fi
 fi
 
@@ -63,9 +63,10 @@ mklink(){
 
 # Create base config
 if [ ! -f ~/.localrc ]; then
+    echo "Creating defaults"
     echo "export DOTFILES=`pwd`" >> ~/.localrc
-    platform=`uname -o`
-    if [[ $platform == 'Darwin' ]]; then
+    if [[ $platform == 'Darwin' ]]
+    then
         echo "source $DOTFILES/extras/osx/local_rc" >> ~/.localrc
     fi
     echo "export DOT_EXCLUDE='${DOT_EXCLUDE}'" >> ~/.localrc
