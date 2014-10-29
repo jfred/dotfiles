@@ -1,5 +1,6 @@
 local window = require "mjolnir.window"
 local fnutils = require "mjolnir.fnutils"
+local alert = require "mjolnir.alert"
 
 ext.grid = {}
 
@@ -52,7 +53,7 @@ end
 
 function ext.grid.adjustwidth(by)
   ext.grid.GRIDWIDTH = math.max(1, ext.grid.GRIDWIDTH + by)
-  -- hydra.alert("grid is now " .. tostring(ext.grid.GRIDWIDTH) .. " tiles wide", 1)
+  alert.show("grid is now " .. tostring(ext.grid.GRIDWIDTH) .. " tiles wide", 1)
   fnutils.map(window.visiblewindows(), ext.grid.snap)
 end
 
