@@ -107,3 +107,7 @@ end
 function ext.grid.resizewindow_taller()
   ext.grid.adjust_focused_window(function(f) f.y = 0; f.h = 2 end)
 end
+
+function ext.grid.resizewindow_shorter()
+  ext.grid.adjust_focused_window(function(f) f.y = 0; f.h = 1 end)
+end

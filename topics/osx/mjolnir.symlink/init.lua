@@ -39,5 +39,6 @@ hotkey.bind(mash, 'H', ext.grid.pushwindow_left)
 hotkey.bind(mash, 'L', ext.grid.pushwindow_right)
 
 hotkey.bind(mash, 'U', ext.grid.resizewindow_taller)
+hotkey.bind(mash, 'Y', ext.grid.resizewindow_shorter)
 hotkey.bind(mash, 'O', ext.grid.resizewindow_wider)
 hotkey.bind(mash, 'I', ext.grid.resizewindow_thinner)
