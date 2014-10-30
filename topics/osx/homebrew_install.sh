@@ -19,6 +19,7 @@ brew install --HEAD macvim
 brew install lynx
 brew install pv
 brew install zopfli
+brew install pstree
 
 # config
 brew install autoenv
