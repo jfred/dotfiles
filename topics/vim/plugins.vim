@@ -1,10 +1,7 @@
 call plug#begin('~/.vim/plugged')
 
-Plug 'gmarik/vundle'
-
 " utils
 Plug 'L9'
-Plug 'christoomey/vim-tmux-navigator'
 
 " Look and feel
 Plug 'bling/vim-airline'
