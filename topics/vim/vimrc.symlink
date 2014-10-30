@@ -2,10 +2,7 @@ set nocompatible
 
 set encoding=utf-8
 
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
-
-source ~/.vundle
+source $DOTFILES/topics/vim/plugins.vim
 
 filetype plugin on
 

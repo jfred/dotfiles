@@ -2,13 +2,9 @@ set nocompatible
 
 filetype off
 
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
-
-source ~/.vundle
+source plugins.vim
 
 filetype plugin on
 
 let mapleader = ","
-"Why leave the home keys
 

@@ -1,14 +1,11 @@
 #!/usr/bin/env bash
 set -e
 
-mkdir -p ~/.vim/bundle
+BASEDIR=$(dirname $0)
 
-if [ ! -d ~/.vim/bundle/vundle ]; then
-    git clone http://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
+mkdir -p ~/.vim/autoload
+if [ ! -f ~/.vim/autoload/plug.vim ]; then
+    curl -fLo ~/.vim/autoload/plug.vim https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 fi
 
-vim -u topics/vim/vimrc_load +BundleInstall! +BundleClean +qa!
-
-# post bundle installs
-pushd ~/.vim/bundle/vimproc.vim && make && popd
-# pushd ~/.vim/bundle/YouCompleteMe && ./install.sh && popd
+(cd ${BASEDIR} && vim -u vimrc_load +PlugClean! +PlugUpdate +qa!)
