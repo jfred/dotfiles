@@ -20,6 +20,7 @@ brew install lynx
 brew install pv
 brew install zopfli
 brew install pstree
+brew install ctags
 
 # config
 brew install autoenv
