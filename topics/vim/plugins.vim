@@ -8,7 +8,7 @@ Plug 'bling/vim-airline'
 Plug 'xoria256.vim'
 
 " Files
-Plug 'Shougo/vimproc.vim'
+Plug 'Shougo/vimproc.vim', { 'do': 'make' }
 Plug 'Shougo/vimfiler.vim'
 Plug 'Shougo/unite.vim'
 Plug 'Shougo/neomru.vim'
