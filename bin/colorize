@@ -5,30 +5,48 @@ die () {
     exit 1
 }
 
-[ "$#" -gt 0 ] || die "usage $0 [-i] [MATCH=color] [MATCH=color] ..."
+[ "$#" -gt 0 ] || die "usage $0 [-i] [-w] [MATCH] [MATCH=color] ..."
 
-red=$(tput setaf 1)
-green=$(tput setaf 2)
-yellow=$(tput setaf 3)
-blue=$(tput setaf 4)
+red=0
+green=1
+yellow=2
+blue=3
+magenta=4
+cyan=5
 
 reset=$(tput sgr0)
 
 SED_OPTIONS='g'
+MATCH_WORD=false
 
+auto=-1
 for var in $@; do
     if [[ "$var" == "-i" ]]; then
         SED_OPTIONS="i$SED_OPTIONS"
+        continue
+    fi
+    if [[ "$var" == "-w" ]]; then
+        MATCH_WORD=true
+        continue
     fi
 
     set -- "$var"
     IFS="="; declare -a arr=($*)
 
     match=${arr[0]}
-    color=${arr[1]}
-
-    rules="$rules;s/\(.*$match.*\)/${!color}\1$reset/$SED_OPTIONS"
+    cname=${arr[1]}
+    cnum=${!cname}
+    if [ -z "${cnum}" ]; then
+        cnum=$((auto+1))
+        auto=$cnum
+    fi
+    color=$(tput setaf $(($cnum%6+1)))
+    
+    if [ $MATCH_WORD == true ]; then
+        rules="$rules;s/\($match\)/${color}\1$reset/$SED_OPTIONS"
+    else
+        rules="$rules;s/\(.*$match.*\)/${color}\1$reset/$SED_OPTIONS"
+    fi
 done
 
-echo $rules
 sed -e "$rules"
