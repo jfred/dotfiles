@@ -132,7 +132,7 @@ nnoremap <Leader>gv :Gitv! --all<CR>
 let g:unite_source_history_yank_enable = 1
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
 nnoremap <Leader>F :Unite -no-split -buffer-name=files  -start-insert file<CR>
-nnoremap <Leader>f :Unite -no-split -buffer-name=files  -start-insert file<CR>
+nnoremap <Leader>f :Unite -no-split -buffer-name=files  -start-insert file_rec/git<CR>
 nnoremap <Leader>r :Unite -no-split -buffer-name=files  file_mru<CR>
 nnoremap <Leader>y :Unite -no-split -buffer-name=yank   history/yank<CR>
 nnoremap <Leader>b :Unite -no-split -buffer-name=buffer buffer<CR>
