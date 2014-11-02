@@ -55,7 +55,7 @@ Plug 'klen/rope-vim'
 " webdev
 Plug 'kchmck/vim-coffee-script'
 Plug 'groenewege/vim-less'
-" Plug 'skammer/vim-css-color'
+Plug 'ap/vim-css-color'
 Plug 'mattn/emmet-vim'
 Plug 'pangloss/vim-javascript'
 
