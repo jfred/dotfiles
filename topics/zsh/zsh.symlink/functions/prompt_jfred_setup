@@ -35,8 +35,12 @@ prompt_jfred_setup() {
     zstyle ':vcs_info:git*+set-message:*' hooks git-untracked git-since_last_commit
 
     # Left hand prompt
+    PROMPT=""
     # host
-    PROMPT="%F{$pc[1]}%m%f:"
+    PROMPT+="%F{$pc[1]}%m%f"
+    # jobs
+    PROMPT+="%(1j.[%j].)"
+    PROMPT+=":"
     PROMPT+="%F{$pc[2]}%2c%f"
     # vcs
     PROMPT+="\${vcs_info_msg_0_}"
