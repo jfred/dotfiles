@@ -50,7 +50,7 @@ Plug 'slim-template/vim-slim'
 Plug 'tpope/vim-rails'
 
 " python
-Plug 'klen/rope-vim'
+" Plug 'klen/rope-vim'
 
 " webdev
 Plug 'kchmck/vim-coffee-script'
