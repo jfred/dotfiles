@@ -53,7 +53,7 @@ end
 
 function ext.grid.adjustwidth(by)
   ext.grid.GRIDWIDTH = math.max(1, ext.grid.GRIDWIDTH + by)
-  alert.show("grid is now " .. tostring(ext.grid.GRIDWIDTH) .. " tiles wide", 1)
+  alert.show("grid is now " .. tostring(ext.grid.GRIDWIDTH) .. " tiles wide", .5)
   fnutils.map(window.visiblewindows(), ext.grid.snap)
 end
 
@@ -66,6 +66,10 @@ end
 
 function ext.grid.maximize_window()
   local win = window.focusedwindow()
+  if not win then
+    alert.show("No window has focus", .5)
+    return
+  end
   local f = {x = 0, y = 0, w = ext.grid.GRIDWIDTH, h = 2}
   ext.grid.set(win, f, win:screen())
 end
