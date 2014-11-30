@@ -22,7 +22,7 @@ prompt_jfred_setup() {
     setopt prompt_subst
     autoload -Uz vcs_info
 
-    zstyle ':vcs_info:*' enable git svn
+    zstyle ':vcs_info:*' enable git svn hg
     zstyle ':vcs_info:*' check-for-changes true
     zstyle ':vcs_info:*' unstagedstr "%F{red}!%f"
     zstyle ':vcs_info:*' stagedstr "%F{green}+%f"
@@ -33,6 +33,7 @@ prompt_jfred_setup() {
     # %a - action (e.g. rebase-i)
     zstyle ':vcs_info:*' formats "(%b%f%c%u)"
     zstyle ':vcs_info:git*+set-message:*' hooks git-untracked git-since_last_commit
+    zstyle ':vcs_info:hg*+set-message:*' hooks hg-since_last_commit
 
     # Left hand prompt
     PROMPT=""
@@ -54,10 +55,10 @@ prompt_jfred_setup() {
     add-zsh-hook precmd prompt_jfred_precmd
 }
 
-function +vi-git-since_last_commit {
+function format_last_commit {
     local now=`date +%s`
 
-    local last_commit=`git log --pretty=format:'%at' -1`
+    local last_commit=$1
     local seconds_since_last_commit=$((now-last_commit))
     local minutes_since_last_commit=$((seconds_since_last_commit/60))
 
@@ -77,6 +78,14 @@ function +vi-git-since_last_commit {
         time_str="$((minutes_since_last_commit/60/24))d"
     fi
     hook_com[branch]="%F{${COLOR}}${time_str}%f|%F{cyan}${hook_com[branch]}%f"
+}
+
+function +vi-hg-since_last_commit {
+    format_last_commit `hg log -l 1 --template "{hgdate(date)}\n" | cut -f1 -d' '`
+}
+
+function +vi-git-since_last_commit {
+    format_last_commit `git log --pretty=format:'%at' -1`
 }
 
 function +vi-git-untracked(){
