@@ -1,16 +1,12 @@
 #!/usr/bin/env bash
+set -e
 
 function die() {
     echo $1
     exit 1
 }
 
-REMOTE_NAME=$(git branch -vv | grep '^*' | cut -d'[' -f 2 | cut -d']' -f 1 | cut -d':' -f1)
-if [ -z ${REMOTE_NAME} ]; then
-    die "No remote branch configured for local branch"
-    exit
-fi
-
+REMOTE_NAME=$(git rev-parse --abbrev-ref --symbolic-full-name @{u})
 REMOTE=$(echo ${REMOTE_NAME} | cut -d'/' -f1)
 REMOTE_BRANCH=$(echo ${REMOTE_NAME} | cut -d'/' -f2-)
 REMOTE_URL=$(git config --get remote.${REMOTE}.url)
