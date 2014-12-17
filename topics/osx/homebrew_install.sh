@@ -1,9 +1,12 @@
 # Make sure we’re using the latest Home
+echo Updating homebrew...
 brew update
 
 # Upgrade any already-installed formulae
+echo Upgrading homebrew...
 brew upgrade
 
+echo Installing base homebrew packages...
 brew install coreutils --default-names
 brew install moreutils
 brew install gnu-sed --default-names
@@ -35,9 +38,11 @@ brew install lua
 brew install luarocks
 
 # Remove outdated versions from the cellar
+echo Homebrew cleanup...
 brew cleanup
 
 # Install native apps
+echo Installing applications via brew-cask...
 
 brew install caskroom/cask/brew-cask
 
