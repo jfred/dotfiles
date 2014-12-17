@@ -36,7 +36,7 @@ Plug 'honza/vim-snippets'
 Plug 'rstacruz/sparkup', {'rtp': 'vim/'}
 
 " go
-Plug 'jnwhiteh/vim-golang'
+Plug 'fatih/vim-go'
 
 " node/js
 Plug 'digitaltoad/vim-jade'

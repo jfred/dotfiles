@@ -206,6 +206,9 @@ command Rst :silent !rst2html.py % > /tmp/rstprev.html && open /tmp/rstprev.html
 au FileType ruby setl sw=2 sts=2 et
 " go
 au FileType go setl sw=4 sts=4 et!
+au FileType go nmap <Leader>gd <Plug>(go-doc)
+au FileType go nmap <Leader>gv <Plug>(go-doc-vertical)
+au FileType go nmap <Leader>gb <Plug>(go-doc-browser)
 " coffee
 au FileType coffee setl sw=2 sts=2 et
 
