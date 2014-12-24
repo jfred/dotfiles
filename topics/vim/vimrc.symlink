@@ -23,7 +23,7 @@ let ctags_cmd='/usr/local/bin/ctags'
 set clipboard=unnamed
 
 " Invisible characters *******************************************************
-set listchars=trail:.,tab:>-
+set listchars=tab:❘-,trail:·,extends:»,precedes:«,nbsp:×
 set nolist
 :noremap <Leader>i :set list!<CR> " Toggle invisible chars
 
