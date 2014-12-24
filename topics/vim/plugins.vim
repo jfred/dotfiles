@@ -43,7 +43,7 @@ Plug 'digitaltoad/vim-jade'
 Plug 'briancollins/vim-jst'
 
 " java
-" Plug 'vim-scripts/javacomplete'
+Plug 'tpope/vim-classpath'
 
 " ruby / rails
 Plug 'slim-template/vim-slim'
