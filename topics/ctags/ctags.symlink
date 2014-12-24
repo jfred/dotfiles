@@ -1,5 +1,6 @@
 --exclude=build 
 --exclude=.template_cache
+--exclude=*.min.js
 --exclude=.git
 --langdef=plain
 --langdef=js
@@ -28,7 +29,6 @@
 --regex-coffee=/^[ \t]*(module\.)?(exports\.)?@?([A-Za-z.]+):.*[-=]>.*$/\3/m,method/
 --regex-coffee=/^[ \t]*([A-Za-z.]*).statics.([A-Za-z.]*)/\1.\2/m,method/
 --regex-coffee=/^[ \t]*(module\.)?(exports\.)?([A-Za-z.]+)[ \t]+=.*[-=]>.*$/\3/f,function/
-#--regex-coffee=/^[ \t]*([A-Za-z.]+)[ \t]+=[^->\n]*$/\1/v,variable/
 --regex-coffee=/^[ \t]*@([A-Za-z.]+)[ \t]+=[^->\n]*$/\1/f,field/
 --regex-coffee=/^[ \t]*@([A-Za-z.]+):[^->\n]*$/\1/f,static field/
 --regex-coffee=/^[ \t]*([A-Za-z.]+):[^->\n]*$/\1/f,field/
