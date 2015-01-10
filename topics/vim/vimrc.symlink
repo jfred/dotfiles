@@ -65,6 +65,7 @@ endif
 if &t_Co > 2 || has("gui_running")
     set t_Co=256
     syntax on
+    set omnifunc=syntaxcomplete#Complete
 endif
 
 if has("gui_running")
@@ -80,9 +81,11 @@ cmap w!! %!sudo tee > /dev/null %
 if has("autocmd")
     " Enable file type detection.
     filetype plugin indent on
+
     " Put these in an autocmd group, so that we can delete them easily.
     augroup vimrcEx
     au!
+
     " When editing a file, always jump to the last known cursor position.
     autocmd BufReadPost *
     \ if line("'\"") > 1 && line("'\"") <= line("$") |
@@ -90,10 +93,7 @@ if has("autocmd")
     \ endif
     augroup END
 
-    autocmd Filetype java setlocal omnifunc=javacomplete#Complete
     set completeopt=menuone,menu,longest
-    autocmd Filetype java let g:SuperTabDefaultCompletionType = "<C-X><C-O>"
-
 endif " has("autocmd")
 
 let g:airline_powerline_fonts=1
@@ -148,8 +148,6 @@ endif
 " Custom mappings for the unite buffer
 autocmd FileType unite call s:unite_settings()
 function! s:unite_settings()
-  " Play nice with supertab
-  let b:SuperTabDisabled=1
   " Enable navigation with control-j and control-k in insert mode
   imap <buffer> <C-j>   <Plug>(unite_select_next_line)
   imap <buffer> <C-k>   <Plug>(unite_select_previous_line)
@@ -174,6 +172,14 @@ set tags=tags,.tags,/
 nmap <F8> :TagbarToggle<CR>
 execute "map <F9> :!".ctags_cmd." -f '.tags' --exclude='build' --extra=+f -R .<CR>"
 
+" Syntax Errors
+let g:syntastic_check_on_open=0
+let g:syntastic_enable_balloons=1
+let g:syntastic_python_flake8_args='--ignore=E111,E501'
+
+" markdown
+au BufRead,BufNewFile *.md set filetype=markdown
+
 " python - virtual env ********************************************************
 if filereadable($VIRTUAL_ENV . '/bin/activate_this.py')
 python << EOF
@@ -184,31 +190,25 @@ execfile(activate_this, dict(__file__=activate_this))
 EOF
 endif
 
-" markdown
-au BufRead,BufNewFile *.md set filetype=markdown
-
-" Syntax Errors
-let g:syntastic_check_on_open=0
-let g:syntastic_enable_balloons=1
-
-let g:syntastic_python_flake8_args='--ignore=E111,E501'
-
-" rope
-let g:ropevim_guess_project=1
-let g:ropevim_vim_completion=1
-let g:ropevim_extended_complete=1
-let ropevim_enable_shortcuts=1
-
 " preview rst
 command Rst :silent !rst2html.py % > /tmp/rstprev.html && open /tmp/rstprev.html
 
+" rope
+"let g:ropevim_guess_project=1
+"let g:ropevim_vim_completion=1
+"let g:ropevim_extended_complete=1
+"let ropevim_enable_shortcuts=1
+
 " ruby
 au FileType ruby setl sw=2 sts=2 et
+
 " go
 au FileType go setl sw=4 sts=4 et!
 au FileType go nmap <Leader>gd <Plug>(go-doc)
 au FileType go nmap <Leader>gv <Plug>(go-doc-vertical)
 au FileType go nmap <Leader>gb <Plug>(go-doc-browser)
+let g:go_fmt_command = "goimports"
+
 " coffee
 au FileType coffee setl sw=2 sts=2 et
 

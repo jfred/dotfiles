@@ -17,7 +17,7 @@ brew install zsh
 brew install git
 brew install python
 brew install ruby
-brew install --HEAD macvim
+brew install --HEAD --with-lua --with-luajit macvim
 
 brew install lynx
 brew install pv

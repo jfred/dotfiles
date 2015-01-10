@@ -25,7 +25,6 @@ Plug 'scrooloose/nerdcommenter'
 Plug 'scrooloose/syntastic'
 Plug 'airblade/vim-gitgutter'
 Plug 'gregsexton/gitv'
-"Plug 'Valloric/YouCompleteMe'
 
 " code snippets
 Plug 'MarcWeber/vim-addon-mw-utils'
@@ -34,9 +33,11 @@ Plug 'garbas/vim-snipmate'
 Plug 'honza/vim-snippets'
 "Plug 'msanders/snipmate.vim'
 Plug 'rstacruz/sparkup', {'rtp': 'vim/'}
+Plug 'Shougo/neocomplete.vim'
 
 " go
 Plug 'fatih/vim-go'
+Plug 'nsf/gocode', {'rtp': 'vim/'}
 
 " node/js
 Plug 'digitaltoad/vim-jade'
@@ -53,9 +54,9 @@ Plug 'tpope/vim-rails'
 " Plug 'klen/rope-vim'
 
 " webdev
-Plug 'kchmck/vim-coffee-script'
-Plug 'groenewege/vim-less'
-Plug 'ap/vim-css-color'
+" Plug 'kchmck/vim-coffee-script'
+" Plug 'groenewege/vim-less'
+" Plug 'ap/vim-css-color'
 Plug 'mattn/emmet-vim'
 Plug 'pangloss/vim-javascript'
 
