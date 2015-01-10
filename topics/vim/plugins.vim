@@ -46,6 +46,9 @@ Plug 'briancollins/vim-jst'
 " java
 Plug 'tpope/vim-classpath'
 
+" clojure
+Plug 'tpope/vim-fireplace'
+
 " ruby / rails
 Plug 'slim-template/vim-slim'
 Plug 'tpope/vim-rails'
