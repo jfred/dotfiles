@@ -37,6 +37,8 @@ brew install imagemagick --with-webp
 brew install lua
 brew install luarocks
 
+brew install direnv
+
 # Remove outdated versions from the cellar
 echo Homebrew cleanup...
 brew cleanup
