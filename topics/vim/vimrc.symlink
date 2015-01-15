@@ -19,6 +19,7 @@ nnoremap <C-d> :q<CR>
 let ctags_cmd='/usr/local/bin/ctags'
 
 "set number
+set pastetoggle=<F3>
 
 set clipboard=unnamed
 
