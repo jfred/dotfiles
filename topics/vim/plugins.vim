@@ -5,7 +5,7 @@ Plug 'L9'
 
 " Look and feel
 Plug 'bling/vim-airline'
-Plug 'xoria256.vim'
+Plug 'altercation/vim-colors-solarized'
 
 " Files
 Plug 'Shougo/vimproc.vim', { 'do': 'make' }

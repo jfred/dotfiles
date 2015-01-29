@@ -15,9 +15,9 @@ prompt_jfred_setup() {
     # prompt colors
     local -a pcc
 
-    pc[1]=${1:-'green'}                                                                         
-    pc[2]=${2:-'white'}                                                                                                   
-    pc[3]=${3:-'yellow'}                                                                                                 
+    pc[1]=${1:-'green'}
+    pc[2]=${2:-'grey'}
+    pc[3]=${3:-'yellow'}
 
     setopt prompt_subst
     autoload -Uz vcs_info

@@ -97,8 +97,7 @@ if has("autocmd")
     set completeopt=menuone,menu,longest
 endif " has("autocmd")
 
-let g:airline_powerline_fonts=1
-let g:airline_theme='badwolf'
+let g:airline_powerline_fonts=0
 set ttimeoutlen=50
 
 " Navigation *****************************************************************
@@ -248,19 +247,37 @@ map <Leader>vl :VimuxRunLastCommand<CR>
 map <Leader>vi :VimuxInspectRunner<CR>
 
 " Style
-set background=dark
-try
-    colorscheme xoria256
-catch /^Vim\%((\a\+)\)\=:E185/
-    colorscheme desert
-endtry
+let g:dark_scheme = 1
+function! ToggleColor()
+  call SetColorScheme(!g:dark_scheme)
+  AirlineRefresh
+endfunction
 
-if exists('+colorcolumn')
-    set colorcolumn=80,120
-    highlight ColorColumn guibg=#373737 ctermbg=235
-endif
+function! SetColorScheme(darkScheme)
+  if a:darkScheme
+    set background=dark
+    try
+        colorscheme solarized
+    catch /^Vim\%((\a\+)\)\=:E185/
+        colorscheme desert
+    endtry
+    let g:airline_theme='badwolf'
 
-highlight SpellBad cterm=underline,bold ctermbg=1 ctermfg=7
+    if exists('+colorcolumn')
+        set colorcolumn=80,120
+        highlight ColorColumn guibg=#373737 ctermbg=235
+    endif
+
+    let g:dark_scheme = 1
+  else
+    set background=light
+    colorscheme solarized
+    let g:airline_theme='light'
+    let g:dark_scheme = 0
+  endif
+  highlight SpellBad cterm=underline,bold ctermbg=1 ctermfg=7
+endfunction
+call SetColorScheme(1)
 
 " system specific ************************************************************
 if filereadable(expand("~/.vimrc_local"))
