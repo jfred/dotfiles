@@ -19,6 +19,7 @@
     type = cat-file -t
     dump = cat-file -p
     find = "!git ls-files | grep -i"
+    fix = "!f() { ${EDITOR} `git diff --name-only | uniq`; }; f"
 [color]
     diff = auto
     branch = auto
