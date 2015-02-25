@@ -1,49 +1,56 @@
 #!/usr/bin/env sh
 set -e
 
+function die {
+    echo >&2 $1
+    exit 1
+}
+
 if [ ! type aws >/dev/null 2>&1 ]; then
     die "AWS CLI is required, but it is not installed."
 fi
 
 region="us-east-1"
 jump=""
-host=""
+target=""
 
 while test $# != 0; do
     case "$1" in
         -r) region=$2 ;;
         -j) jump=$2 ;;
-        *)  host=$1
+        *)  target=$1
     esac
     shift
 done
 
-function die {
-    echo >&2 $1
-    exit 1
-}
-
-if [ -z "${host// }" ]; then
-    die "Must provide region and host at minimum."
+if [ -z "${target// }" ]; then
+    die "Must provide a target at minimum."
 fi
 
 cmd='ssh'
 
-function ec2_attr {
-    val=`aws ec2 describe-instances --region=${region} --query "Reservations[0].Instances[0].${2}" --filter "Name=tag:Name,Values=${1}"`
-    if [ -z "${val// }" ]; then
-       die "Failed to find instance named ${1} in ${region}"
+function ec2_login {
+    login=""
+    name=$1
+    parts=(${1/@/ })
+    if [ ${#parts[@]} -eq 2 ]; then
+        login="${parts[0]}@"
+        name="${parts[1]}"
     fi
-    echo $val
+    val=`aws ec2 describe-instances --region=${region} --query "Reservations[0].Instances[0].${2}IpAddress" --filter "Name=tag:Name,Values=${name}"`
+    if [ -z "${val// }" ]; then
+       die "Failed to find instance named ${name} in ${region}"
+    fi
+    echo "$login${val//\"}"
 }
 
 if [ -z "${jump// }" ]; then
-    public_ip=`ec2_attr "${host}" "PublicIpAddress"`
-    cmd="${cmd} ${public_ip//\"}"
+    public=`ec2_login "${target}" "Public"`
+    cmd="${cmd} ${public}"
 else
-    public_ip=`ec2_attr "${jump}" "PublicIpAddress"`
-    private_ip=`ec2_attr "${host}" "PrivateIpAddress"`
-    cmd="${cmd} -A -t ${public_ip//\"} ssh -A ${private_ip//\"}"
+    public=`ec2_login "${jump}" "Public"`
+    private=`ec2_login "${target}" "Private"`
+    cmd="${cmd} -A -t ${public} ssh -A ${private}"
 fi
 
 echo "executing: ${cmd}"
