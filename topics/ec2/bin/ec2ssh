@@ -1,6 +1,24 @@
 #!/usr/bin/env sh
 set -e
-USAGE="ec2ssh [-r {REGION}] [-j {JUMP_HOST}] {TARGET_HOST}"
+
+function usage() {
+    cat<<EOF
+Usage: ec2ssh [-r REGION] [-j JUMP] [-t TAG] <TARGET>
+
+Open an ssh connection to EC2 instance named <TARGET>
+
+  -h           Display help
+  -l           List hosts
+  -r, REGION   EC2 Region, defaults to us-east-1
+  -j, JUMP     Jump host (optional)
+  -t, TAG      Resolve insances with tag, defaults to Name
+EOF
+}
+
+function list {
+    aws ec2 describe-instances --region=${region} --query "sort_by(Reservations[].Instances[].{InstanceId:InstanceId,${tag}:Tags[?Key==\`${tag}\`]|[0].Value,PublicIP:PublicIpAddress,PrivateIP:PrivateIpAddress}, &${tag})" --output=table
+}
+
 
 function die {
     echo >&2 $1
@@ -11,46 +29,59 @@ if [ ! type aws >/dev/null 2>&1 ]; then
     die "AWS CLI is required, but it is not installed."
 fi
 
+tag="Name"
 region="us-east-1"
 jump=""
 target=""
 
 while test $# != 0; do
     case "$1" in
-        -r) region=$2 ;;
-        -j) jump=$2 ;;
+        -h) usage; exit 1;;
+        -l) list; exit 1;;
+        -r) region=$2;;
+        -j) jump=$2;;
+        -t) tag=$2;;
         *)  target=$1
     esac
     shift
 done
 
 if [ -z "${target// }" ]; then
-    die "Must provide a target at minimum.\nusage: ${USAGE}"
+    usage
+    exit 1
 fi
 
 cmd='ssh'
 
-function ec2_login {
-    login=""
-    name=$1
-    parts=(${1/@/ })
-    if [ ${#parts[@]} -eq 2 ]; then
-        login="${parts[0]}@"
-        name="${parts[1]}"
+function transform_host {
+    hostparts=(${1/@/ })
+    user="${hostparts[0]}"
+    instance="${hostparts[1]}"
+
+    if [ -z "${instance}" ]; then
+        instance=${user}
+        user=""
     fi
-    val=`aws ec2 describe-instances --region=${region} --query "Reservations[0].Instances[0].${2}IpAddress" --filter "Name=tag:Name,Values=${name}"`
-    if [ -z "${val// }" ]; then
-       die "Failed to find instance named ${name} in ${region}"
+
+    ipaddr=`aws ec2 describe-instances --region=${region} --query "Reservations[0].Instances[0].${2}IpAddress" --filter "Name=tag:${tag},Values=${instance}"`
+    ipaddr=${ipaddr//\"}
+    if [ -z "${ipaddr}" ]; then
+       die "Failed to find instance tagged ${tag}:${instance} in ${region}"
     fi
-    echo "$login${val//\"}"
+
+    if [ -z "${user}" ]; then
+        echo "${ipaddr}"
+    else
+        echo "${user}@${ipaddr}"
+    fi
 }
 
-if [ -z "${jump// }" ]; then
-    public=`ec2_login "${target}" "Public"`
+if [ -z "${jump}" ]; then
+    public=`transform_host "${target}" "Public"`
     cmd="${cmd} ${public}"
 else
-    public=`ec2_login "${jump}" "Public"`
-    private=`ec2_login "${target}" "Private"`
+    public=`transform_host "${jump}" "Public"`
+    private=`transform_host "${target}" "Private"`
     cmd="${cmd} -A -t ${public} ssh -A ${private}"
 fi
 
