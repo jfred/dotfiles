@@ -25,6 +25,7 @@ Plug 'scrooloose/nerdcommenter'
 Plug 'scrooloose/syntastic'
 Plug 'airblade/vim-gitgutter'
 Plug 'gregsexton/gitv'
+Plug 'ervandew/supertab'
 
 " code snippets
 Plug 'MarcWeber/vim-addon-mw-utils'
@@ -33,7 +34,6 @@ Plug 'garbas/vim-snipmate'
 Plug 'honza/vim-snippets'
 "Plug 'msanders/snipmate.vim'
 Plug 'rstacruz/sparkup', {'rtp': 'vim/'}
-Plug 'Shougo/neocomplete.vim'
 
 " go
 Plug 'fatih/vim-go'
