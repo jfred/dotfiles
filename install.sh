@@ -13,10 +13,10 @@ if [ ! "_$1" == "_" ]; then
     fi
 fi
 
-platform=`uname -o 2> /dev/null || uname`
-if [ -z "$DOT_EXCLUDE" ]; then
+platform=$(uname -o 2> /dev/null || uname)
+if [ -z "${DOT_EXCLUDE}" ]; then
     DOT_EXCLUDE="osx"
-    if [[ $platform == 'Darwin' ]]
+    if [[ ${platform} == 'Darwin' ]]
     then
         DOT_EXCLUDE="(linux|ubuntu)"
     fi
@@ -27,18 +27,18 @@ spinner() {
     local pid=$1
     local delay=0.75
     local spinstr='|/-\'
-    while [ "$(ps a | awk '{print $1}' | grep $pid)" ]; do
+    while [ "$(ps a | awk '{print $1}' | grep ${pid})" ]; do
         local temp=${spinstr#?}
-        printf " [%c]  " "$spinstr"
-        local spinstr=$temp${spinstr%"$temp"}
-        sleep $delay
+        printf " [%c]  " "${spinstr}"
+        local spinstr=${temp}${spinstr%"${temp}"}
+        sleep ${delay}
         printf "\b\b\b\b\b\b"
     done
     printf "    \b\b\b\b"
 }
 
 confirm(){
-    echo -n "$@ "
+    echo -n "$* "
     read ans
     for res in y Y yes; do
         if [ "_${ans}" == "_${res}" ]; then
@@ -49,18 +49,18 @@ confirm(){
 }
 
 mklink(){
-    filename=`echo $1 | sed 's/\.\///'`
-    link_file="${HOME}/.`echo ${filename} | sed 's/.*\/\([a-z_.A-Z]*\).symlink/\1/'`"
-    orig_file="`pwd`/${filename}"
+    filename=$(echo "$1" | sed 's/\.\///')
+    link_file="${HOME}/.$(echo "${filename}" | sed 's/.*\/\([a-z_.A-Z]*\).symlink/\1/')"
+    orig_file="$(pwd)/${filename}"
     # if the link already exists and pointing to the right place - continue
-    if [ -L $link_file ]; then
-        target=`readlink ${link_file}`
+    if [ -L "${link_file}" ]; then
+        target=$(readlink "${link_file}")
         if [ "${target}" == "${orig_file}" ]; then
             return 0
         fi
     fi
 
-    if [ -e $link_file ]; then
+    if [ -e "${link_file}" ]; then
         confirm "Replace ${link_file}? (y/N)"
         if [ $? -eq 1 ]; then
             return 1
@@ -71,36 +71,36 @@ mklink(){
             return 1
         fi
     fi
-    echo ln -fs $orig_file $link_file
-    ln -fs $orig_file $link_file
-    echo "$orig_file linked as $link_file"
+    echo ln -fs "${orig_file} ${link_file}"
+    ln -fs "${orig_file}" "${link_file}"
+    echo "${orig_file} linked as ${link_file}"
 }
 
 # Create base config
 if [ ! -f ~/.localrc ]; then
     echo "Creating defaults"
-    echo "export DOTFILES=`pwd`" >> ~/.localrc
-    if [[ $platform == 'Darwin' ]]
+    echo "export DOTFILES=$(pwd)" >> ~/.localrc
+    if [[ ${platform} == 'Darwin' ]]
     then
-        echo "source $DOTFILES/extras/osx/local_rc" >> ~/.localrc
+        echo "source ${DOTFILES}/extras/osx/local_rc" >> ~/.localrc
     fi
     echo "export DOT_EXCLUDE='${DOT_EXCLUDE}'" >> ~/.localrc
 fi
 
 # Create links
-LINKS=`find . -name '*.symlink'`
+LINKS=$(find . -name '*.symlink')
 for filename in ${LINKS}; do
-    if [[ $filename =~ $DOT_EXCLUDE ]]; then
+    if [[ ${filename} =~ ${DOT_EXCLUDE} ]]; then
         # echo "Skipping ${filename}"
         continue
     fi
-    mklink "$filename"
+    mklink "${filename}"
 done
 
 # Run installs
-LINKS=`find topics -name 'install.sh'`
+LINKS=$(find topics -name 'install.sh')
 for filename in ${LINKS}; do
-    if [[ $filename =~ $DOT_EXCLUDE ]]; then
+    if [[ ${filename} =~ ${DOT_EXCLUDE} ]]; then
         # echo "Skipping ${filename}"
         continue
     fi
@@ -109,13 +109,13 @@ for filename in ${LINKS}; do
         if [ $? -eq 0 ]; then
             echo -n "Executing ${filename}..."
             ${filename} > /dev/null 2>&1 &
-            spinner $!
+            spinner "$!"
             echo " done"
         fi
     else
         echo -n "Executing ${filename}..."
         ${filename} > /dev/null 2>&1 &
-        spinner $!
+        spinner "$!"
         echo " done"
     fi
 done
