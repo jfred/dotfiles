@@ -1,1 +1,1 @@
-git branch --merged | grep -v "\*" | xargs -p -n 1 git branch -d
+git fetch -p && git branch --merged | grep -v "\*" | xargs -p -n 1 git branch -d
