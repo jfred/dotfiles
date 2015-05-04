@@ -76,11 +76,16 @@ function transform_host {
         instance=${user}
         user=""
     fi
-
-    ipaddr=`aws ec2 describe-instances --region=${region} --query "Reservations[0].Instances[0].${2}IpAddress" --filter "Name=tag:${tag},Values=${instance}"`
-    ipaddr=${ipaddr//\"}
-    if [ -z "${ipaddr}" ]; then
-       die "Failed to find instance tagged ${tag}:${instance} in ${region}"
+  
+    if [[ ${instance} =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
+        # if it looks like an ip address...
+        ipaddr=${instance}
+    else
+        ipaddr=`aws ec2 describe-instances --region=${region} --query "Reservations[0].Instances[0].${2}IpAddress" --filter "Name=tag:${tag},Values=${instance}"`
+        ipaddr=${ipaddr//\"}
+        if [ -z "${ipaddr}" ]; then
+           die "Failed to find instance tagged ${tag}:${instance} in ${region}"
+        fi
     fi
 
     if [ -z "${user}" ]; then
