@@ -3,6 +3,7 @@
 *.iml
 .DS_Store
 .env
+.envrc
 .idea
 .pt
 .ropeproject
