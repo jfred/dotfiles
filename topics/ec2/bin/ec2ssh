@@ -38,9 +38,9 @@ while test $# != 0; do
     case "$1" in
         -h) usage; exit 1;;
         -l) list; exit 1;;
-        -r) region=$2;;
-        -j) jump=$2;;
-        -t) tag=$2;;
+        -r) region=$2; shift;;
+        -j) jump=$2; shift;;
+        -t) tag=$2; shift;;
         *)  target=$1
     esac
     shift
