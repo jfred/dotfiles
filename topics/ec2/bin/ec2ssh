@@ -7,11 +7,13 @@ Usage: ec2ssh [-r REGION] [-j JUMP] [-t TAG] <TARGET>
 
 Open an ssh connection to EC2 instance named <TARGET>
 
-  -h           Display help
-  -l           List hosts
-  -r, REGION   EC2 Region, defaults to us-east-1
-  -j, JUMP     Jump host (optional)
-  -t, TAG      Resolve insances with tag, defaults to Name
+  -h              Display help
+  -l              List hosts
+  -r, REGION      EC2 Region, defaults to us-east-1
+  -j, JUMP        Jump host (optional)
+  -t, TAG         Resolve insances with tag, defaults to Name
+  -L, FWD         Port forwarding - format port:host:hostport (if jump, proxies through JUMP_FWD)
+  -F, JUMP_FWD    Port to use on jump host, defaults to 9999    
 EOF
 }
 
@@ -33,6 +35,8 @@ tag="Name"
 region="us-east-1"
 jump=""
 target=""
+proxy=""
+jump_port="9999"
 
 while test $# != 0; do
     case "$1" in
@@ -41,6 +45,16 @@ while test $# != 0; do
         -r) region=$2; shift;;
         -j) jump=$2; shift;;
         -t) tag=$2; shift;;
+        -L)
+          proxy=(${2//:/ }); 
+          if [ ${#proxy[@]} != 3 ]; then
+            >&2 echo "ERROR: proxy port format must be [port]:[host]:[hostport]"
+            usage
+            exit 1
+          fi
+          shift
+          ;;
+        -F) jump_port=$2; shift;;
         *)  target=$1
     esac
     shift
@@ -76,13 +90,25 @@ function transform_host {
     fi
 }
 
+if [ -n "${proxy[1]}" ]; then
+  proxy[1]=`transform_host "${proxy[1]}" "Private"`
+fi
+
 if [ -z "${jump}" ]; then
     public=`transform_host "${target}" "Public"`
-    cmd="${cmd} ${public}"
+    if [ -s "${proxy}" ]; then
+      cmd="${cmd} ${public}"
+    else
+      cmd="${cmd} -L ${proxy[0]}:${proxy[1]}:${proxy[2]} ${public}"
+    fi
 else
     public=`transform_host "${jump}" "Public"`
     private=`transform_host "${target}" "Private"`
-    cmd="${cmd} -A -t ${public} ssh -A ${private}"
+    if [ -s "${proxy}" ]; then
+      cmd="${cmd} -A -t ${public} ssh -A ${private}"
+    else
+      cmd="${cmd} -A -L ${proxy[0]}:localhost:${jump_port} -t ${public} ssh -A -L ${jump_port}:${proxy[1]}:${proxy[2]} ${private}"
+    fi
 fi
 
 echo "executing: ${cmd}"
