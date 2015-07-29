@@ -101,7 +101,7 @@ fi
 
 if [ -z "${jump}" ]; then
     public=`transform_host "${target}" "Public"`
-    if [ -s "${proxy}" ]; then
+    if [ -z "${proxy}" ]; then
       cmd="${cmd} ${public}"
     else
       cmd="${cmd} -L ${proxy[0]}:${proxy[1]}:${proxy[2]} ${public}"
