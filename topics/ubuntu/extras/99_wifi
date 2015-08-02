@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# On the macbooks with ubuntu installed
+# resuming from "lid close" doesn't restart
+# the wifi adapter
+#
+# As a quick fix this can go in:
+#   /etc/pm/sleep.d/
+
+case "${1}" in
+  resume|thaw)
+    nmcli r wifi off && nmcli r wifi on;
+esac
