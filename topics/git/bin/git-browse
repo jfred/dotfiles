@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 set -e
 
+OPEN_CMD='open'
+UNAME=$(uname | tr "[:upper:]" "[:lower:]")
+if [ "$UNAME" == "linux" ]; then
+    OPEN_CMD='xdg-open'
+fi
+
 function die() {
     echo $1
     exit 1
@@ -14,8 +20,8 @@ REMOTE_ID=$(echo ${REMOTE_URL} | cut -d':' -f2 | cut -d'.' -f1)
 
 case $REMOTE_URL in
     *@github.com:*)
-        open "https://github.com/${REMOTE_ID}/tree/${REMOTE_BRANCH}" ;;
+        ${OPEN_CMD} "https://github.com/${REMOTE_ID}/tree/${REMOTE_BRANCH}" ;;
     *@bitbucket.org:*)
-        open "https://bitbucket.org/${REMOTE_ID}/src?at=${REMOTE_BRANCH}" ;;
+        ${OPEN_CMD} "https://bitbucket.org/${REMOTE_ID}/src?at=${REMOTE_BRANCH}" ;;
     *) die "Unsupported remote: ${REMOTE_URL}" ;;
 esac
