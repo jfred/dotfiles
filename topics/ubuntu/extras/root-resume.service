@@ -1,0 +1,19 @@
+# If system is using system.d this will restart wifi for macboo
+# copy to:
+#   /etc/systemd/system/wifi-resume.service
+#   
+# Then enable the service:
+#   sudo systemctl enable root-resume.service
+#
+# source: http://askubuntu.com/a/642559
+[Unit]
+Description=Local system resume actions
+After=suspend.target
+
+[Service]
+Type=oneshot
+ExecStartPre=/usr/bin/nmcli r wifi off
+ExecStart=/usr/bin/nmcli r wifi on
+
+[Install]
+WantedBy=suspend.target
