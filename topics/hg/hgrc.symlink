@@ -1,0 +1,18 @@
+[alias]
+st = status
+dh = diff
+lg = log -G --template "{label('custom.rev',node|short)} : {if(tags, label('custom.tag', '({tags}) '))}{desc|strip|firstline} {label('custom.author','({author|person} {date|age})')}\n"
+
+[color]
+custom.tag = yellow
+custom.rev = red
+custom.author = green
+
+[pager]
+pager = LESS='FRX' less -d
+attend = annotate, cat, diff, export, glog, log, qdiff, lg
+
+[extensions]
+color =
+graphlog = 
+pager =
