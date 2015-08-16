@@ -31,7 +31,7 @@ prompt_jfred_setup() {
     # %u - unstagedstr (see below)
     # %c - stangedstr (see below)
     # %a - action (e.g. rebase-i)
-    zstyle ':vcs_info:*' formats "(%b%f%c%u)"
+    zstyle ':vcs_info:*' formats "(%F{green}%s%f:%b%f%c%u)"
     zstyle ':vcs_info:git*+set-message:*' hooks git-untracked git-since_last_commit
     zstyle ':vcs_info:hg*+set-message:*' hooks hg-since_last_commit
 
