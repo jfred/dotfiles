@@ -57,7 +57,3 @@ brew cask install google-chrome
 brew cask install sourcetree
 
 brew cask install mjolnir
-luarocks install mjolnir.alert
-luarocks install mjolnir.hotkey
-luarocks install mjolnir.application
-

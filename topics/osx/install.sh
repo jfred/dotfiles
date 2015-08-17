@@ -7,3 +7,6 @@ $BASEDIR/settings.sh
 
 # install base packages
 $BASEDIR/homebrew_install.sh
+
+# install mjolnir lua libs
+$BASEDIR/mjolnir_support.sh
