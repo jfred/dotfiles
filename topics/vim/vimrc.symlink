@@ -59,7 +59,9 @@ set noswapfile
 
 if has('mouse')
     set mouse=a
-    set ttymouse=xterm2
+    if !has('nvim')
+        set ttymouse=xterm2
+    endif
 endif
 
 " Switch syntax highlighting on, when the terminal has colors
