@@ -178,12 +178,6 @@ let g:syntastic_check_on_open=0
 let g:syntastic_enable_balloons=1
 let g:syntastic_python_flake8_args='--ignore=E111,E501'
 
-" simple closing braces
-inoremap {      {}<Left>
-inoremap {<CR>  {<CR>}<Esc>O
-inoremap {{     {
-inoremap {}     {}
-
 " markdown
 au BufRead,BufNewFile *.md set filetype=markdown
 
