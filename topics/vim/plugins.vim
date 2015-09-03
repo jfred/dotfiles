@@ -62,5 +62,6 @@ Plug 'tpope/vim-rails'
 " Plug 'ap/vim-css-color'
 Plug 'mattn/emmet-vim'
 Plug 'pangloss/vim-javascript'
+Plug 'mxw/vim-jsx'
 
 call plug#end()
