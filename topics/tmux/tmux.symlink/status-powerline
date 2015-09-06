@@ -1,0 +1,7 @@
+#!/bin/bash -f
+
+tmux set -g status-left '#[fg=colour235,bg=colour252,bold] ❐ #S #[fg=colour252,bg=colour234,nobold]⮀' > /dev/null
+tmux set -g status-right "#[fg=colour16]#[fg=colour7,bg=colour16,bold] #(my_status) #[fg=colour23]#[fg=colour253,bg=colour23,bold] %a %m/%d %H:%M " > /dev/null
+
+tmux set -g window-status-format "#[fg=white,bg=colour234] #I #W " > /dev/null
+tmux set -g window-status-current-format "#[fg=colour234,bg=colour39]⮀#[fg=colour25,bg=colour39,noreverse,bold] #I #W #[fg=colour39,bg=colour234,nobold]⮀" > /dev/null
