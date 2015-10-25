@@ -28,6 +28,10 @@ Plug 'gregsexton/gitv'
 Plug 'ervandew/supertab'
 Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer' }
 
+if has('nvim')
+    Plug 'floobits/floobits-neovim'
+end
+
 " code snippets
 Plug 'MarcWeber/vim-addon-mw-utils'
 Plug 'tomtom/tlib_vim'
