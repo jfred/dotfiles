@@ -8,4 +8,4 @@ if [ ! -f ~/.vim/autoload/plug.vim ]; then
     curl -fLo ~/.vim/autoload/plug.vim https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 fi
 
-(cd ${BASEDIR} && vim -u vimrc_load +PlugClean! +PlugUpdate +qa!)
+(cd ${BASEDIR} && vim -u vimrc_load +PlugClean! +PlugUpdate +UpdateRemotePlugins +qa!)
