@@ -74,10 +74,12 @@ bind -t vi-copy v begin-selection
 bind -t vi-copy y copy-selection
 
 # Mouse
-set-option -g mouse-select-pane on
-set-option -g mouse-resize-pane on
-set-option -g mouse-select-window on
-set-window-option -g mode-mouse off
+#set-option -g mouse-select-pane on
+#set-option -g mouse-resize-pane on
+#set-option -g mouse-select-window on
+#set-window-option -g mode-mouse off
+set -g mouse-utf8 on
+set -g mouse on
 
 # Status line - from https://github.com/zolrath/wemux/wiki/Status-Line
 set -g status-left-length 32
