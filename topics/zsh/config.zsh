@@ -11,6 +11,11 @@ bindkey -e
 export CLICOLOR=1
 export LSCOLORS=GxFxCxDxBxegedabagacad
 
+# direnv if available
+if type direnv > /dev/null; then
+    eval "$(direnv hook zsh)"
+fi
+
 fpath=(~/.zsh/functions $fpath)
 autoload -U ~/.zsh/functions/*(:t)
 
