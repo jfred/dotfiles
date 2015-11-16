@@ -3,6 +3,9 @@ set nocompatible
 filetype off
 
 source plugins.vim
+if filereadable(expand("~/.vimrc_local"))
+  source ~/.vimrc_local
+endif
 
 filetype plugin on
 
