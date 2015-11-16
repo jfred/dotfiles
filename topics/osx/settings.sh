@@ -1,5 +1,8 @@
 #! /bin/bash -e
 
+# F keys without fn
+defaults write -g com.apple.keyboard.fnState -bool true
+
 # Menu bar: disable transparency
 defaults write NSGlobalDomain AppleEnableMenuBarTransparency -bool false
 
