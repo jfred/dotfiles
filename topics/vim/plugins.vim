@@ -16,7 +16,6 @@ Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'benmills/vimux'
 
 " general code
-Plug 'rizzatti/dash.vim'
 Plug 'tpope/vim-sleuth'
 Plug 'majutsushi/tagbar'
 Plug 'tpope/vim-fugitive'
