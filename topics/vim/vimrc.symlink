@@ -192,7 +192,9 @@ au FileType ruby setl sw=2 sts=2 et
 " coffee
 au FileType coffee setl sw=2 sts=2 et
 
-source ${DOTFILES}/topics/vim/lang/*.vim
+for f in split(glob('${DOTFILES}/topics/vim/lang/*.vim'), '\n')
+    exe 'source' f
+endfor
 
 " Status line
 set laststatus=2
