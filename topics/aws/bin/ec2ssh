@@ -27,9 +27,7 @@ function die {
     exit 1
 }
 
-if [ ! type aws >/dev/null 2>&1 ]; then
-    die "AWS CLI is required, but it is not installed."
-fi
+type aws >/dev/null 2>&1 || die "AWS CLI is required, but it is not installed."
 
 tag="Name"
 region="us-east-1"
