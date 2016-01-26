@@ -16,7 +16,7 @@ if type direnv > /dev/null; then
     eval "$(direnv hook zsh)"
 fi
 
-cdpath=($HOME $HOME/Code)
+export CDPATH=$CDPATH:$HOME:$HOME/Code
 
 fpath=(~/.zsh/functions $fpath)
 autoload -U ~/.zsh/functions/*(:t)
