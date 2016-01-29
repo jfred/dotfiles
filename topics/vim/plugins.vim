@@ -60,6 +60,9 @@ Plug 'tpope/vim-rails'
 " python
 " Plug 'klen/rope-vim'
 
+" elixir
+Plug 'elixir-lang/vim-elixir'
+
 " webdev
 " Plug 'kchmck/vim-coffee-script'
 " Plug 'groenewege/vim-less'
