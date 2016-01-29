@@ -47,6 +47,9 @@ Plug 'nsf/gocode', {'rtp': 'vim/'}
 Plug 'digitaltoad/vim-jade'
 Plug 'briancollins/vim-jst'
 
+" typescript
+Plug 'leafgarland/typescript-vim'
+
 " java
 Plug 'tpope/vim-classpath'
 
