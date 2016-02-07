@@ -100,6 +100,11 @@ if has("autocmd")
     let g:SuperTabDefaultCompletionType = "context"
 endif " has("autocmd")
 
+" Use whole "words" when opening URLs.
+" This avoids cutting off parameters (after '?') and anchors (after '#'). 
+" See https://vi.stackexchange.com/a/2980
+let g:netrw_gx="<cWORD>"
+
 let g:airline_powerline_fonts=0
 set ttimeoutlen=50
 
