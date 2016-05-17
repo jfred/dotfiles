@@ -19,6 +19,9 @@ REMOTE_URL=$(git config --get remote.${REMOTE}.url)
 REMOTE_ID=$(echo ${REMOTE_URL} | cut -d':' -f2 | cut -d'.' -f1)
 
 case $REMOTE_URL in
+    *@github.com\/*)
+        REMOTE_ID=$(git config --get remote.origin.url | cut -d'/' -f4- | cut -d'.' -f1)
+        ${OPEN_CMD} "https://github.com/${REMOTE_ID}/tree/${REMOTE_BRANCH}" ;;
     *@github.com:*)
         ${OPEN_CMD} "https://github.com/${REMOTE_ID}/tree/${REMOTE_BRANCH}" ;;
     *@bitbucket.org:*)
