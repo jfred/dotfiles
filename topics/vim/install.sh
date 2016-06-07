@@ -2,7 +2,7 @@
 set -e
 
 # commit hash of vim-plug
-COMMIT_HASH=77413875dac6b4d147889d5a7c2e60a1929b5549
+COMMIT_HASH=7e7dec9252026d8cfbad76809bf248c78ea3a207
 BASEDIR=$(dirname $0)
 
 LATEST_HASH=$(git ls-remote https://github.com/junegunn/vim-plug | grep master | awk '{ print $1}')

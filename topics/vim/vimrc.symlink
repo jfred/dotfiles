@@ -77,9 +77,6 @@ if has("gui_running")
     set guioptions-=mrT
 endif
 
-" allow
-let g:syntastic_always_populate_loc_list=1
-
 " Sudo file if you must
 cmap w!! %!sudo tee > /dev/null %
 
@@ -180,8 +177,17 @@ execute "map <F9> :!".ctags_cmd." -f '.tags' --exclude='build' --extra=+f -R .<C
 
 " Syntax Errors
 let g:syntastic_check_on_open=0
+let g:syntastic_check_on_wq=0
 let g:syntastic_enable_balloons=1
 let g:syntastic_python_flake8_args='--ignore=E111,E501'
+let g:syntastic_always_populate_loc_list=1
+let g:syntastic_enable_signs=0
+let g:syntastic_mode_map = {
+        \ "mode": "passive",
+        \ "active_filetypes": [],
+        \ "passive_filetypes": [] }
+
+nmap <F2> :SyntasticCheck<CR>
 
 " markdown
 au BufRead,BufNewFile *.md set filetype=markdown

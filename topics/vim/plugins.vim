@@ -47,6 +47,9 @@ Plug 'nsf/gocode', {'rtp': 'vim/'}
 Plug 'digitaltoad/vim-jade'
 Plug 'briancollins/vim-jst'
 
+" typescript
+Plug 'leafgarland/typescript-vim'
+
 " java
 Plug 'tpope/vim-classpath'
 
@@ -59,6 +62,9 @@ Plug 'tpope/vim-rails'
 
 " python
 " Plug 'klen/rope-vim'
+
+" elixir
+Plug 'elixir-lang/vim-elixir'
 
 " webdev
 " Plug 'kchmck/vim-coffee-script'
