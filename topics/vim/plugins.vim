@@ -5,6 +5,7 @@ Plug 'L9'
 
 " Look and feel
 Plug 'bling/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 Plug 'altercation/vim-colors-solarized'
 
 " Files
