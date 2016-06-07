@@ -16,6 +16,9 @@ Plug 'Shougo/neomru.vim'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'benmills/vimux'
 
+" Navigation
+Plug 'christoomey/vim-tmux-navigator'
+
 " general code
 Plug 'tpope/vim-sleuth'
 Plug 'majutsushi/tagbar'
