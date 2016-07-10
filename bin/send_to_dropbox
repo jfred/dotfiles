@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+set -e
+
+if [ $# -eq 0 ]; then
+    cat <<EOF
+Ability to upload a url directly into Dropbox.
+Requires valid Dropbox token set to DROPBOX_TOKEN environment variable.
+
+Start an upload:
+    Usage: $0 {URL} {DROPBOX_PATH}
+
+    URL             a public URL
+    DROPBOX_PATH    relative path on Dropbox (no leading slash)
+
+    Result: JSON object with a "job" property for checking status
+
+Check an upload:
+    Usage: $0 -c {JOB_ID}
+EOF
+    exit 1
+fi
+
+: ${DROPBOX_TOKEN:?DROPBOX_TOKEN is required}
+
+if [ "$1" = "-c" ]; then
+    curl -H "Authorization: Bearer ${DROPBOX_TOKEN}" "https://api.dropbox.com/1/save_url_job/${2}"
+    exit 0
+fi
+
+curl -H "Authorization: Bearer ${DROPBOX_TOKEN}" "https://api.dropbox.com/1/save_url/auto/${2}" --data-urlencode "url=${1}"
+
