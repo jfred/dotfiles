@@ -2,16 +2,26 @@
 # The following example would disable java and vagrant
 #     DOT_EXCLUDE='(java|vagrant)' 
 DOT_EXCLUDE='_no_matches_'
+# number of milliseconds a source can run before warning would be printed
+WARN_THRESHOLD=30
 # load config and system specific
 [[ -f ~/.localrc ]] && source ~/.localrc
 setopt extendedglob
 
 export PATH=$PATH:$DOTFILES/bin
 
+function source_warn {
+    local -i t0 t1
+    t0=$(date '+%s%3N')
+    source $1
+    runtime=$(($(date '+%s%3N') - $t0))
+    [[ $runtime -gt $WARN_THRESHOLD ]] && echo "WARN sourcing $1 took ${runtime}ms"
+}
+
 # load all zsh and bin for enabled topics
 for config_file ($DOTFILES/**/*.zsh) do
     if [[ ! $config_file =~ $DOT_EXCLUDE ]]; then
-        source $config_file
+        source_warn $config_file
     fi
 done
 for bin ($DOTFILES/**/bin); do
