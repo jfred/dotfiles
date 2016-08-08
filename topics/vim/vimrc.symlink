@@ -271,6 +271,11 @@ function! SetColorScheme(darkScheme)
 endfunction
 call SetColorScheme(1)
 
++" Hack to get C-h working in neovim
+if has('nvim')
+    nnoremap <silent> <BS> :TmuxNavigateLeft<cr>
+endif
+
 " system specific ************************************************************
 if filereadable(expand("~/.vimrc_local"))
   source ~/.vimrc_local
