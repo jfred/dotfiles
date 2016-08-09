@@ -27,55 +27,41 @@ Plug 'tpope/vim-surround'
 Plug 'scrooloose/nerdcommenter'
 Plug 'scrooloose/syntastic'
 Plug 'airblade/vim-gitgutter'
-Plug 'gregsexton/gitv'
-Plug 'ervandew/supertab'
-Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer --gocode-completer' }
-
-if has('nvim')
-    Plug 'floobits/floobits-neovim'
-end
 
 " code snippets
-Plug 'MarcWeber/vim-addon-mw-utils'
-Plug 'tomtom/tlib_vim'
+Plug 'MarcWeber/vim-addon-mw-utils'    " required by snipmate
+Plug 'tomtom/tlib_vim'                 " required by snipmate
 Plug 'garbas/vim-snipmate'
 Plug 'honza/vim-snippets'
-"Plug 'msanders/snipmate.vim'
-Plug 'rstacruz/sparkup', {'rtp': 'vim/'}
+Plug 'rstacruz/sparkup', {'rtp': 'vim/', 'for': 'html'}
 
 " go
-Plug 'fatih/vim-go'
-Plug 'nsf/gocode', {'rtp': 'vim/'}
-
-" node/js
-Plug 'digitaltoad/vim-jade'
-Plug 'briancollins/vim-jst'
+Plug 'fatih/vim-go', {'for': 'go'}
+Plug 'nsf/gocode', {'rtp': 'vim/', 'for': 'go'}
 
 " typescript
-Plug 'leafgarland/typescript-vim'
+Plug 'leafgarland/typescript-vim', {'for': 'typescript'}
 
 " java
-Plug 'tpope/vim-classpath'
+Plug 'tpope/vim-classpath', {'for': 'java'}
 
 " clojure
-Plug 'tpope/vim-fireplace'
+Plug 'tpope/vim-fireplace', {'for': 'clojure'}
 
 " ruby / rails
-Plug 'slim-template/vim-slim'
-Plug 'tpope/vim-rails'
+Plug 'slim-template/vim-slim', {'for': 'ruby'}
+Plug 'tpope/vim-rails', {'for': 'rails'}
 
 " python
-" Plug 'klen/rope-vim'
+Plug 'klen/rope-vim', {'for': 'python'}
 
 " elixir
-Plug 'elixir-lang/vim-elixir'
+Plug 'elixir-lang/vim-elixir', {'for': 'erlang'}
 
 " webdev
-" Plug 'kchmck/vim-coffee-script'
-" Plug 'groenewege/vim-less'
-" Plug 'ap/vim-css-color'
-Plug 'mattn/emmet-vim'
-Plug 'pangloss/vim-javascript'
-Plug 'mxw/vim-jsx'
+Plug 'pangloss/vim-javascript', {'for': 'javascript'}
+
+" completion
+Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer --gocode-completer' }
 
 call plug#end()
