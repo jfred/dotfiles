@@ -41,5 +41,3 @@
 	default = tracking
 [merge]
 	stat = true
-[init]
-	templatedir = ~/.git_template
