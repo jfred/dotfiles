@@ -8,7 +8,7 @@ WARN_THRESHOLD=30
 [[ -f ~/.localrc ]] && source ~/.localrc
 setopt extendedglob
 
-export PATH=$PATH:$DOTFILES/bin
+export PATH=$PATH:~/bin:$DOTFILES/bin
 
 function source_warn {
     local -i t0 t1
