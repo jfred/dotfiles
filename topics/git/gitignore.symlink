@@ -12,6 +12,8 @@
 .tags
 .jruby
 .sass-cache
+.floo
+.flooignore
 atlassian-ide-plugin.xml
 lude
 Pods
