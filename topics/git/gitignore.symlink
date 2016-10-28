@@ -14,6 +14,7 @@
 .sass-cache
 .floo
 .flooignore
+.direnv
 atlassian-ide-plugin.xml
 lude
 Pods
