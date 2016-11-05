@@ -7,6 +7,6 @@ export_alias() {
   mkdir -p "$alias_dir"
   PATH_add "$alias_dir"
   echo "#!/usr/bin/env bash -e" > "$target"
-  echo "$@" >> "$target"
+  echo "$@ \$@" >> "$target"
   chmod +x "$target"
 }
