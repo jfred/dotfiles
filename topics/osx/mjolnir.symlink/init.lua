@@ -37,11 +37,6 @@ hotkey.bind(mash, "'", function() fnutils.map(window.visiblewindows(), ext.grid.
 hotkey.bind(mash, '=', function() ext.grid.adjustwidth( 1) end)
 hotkey.bind(mash, '-', function() ext.grid.adjustwidth(-1) end)
 
-hotkey.bind(mashshift, 'H', function() window.focusedwindow():focuswindow_west() end)
-hotkey.bind(mashshift, 'L', function() window.focusedwindow():focuswindow_east() end)
-hotkey.bind(mashshift, 'K', function() window.focusedwindow():focuswindow_north() end)
-hotkey.bind(mashshift, 'J', function() window.focusedwindow():focuswindow_south() end)
-
 hotkey.bind(mash, 'M', ext.grid.maximize_window)
 
 hotkey.bind(mash, 'N', ext.grid.pushwindow_nextscreen)
@@ -58,6 +53,6 @@ hotkey.bind(mash, '.', ext.grid.resizewindow_wider)
 hotkey.bind(mash, ',', ext.grid.resizewindow_thinner)
 
 -- default positions
-hotkey.bind(mash, '1', function() ext.grid.adjust_focused_window(function(f) f.y = 0; f.x = 0; f.w = 1; f.h = 2; end) end)
-hotkey.bind(mash, '2', function() ext.grid.adjust_focused_window(function(f) f.y = 0; f.x = 0; f.w = 2; f.h = 2; end) end)
-hotkey.bind(mash, '3', function() ext.grid.adjust_focused_window(function(f) f.y = 0; f.x = 2; f.w = 1; f.h = 2; end) end)
+hotkey.bind(mash, '1', function() ext.grid.adjust_focused_window(function(f) f.y = 0; f.w = 1; f.h = 2; end) end)
+hotkey.bind(mash, '2', function() ext.grid.adjust_focused_window(function(f) f.y = 0; f.w = 2; f.h = 2; end) end)
+hotkey.bind(mash, '3', function() ext.grid.adjust_focused_window(function(f) f.y = 0; f.w = 3; f.h = 2; end) end)
