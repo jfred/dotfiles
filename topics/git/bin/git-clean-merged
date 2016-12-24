@@ -1,1 +1,7 @@
-git fetch -p && git branch --merged | grep -v "\*" | xargs -p -n 1 git branch -d
+set -e
+git fetch -p
+if [ "$1" = "-f" ]; then
+    git branch --merged | grep -v "\*" | xargs -n 1 git branch -d
+else
+    git branch --merged | grep -v "\*" | xargs -p -n 1 git branch -d
+fi
