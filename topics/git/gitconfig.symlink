@@ -21,7 +21,6 @@
     dump = cat-file -p
     find = "!git ls-files | grep -i"
     fix = "!f() { ${EDITOR} `git diff --name-only | uniq`; }; f"
-    gone = "!git branch -vv | grep \": gone]\" | awk '{ print $1 }' | xargs -p -n 1 git branch -D"
 [color]
     diff = auto
     branch = auto

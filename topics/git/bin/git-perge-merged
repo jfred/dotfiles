@@ -1,0 +1,9 @@
+set -e
+git fetch -p
+if [ "$1" = "-f" ]; then
+    git branch --merged | grep -v "\*" | xargs -n 1 git branch -d
+    git branch -vv | grep ": gone]" | awk '{ print $1 }' | xargs -n 1 git branch -D
+else
+    git branch --merged | grep -v "*" | xargs -p -n 1 git branch -d
+    git branch -vv | grep ": gone]" | awk '{ print $1 }' | xargs -p -n 1 git branch -D
+fi
