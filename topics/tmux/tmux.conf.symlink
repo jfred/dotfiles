@@ -84,8 +84,8 @@ setw -g mode-keys vi
 bind [ copy-mode
 unbind p
 bind p paste-buffer
-bind -t vi-copy v begin-selection
-bind -t vi-copy y copy-selection
+bind -Tcopy-mode-vi v send -X begin-selection
+bind -Tcopy-mode-vi y send -X copy-selection
 
 # Mouse
 #set-option -g mouse-select-pane on
