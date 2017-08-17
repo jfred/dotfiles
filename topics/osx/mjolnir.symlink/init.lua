@@ -28,8 +28,10 @@ end
 hotkey.bind(mash, 'R', reloading)
 hotkey.bind(mash, 'D', opendictionary)
 hotkey.bind(mash, '`', function() launch("iTerm") end)
+hotkey.bind(mash, 'W', function() launch("iTerm") end)
 hotkey.bind(mash, 'S', function() launch("Slack") end)
 hotkey.bind(mash, 'I', function() launch("IntelliJ IDEA 2017.2 EAP") end)
+hotkey.bind(mash, 'C', function() launch("Google Chrome") end)
 
 hotkey.bind(mash, ';', function() ext.grid.snap(window.focusedwindow()) end)
 hotkey.bind(mash, "'", function() fnutils.map(window.visiblewindows(), ext.grid.snap) end)
