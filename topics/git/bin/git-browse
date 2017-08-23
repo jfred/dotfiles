@@ -1,15 +1,19 @@
 #!/usr/bin/env bash
 set -e
 
-OPEN_CMD='open'
-UNAME=$(uname | tr "[:upper:]" "[:lower:]")
-if [ "$UNAME" == "linux" ]; then
-    OPEN_CMD='xdg-open'
-fi
-
 function die() {
     echo $1
     exit 1
+}
+
+function launch() {
+    echo "Opening ${1}"
+    UNAME=$(uname | tr "[:upper:]" "[:lower:]")
+    if [ "$UNAME" == "linux" ]; then
+        xdg-open ${1}
+    else
+        open ${1}
+    fi
 }
 
 REMOTE_NAME=$(git rev-parse --abbrev-ref --symbolic-full-name @{u})
@@ -21,13 +25,13 @@ REMOTE_ID=$(echo ${REMOTE_URL} | cut -d':' -f2 | cut -d'.' -f1)
 case $REMOTE_URL in
     *@github.com\/*)
         REMOTE_ID=$(git config --get remote.origin.url | cut -d'/' -f4- | cut -d'.' -f1)
-        ${OPEN_CMD} "https://github.com/${REMOTE_ID}/tree/${REMOTE_BRANCH}" ;;
+        launch "https://github.com/${REMOTE_ID}/tree/${REMOTE_BRANCH}" ;;
     https:\/\/github.com\/*)
         REMOTE_ID=$(git config --get remote.origin.url | cut -d'/' -f4- | cut -d'.' -f1)
-        ${OPEN_CMD} "https://github.com/${REMOTE_ID}/tree/${REMOTE_BRANCH}" ;;
+        launch "https://github.com/${REMOTE_ID}/tree/${REMOTE_BRANCH}" ;;
     *@github.com:*)
-        ${OPEN_CMD} "https://github.com/${REMOTE_ID}/tree/${REMOTE_BRANCH}" ;;
+        launch "https://github.com/${REMOTE_ID}/tree/${REMOTE_BRANCH}" ;;
     *@bitbucket.org:*)
-        ${OPEN_CMD} "https://bitbucket.org/${REMOTE_ID}/src?at=${REMOTE_BRANCH}" ;;
+        launch "https://bitbucket.org/${REMOTE_ID}/src?at=${REMOTE_BRANCH}" ;;
     *) die "Unsupported remote: ${REMOTE_URL}" ;;
 esac
