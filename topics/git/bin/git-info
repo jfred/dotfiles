@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+git browse
+git ci
+git jira open
