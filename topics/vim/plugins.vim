@@ -1,3 +1,5 @@
+let g:has_async = v:version >= 800 || has('nvim')
+
 call plug#begin('~/.vim/plugged')
 
 " utils
@@ -9,10 +11,7 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'altercation/vim-colors-solarized'
 
 " Files
-Plug 'Shougo/vimproc.vim', { 'do': 'make' }
-Plug 'Shougo/vimfiler.vim'
-Plug 'Shougo/unite.vim'
-Plug 'Shougo/neomru.vim'
+Plug 'ctrlpvim/ctrlp.vim'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'benmills/vimux'
 
@@ -20,27 +19,21 @@ Plug 'benmills/vimux'
 Plug 'christoomey/vim-tmux-navigator'
 
 " general code
-Plug 'tpope/vim-sleuth'
+Plug 'vim-scripts/tComment'
 Plug 'majutsushi/tagbar'
+Plug 'tpope/vim-endwise'
+Plug 'tpope/vim-projectionist'
 Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-surround'
-Plug 'scrooloose/nerdcommenter'
-Plug 'scrooloose/syntastic'
-Plug 'airblade/vim-gitgutter'
 
-" code snippets
-Plug 'MarcWeber/vim-addon-mw-utils'    " required by snipmate
-Plug 'tomtom/tlib_vim'                 " required by snipmate
-Plug 'garbas/vim-snipmate'
-Plug 'honza/vim-snippets'
-Plug 'rstacruz/sparkup', {'rtp': 'vim/', 'for': 'html'}
+if g:has_async
+  Plug 'w0rp/ale'
+endif
 
 " go
 Plug 'fatih/vim-go', {'for': 'go'}
 Plug 'nsf/gocode', {'rtp': 'vim/', 'for': 'go'}
-
-" typescript
-Plug 'leafgarland/typescript-vim', {'for': 'typescript'}
 
 " java
 Plug 'tpope/vim-classpath', {'for': 'java'}
@@ -61,7 +54,7 @@ Plug 'elixir-lang/vim-elixir', {'for': 'erlang'}
 " webdev
 Plug 'pangloss/vim-javascript', {'for': 'javascript'}
 
-" completion
-Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer --gocode-completer' }
+" typescript
+Plug 'leafgarland/typescript-vim', {'for': 'typescript'}
 
 call plug#end()

@@ -64,6 +64,16 @@ if has('mouse')
     endif
 endif
 
+" ALE linting events
+if g:has_async
+    set updatetime=1000
+    let g:ale_lint_on_text_changed = 0
+    autocmd CursorHold * call ale#Lint()
+    autocmd CursorHoldI * call ale#Lint()
+    autocmd InsertEnter * call ale#Lint()
+    autocmd InsertLeave * call ale#Lint()
+endif
+
 " Switch syntax highlighting on, when the terminal has colors
 if &t_Co > 2 || has("gui_running")
     set t_Co=256
@@ -121,13 +131,6 @@ cnoremap <C-n> <Down>
 " ctrl-l is normally mapped as redraw so now I redraw and window naviagte
 nnoremap <C-l> <C-w>l:redraw!<CR>
 
-" NERDCommenter
-" let NERDCreateDefaultMappings=0
-let NERDSpaceDelims=1
-map <Leader>/ <plug>NERDCommenterToggle
-map <Leader>[ <plug>NERDCommenterAlignLeft
-map <Leader>] <plug>NERDCommenterUncomment
-
 " NERDTree
 let NERDTreeIgnore=['\.pyc', '\.class', 'node_modules']
 nmap <silent> <Leader>nt :NERDTreeToggle<CR>
@@ -135,16 +138,6 @@ nmap <silent> <Leader>nt :NERDTreeToggle<CR>
 " gitv
 nnoremap <Leader>gV :Gitv --all<CR>
 nnoremap <Leader>gv :Gitv! --all<CR>
-
-" Nav
-let g:unite_source_history_yank_enable = 1
-call unite#filters#matcher_default#use(['matcher_fuzzy'])
-nnoremap <Leader>F :Unite -no-split -buffer-name=files  -start-insert file<CR>
-nnoremap <Leader>f :Unite -no-split -buffer-name=files  -start-insert file_rec/git<CR>
-nnoremap <Leader>r :Unite -no-split -buffer-name=files  file_mru<CR>
-nnoremap <Leader>y :Unite -no-split -buffer-name=yank   history/yank<CR>
-nnoremap <Leader>b :Unite -no-split -buffer-name=buffer buffer<CR>
-nnoremap <Leader>g :Unite -no-split -buffer-name=grep   grep:.<CR>
 
 " Use ag for search
 if executable('ag')
@@ -180,19 +173,6 @@ set tags=tags,.tags,/
 nmap <F8> :TagbarToggle<CR>
 execute "map <F9> :!".ctags_cmd." -f '.tags' --exclude='build' --extra=+f -R .<CR>"
 
-" Syntax Errors
-let g:syntastic_check_on_open=0
-let g:syntastic_check_on_wq=0
-let g:syntastic_enable_balloons=1
-let g:syntastic_python_flake8_args='--ignore=E111,E501'
-let g:syntastic_always_populate_loc_list=1
-let g:syntastic_enable_signs=0
-let g:syntastic_mode_map = {
-        \ "mode": "passive",
-        \ "active_filetypes": [],
-        \ "passive_filetypes": [] }
-
-nmap <F2> :SyntasticCheck<CR>
 
 " markdown
 au BufRead,BufNewFile *.md set filetype=markdown
