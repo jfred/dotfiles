@@ -9,13 +9,8 @@ require "grid"
 
 local hyper = {"cmd", "alt", "shift", "ctrl"}
 
-local function opendictionary()
-  alert.show("Lexicon, at your service.", 0.75)
-  application.launchorfocus("Dictionary")
-end
-
 local function reloading()
-  alert.show("Reloading Mjolnir config", 0.75)
+  alert.show("Reloading Mjolnir config", 0.25)
   mjolnir.reload()
 end
 
@@ -24,11 +19,15 @@ local function launch(app)
   application.launchorfocus(app)
 end
 
+local function runcommand(app, cmd)
+  alert.show("Opening " .. app, 0.25)
+  os.execute(cmd)
+end
+
 hotkey.bind(hyper, 'R', reloading)
-hotkey.bind(hyper, 'D', opendictionary)
 hotkey.bind(hyper, 'P', function() launch("Slack") end)
 hotkey.bind(hyper, 'U', function() launch("iTerm") end)
-hotkey.bind(hyper, 'I', function() launch("IntelliJ IDEA") end)
+hotkey.bind(hyper, 'I', function() runcommand("IntelliJ IDEA", "/usr/local/bin/idea") end)
 hotkey.bind(hyper, 'O', function() launch("Google Chrome") end)
 
 hotkey.bind(hyper, ';', function() ext.grid.snap(window.focusedwindow()) end)
