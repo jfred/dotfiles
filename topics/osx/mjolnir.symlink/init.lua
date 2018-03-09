@@ -15,12 +15,12 @@ local function reloading()
 end
 
 local function launch(app)
-  alert.show("Opening " .. app, 0.25)
+  -- alert.show("Opening " .. app, 0.25)
   application.launchorfocus(app)
 end
 
 local function runcommand(app, cmd)
-  alert.show("Opening " .. app, 0.25)
+  -- alert.show("Opening " .. app, 0.25)
   os.execute(cmd)
 end
 
