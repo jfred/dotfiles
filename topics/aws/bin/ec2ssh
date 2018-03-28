@@ -18,7 +18,7 @@ EOF
 }
 
 function list {
-    aws ec2 describe-instances --region=${region} --query "sort_by(Reservations[].Instances[].{InstanceId:InstanceId,${tag}:Tags[?Key==\`${tag}\`]|[0].Value,PublicIP:PublicIpAddress,PrivateIP:PrivateIpAddress}, &${tag})" --output=table
+    aws ec2 describe-instances --region=${region} --query "Reservations[].Instances[].{InstanceId:InstanceId,${tag}:Tags[?Key==\`${tag}\`]|[0].Value,PublicIP:PublicIpAddress,PrivateIP:PrivateIpAddress}" --output=table
 }
 
 
