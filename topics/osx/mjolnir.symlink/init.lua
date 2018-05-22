@@ -8,6 +8,7 @@ ext = {}
 require "grid"
 
 local hyper = {"cmd", "alt", "shift", "ctrl"}
+local mega = {"cmd", "shift", "alt"}
 
 local function reloading()
   alert.show("Reloading Mjolnir config", 0.25)
@@ -24,34 +25,39 @@ local function runcommand(app, cmd)
   os.execute(cmd)
 end
 
-hotkey.bind(hyper, 'R', reloading)
-hotkey.bind(hyper, 'P', function() launch("Slack") end)
-hotkey.bind(hyper, 'U', function() launch("iTerm") end)
-hotkey.bind(hyper, 'I', function() runcommand("IntelliJ IDEA", "/usr/local/bin/idea") end)
-hotkey.bind(hyper, 'O', function() launch("Google Chrome") end)
+local function superbind(char, func)
+  hotkey.bind(hyper, char, func)
+  hotkey.bind(mega, char, func)
+end
 
-hotkey.bind(hyper, ';', function() ext.grid.snap(window.focusedwindow()) end)
-hotkey.bind(hyper, "'", function() fnutils.map(window.visiblewindows(), ext.grid.snap) end)
+superbind('R', reloading)
+superbind('P', function() launch("Slack") end)
+superbind('U', function() launch("iTerm") end)
+superbind('I', function() runcommand("IntelliJ IDEA", "/usr/local/bin/idea") end)
+superbind('O', function() launch("Google Chrome") end)
 
-hotkey.bind(hyper, '=', function() ext.grid.adjustwidth( 1) end)
-hotkey.bind(hyper, '-', function() ext.grid.adjustwidth(-1) end)
+superbind(';', function() ext.grid.snap(window.focusedwindow()) end)
+superbind("'", function() fnutils.map(window.visiblewindows(), ext.grid.snap) end)
 
-hotkey.bind(hyper, 'M', ext.grid.maximize_window)
+superbind('=', function() ext.grid.adjustwidth( 1) end)
+superbind('-', function() ext.grid.adjustwidth(-1) end)
 
-hotkey.bind(hyper, 'N', ext.grid.pushwindow_nextscreen)
-hotkey.bind(hyper, 'P', ext.grid.pushwindow_prevscreen)
+superbind('M', ext.grid.maximize_window)
 
-hotkey.bind(hyper, 'J', ext.grid.pushwindow_down)
-hotkey.bind(hyper, 'K', ext.grid.pushwindow_up)
-hotkey.bind(hyper, 'H', ext.grid.pushwindow_left)
-hotkey.bind(hyper, 'L', ext.grid.pushwindow_right)
+superbind('N', ext.grid.pushwindow_nextscreen)
+superbind('P', ext.grid.pushwindow_prevscreen)
 
-hotkey.bind(hyper, '[', ext.grid.resizewindow_taller)
-hotkey.bind(hyper, ']', ext.grid.resizewindow_shorter)
-hotkey.bind(hyper, '.', ext.grid.resizewindow_wider)
-hotkey.bind(hyper, ',', ext.grid.resizewindow_thinner)
+superbind('J', ext.grid.pushwindow_down)
+superbind('K', ext.grid.pushwindow_up)
+superbind('H', ext.grid.pushwindow_left)
+superbind('L', ext.grid.pushwindow_right)
+
+superbind('[', ext.grid.resizewindow_taller)
+superbind(']', ext.grid.resizewindow_shorter)
+superbind('.', ext.grid.resizewindow_wider)
+superbind(',', ext.grid.resizewindow_thinner)
 
 -- default positions
-hotkey.bind(hyper, '1', function() ext.grid.adjust_focused_window(function(f) f.y = 0; f.w = 1; f.h = 2; end) end)
-hotkey.bind(hyper, '2', function() ext.grid.adjust_focused_window(function(f) f.y = 0; f.w = 2; f.h = 2; end) end)
-hotkey.bind(hyper, '3', function() ext.grid.adjust_focused_window(function(f) f.y = 0; f.w = 3; f.h = 2; end) end)
+superbind('1', function() ext.grid.adjust_focused_window(function(f) f.y = 0; f.w = 1; f.h = 2; end) end)
+superbind('2', function() ext.grid.adjust_focused_window(function(f) f.y = 0; f.w = 2; f.h = 2; end) end)
+superbind('3', function() ext.grid.adjust_focused_window(function(f) f.y = 0; f.w = 3; f.h = 2; end) end)
