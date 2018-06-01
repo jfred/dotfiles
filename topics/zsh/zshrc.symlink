@@ -30,8 +30,13 @@ for bin ($DOTFILES/**/bin); do
     fi
 done
 
-autoload -U compinit
-compinit
+# checking cached .zcompdump only once a day
+autoload -Uz compinit
+if [[ -n ${ZDOTDIR}/.zcompdump(#qN.mh+24) ]]; then
+	compinit;
+else
+	compinit -C;
+fi;
 
 # matches case insensitive for lowercase
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
