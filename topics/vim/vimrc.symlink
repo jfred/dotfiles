@@ -135,10 +135,6 @@ nnoremap <C-l> <C-w>l:redraw!<CR>
 let NERDTreeIgnore=['\.pyc', '\.class', 'node_modules']
 nmap <silent> <Leader>nt :NERDTreeToggle<CR>
 
-" gitv
-nnoremap <Leader>gV :Gitv --all<CR>
-nnoremap <Leader>gv :Gitv! --all<CR>
-
 " Use ag for search
 if executable('ag')
   let g:unite_source_grep_command = 'ag'
