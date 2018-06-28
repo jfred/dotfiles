@@ -8,6 +8,7 @@
     dd = diff -b -w --word-diff-regex=.
     lg = log --graph --pretty=format:'%C(red)%h%C(reset) : %C(yellow)%d%C(reset) %s %C(green)(%an %cr)%C(reset)' --abbrev-commit --date=relative
     ll = log --pretty=format:'%C(red)%h%C(yellow)%d %C(reset)%s%C(green) [%cn]' --stat
+    lb = "!git branch --sort=-committerdate --format='%(refname:short)|%(contents:subject) - %(authorname) (%(committerdate:relative))' | column -t -s '|'"
     ds = diff --shortstat
     fl = !git flow feature list
     fs = !git flow feature start
