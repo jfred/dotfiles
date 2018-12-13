@@ -31,6 +31,7 @@ grid.setGrid('5x3')
 superbind("R", reloading)
 
 -- grid
+hs.window.animationDuration = 0 -- disable animations
 superbind('Y', grid.toggleShow)
 superbind(';', grid.snap)
 
