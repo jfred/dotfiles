@@ -48,7 +48,6 @@ echo Installing applications via brew-cask...
 
 brew install caskroom/cask/brew-cask
 
-brew cask install quicksilver
 brew cask install iterm2
 
 brew cask install mou
@@ -56,4 +55,4 @@ brew cask install google-chrome
 
 brew cask install sourcetree
 
-brew cask install mjolnir
+brew cask install hammerspoon
