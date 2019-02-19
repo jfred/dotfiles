@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# Execute a git command in a series of sub git directories
+#
+# Mostly used for checking status and fetching
+#
+#   $ git subex fetch
+#   $ git subex status
+
+if [[ $# -eq 0 ]]; then
+    echo "Usage: git subex [COMMAND ARGS]"
+    exit 1
+fi
+
+for dir in `find . -name ".git" -type d -depth 2 | sed 's/\/.git$//g'`; do
+    echo Executing in ${dir}
+    git -C ${dir} $@
+    if [[ $? -ne 0 ]]; then
+        echo "Aborting, last execution failed"
+        exit 1
+    fi
+done
