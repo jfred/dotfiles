@@ -7,9 +7,9 @@ echo Upgrading homebrew...
 brew upgrade
 
 echo Installing base homebrew packages...
-brew install coreutils --default-names
+brew install coreutils
 brew install moreutils
-brew install gnu-sed --default-names
+brew install gnu-sed
 
 brew install tree
 
@@ -44,13 +44,11 @@ echo Homebrew cleanup...
 brew cleanup
 
 # Install native apps
-echo Installing applications via brew-cask...
-
-brew install caskroom/cask/brew-cask
+echo Installing applications...
 
 brew cask install iterm2
 
-brew cask install mou
+brew cask install macdown
 brew cask install google-chrome
 
 brew cask install sourcetree

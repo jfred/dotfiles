@@ -34,11 +34,12 @@ OSX Specifics
 1. install XCode
 2. install homebrew
 
-    /usr/bin/ruby -e "$(curl -fsSL https://raw.github.com/mxcl/homebrew/go)"
+    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
-3. install zsh, git, python, ruby, etc via brew
+3. set shell
 
-    ./extras/osx.sh
+    echo /usr/local/bin/zsh | sudo tee -a /etc/shells
+    chsh -s /usr/local/bin/zsh 
 
 Other
 -----
