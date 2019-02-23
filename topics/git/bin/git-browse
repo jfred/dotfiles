@@ -23,7 +23,7 @@ function launch() {
     fi
 }
 
-REMOTE_NAME=$(git rev-parse --abbrev-ref --symbolic-full-name @{u})
+REMOTE_NAME=$(git rev-parse --abbrev-ref --symbolic-full-name @{u} | sed 's/^remotes\///')
 REMOTE=$(echo ${REMOTE_NAME} | cut -d'/' -f1)
 REMOTE_BRANCH=$(echo ${REMOTE_NAME} | cut -d'/' -f2-)
 REMOTE_URL=$(git config --get remote.${REMOTE}.url)
