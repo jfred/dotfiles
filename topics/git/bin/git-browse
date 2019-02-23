@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
-set -e
+error() {
+    local src=$1
+    local ln=$2
+    echo "Error at ${src}:${ln}"
+    sed "${ln}!d" ${src}
+    exit 1
+}
+trap 'error "${BASH_SOURCE}" "${LINENO}"' ERR
 
 function die() {
     echo $1
