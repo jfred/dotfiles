@@ -79,7 +79,7 @@ function transform_host {
         # if it looks like an ip address...
         ipaddr=${instance}
     else
-        ipaddr=`aws ec2 describe-instances --region=${region} --query "Reservations[0].Instances[0].${2}IpAddress" --filter "Name=tag:${tag},Values=${instance}*"`
+        ipaddr=`aws ec2 describe-instances --region=${region} --query "Reservations[0].Instances[0].${2}IpAddress" --filter "Name=tag:${tag},Values=${instance}*" "Name=instance-state-name,Values=pending,running,shutting-down,stopping"`
         ipaddr=${ipaddr//\"}
         if [ -z "${ipaddr}" ]; then
            die "Failed to find instance tagged ${tag}:${instance} in ${region}"
