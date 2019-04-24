@@ -32,7 +32,7 @@
     name = Joshua Frederick
     email = josh@jfred.net
 [core]
-    excludesfile = ~/.gitignore
+	excludesfile = /Users/jfred/.gitignore
     autocrlf = input
 [advice]
 	statusHints = false
@@ -44,3 +44,9 @@
 	default = tracking
 [merge]
 	stat = true
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
+[mergetool "sourcetree"]
+	cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true

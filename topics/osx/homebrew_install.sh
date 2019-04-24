@@ -10,6 +10,8 @@ echo Installing base homebrew packages...
 brew install coreutils
 brew install moreutils
 brew install gnu-sed
+brew install zsh
+brew link zsh
 
 brew install tree
 
@@ -17,13 +19,14 @@ brew install zsh
 brew install git
 brew install python
 brew install ruby
-brew install --HEAD --with-lua --with-luajit macvim
 
 brew install lynx
 brew install pv
 brew install zopfli
 brew install pstree
 brew install ctags
+
+brew install macvim
 
 # config
 brew install autoenv
@@ -32,10 +35,7 @@ brew install autoenv
 brew install tmux
 brew install reattach-to-user-namespace
 
-brew install imagemagick --with-webp
-
-brew install lua
-brew install luarocks
+brew install imagemagick
 
 brew install direnv
 
