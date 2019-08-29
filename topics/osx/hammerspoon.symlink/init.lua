@@ -25,7 +25,7 @@ local function launch(app)
 end
 
 -- default grid
-grid.setGrid('5x3')
+grid.setGrid('4x2')
 
 -- reload config
 superbind("R", reloading)
