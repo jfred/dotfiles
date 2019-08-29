@@ -22,7 +22,8 @@
     dump = cat-file -p
     find = "!git ls-files | grep -i"
     fix = "!f() { ${EDITOR} `git diff --name-only | uniq`; }; f"
-    find-branch = "!sh -c \"git branch -a | sed 's/remotes\\/[^/]*\\///g' | sed 's/^[* ]*//g' | sort -u | grep $1 | head -n 1 | xargs git checkout\""
+    list-branch = "!f() { git branch -a | sed 's/remotes\\/[^/]*\\///g' | sed 's/^[* ]*//g' | sort -u | grep -v ' -> ' | grep $1; }; f"
+    find-branch = "!f() { git list-branch $1 | head -n 1 | xargs git checkout; }; f"
     fb = find-branch
     clone-user = "!f() { curl -sL \"https://api.github.com/users/$1/repos?per_page=1000\" | jq -r '.[]| select( .fork == false ) |.clone_url' | xargs -L1 git clone; }; f"
 [color]
