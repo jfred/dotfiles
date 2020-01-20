@@ -3,7 +3,7 @@ let g:has_async = v:version >= 800 || has('nvim')
 call plug#begin('~/.vim/plugged')
 
 " utils
-Plug 'L9'
+Plug 'vim-scripts/L9'
 
 " Look and feel
 Plug 'bling/vim-airline'

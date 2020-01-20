@@ -26,7 +26,7 @@ brew install zopfli
 brew install pstree
 brew install ctags
 
-brew install macvim
+brew install vim
 
 # config
 brew install autoenv
