@@ -47,7 +47,7 @@ Plug 'slim-template/vim-slim', {'for': 'ruby'}
 Plug 'tpope/vim-rails', {'for': 'rails'}
 
 " python
-Plug 'klen/rope-vim', {'for': 'python'}
+Plug 'python-mode/python-mode', { 'for': 'python', 'branch': 'develop' }
 
 " elixir
 Plug 'elixir-lang/vim-elixir', {'for': 'erlang'}
