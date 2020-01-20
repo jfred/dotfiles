@@ -39,10 +39,6 @@ brew install imagemagick
 
 brew install direnv
 
-# Remove outdated versions from the cellar
-echo Homebrew cleanup...
-brew cleanup
-
 # Install native apps
 echo Installing applications...
 
@@ -54,3 +50,14 @@ brew cask install google-chrome
 brew cask install sourcetree
 
 brew cask install hammerspoon
+
+echo Installing fonts...
+
+brew tap homebrew/cask-fonts
+
+brew cask install font-inconsolata
+brew cask install font-jetbrains-mono
+
+# Remove outdated versions from the cellar
+echo Homebrew cleanup...
+brew cleanup
