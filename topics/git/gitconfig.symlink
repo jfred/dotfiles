@@ -26,6 +26,7 @@
     find-branch = "!f() { git list-branch $1 | head -n 1 | xargs git checkout; }; f"
     fb = find-branch
     clone-user = "!f() { curl -sL \"https://api.github.com/users/$1/repos?per_page=1000\" | jq -r '.[]| select( .fork == false ) |.clone_url' | xargs -L1 git clone; }; f"
+    reword = commit --amend
 [color]
     diff = auto
     branch = auto
