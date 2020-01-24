@@ -20,7 +20,13 @@ if [ "$CI_URL" == "" ]; then
     die "Error: No CI_URL is set"
 fi
 
-BRANCH=$(git rev-parse --abbrev-ref --symbolic-full-name @{u} | cut -d'/' -f2-)
+BRANCH=$(git rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null | cut -d'/' -f2-)
+
+if [ "$BRANCH" == "" ]; then
+    die "Error: no upstream found"
+fi
+
+
 BRANCH_ESCAPED=$(echo ${BRANCH} | sed 's/\//%252F/g')
 
 BUILD_URL=${CI_URL}
