@@ -36,15 +36,17 @@
     name = Joshua Frederick
     email = josh@jfred.net
 [core]
-	excludesfile = /Users/jfred/.gitignore
+    excludesfile = ~/.gitignore
     autocrlf = input
 [advice]
-	statusHints = false
+    statusHints = false
 [diff]
-	renames = copies
+    renames = copies
 [branch]
-	autosetupmerge = true
+    autosetupmerge = true
 [push]
-	default = tracking
+    default = tracking
 [merge]
-	stat = true
+    stat = true
+[pull]
+    rebase = true
