@@ -3,6 +3,7 @@
     co = checkout
     aa = add --all .
     ap = add --all . -p
+    bl = show-branch --list
     st = status -sb
     dh = diff HEAD
     dd = diff -b -w --word-diff-regex=.
