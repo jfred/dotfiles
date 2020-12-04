@@ -8,19 +8,38 @@ Usage: ec2ssh [-r REGION] [-j JUMP] [-t TAG] <TARGET>
 Open an ssh connection to EC2 instance named <TARGET>
 
   -h              Display help
-  -l              List hosts
   -r, REGION      EC2 Region, defaults to us-east-1
-  -j, JUMP        Jump host (optional)
   -t, TAG         Resolve insances with tag, defaults to Name
+  -l              List hosts
+  -lv             List VPCs
+  -v, VPC_ID      Limit to one VPC
+  -j, JUMP        Jump host (optional)
   -L, FWD         Port forwarding - format port:host:hostport (if jump, proxies through JUMP_FWD)
   -F, JUMP_FWD    Port to use on jump host, defaults to 9999    
 EOF
 }
 
 function list {
-    aws ec2 describe-instances --region=${region} --query "Reservations[].Instances[].{InstanceId:InstanceId,${tag}:Tags[?Key==\`${tag}\`]|[0].Value,PublicIP:PublicIpAddress,PrivateIP:PrivateIpAddress}" --output=table
+  aws ec2 describe-instances \
+    --region=${region} \
+    ${filters} \
+    --query "sort_by(Reservations[].Instances[].{InstanceId:InstanceId,${tag}:Tags[?Key==\`${tag}\`] | [0].Value,PublicIP:PublicIpAddress,PrivateIP:PrivateIpAddress,VPC:VpcId}, &${tag})" \
+    --output=table
 }
 
+function list_vpc {
+  aws ec2 describe-vpcs \
+    --region=${region} \
+    --query "sort_by(Vpcs[].{VpcId:VpcId,Name:(Tags[?Key==\`Name\`]) | [0].Value,VpcId:VpcId }, &Name)" \
+    --output=table
+}
+
+function add_filter {
+  if [[ "${filters}" -eq "" ]]; then
+    filters="--filters "
+  fi
+  filters="${filters}${1}"
+}
 
 function die {
     echo >&2 $1
@@ -35,14 +54,22 @@ jump=""
 target=""
 proxy=""
 jump_port="9999"
+filters=""
 
+CMD=""
+
+# parse options (and capture command for out of order)
 while test $# != 0; do
     case "$1" in
-        -h) usage; exit 1;;
-        -l) list; exit 1;;
+        -h) CMD=$1;;
+        -l) CMD=$1;;
+        -lv) CMD=$1;;
         -r) region=$2; shift;;
         -j) jump=$2; shift;;
         -t) tag=$2; shift;;
+        -v)
+          add_filter "Name=vpc-id,Values=$2"
+          shift;;
         -L)
           proxy=(${2//:/ }); 
           if [ ${#proxy[@]} != 3 ]; then
@@ -57,6 +84,13 @@ while test $# != 0; do
     esac
     shift
 done
+
+case "${CMD}" in
+  -l) list; exit;;
+  -lv) list_vpc; exit;;
+  '');;
+  *) echo "Undandled command: ${CMD}"; exit 1;;
+esac
 
 if [ -z "${target// }" ]; then
     usage
