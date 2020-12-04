@@ -28,6 +28,7 @@ brew install zopfli
 brew install pstree
 brew install ctags
 brew install fzf
+brew install ripgrep
 
 brew install vim
 

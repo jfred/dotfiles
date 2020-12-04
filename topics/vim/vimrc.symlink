@@ -135,8 +135,10 @@ nnoremap <C-l> <C-w>l:redraw!<CR>
 nmap <silent> <Leader>nt :Ranger<CR>
 
 let g:ranger_map_keys = 0
-map <Leader>f :Files<CR>
+map <Leader>f :GFiles<CR>
+map <Leader>F :Files<CR>
 map <Leader>l :Lines<CR>
+map <Leader>L :Rg<CR>
 
 " Use ag for search
 if executable('ag')
