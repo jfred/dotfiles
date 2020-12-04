@@ -25,6 +25,7 @@ brew install pv
 brew install zopfli
 brew install pstree
 brew install ctags
+brew install fzf
 
 brew install vim
 
@@ -57,6 +58,9 @@ brew tap homebrew/cask-fonts
 
 brew cask install font-inconsolata
 brew cask install font-jetbrains-mono
+
+# Upgrade any already installed
+brew upgrade
 
 # Remove outdated versions from the cellar
 echo Homebrew cleanup...
