@@ -13,6 +13,7 @@ brew install gnu-sed
 brew install zsh
 brew link zsh
 brew install bat
+brew install ranger
 
 brew install tree
 

@@ -132,9 +132,7 @@ cnoremap <C-n> <Down>
 " ctrl-l is normally mapped as redraw so now I redraw and window naviagte
 nnoremap <C-l> <C-w>l:redraw!<CR>
 
-" NERDTree
-let NERDTreeIgnore=['\.pyc', '\.class', 'node_modules']
-nmap <silent> <Leader>nt :NERDTreeToggle<CR>
+nmap <silent> <Leader>nt :Ranger<CR>
 
 " Use ag for search
 if executable('ag')
