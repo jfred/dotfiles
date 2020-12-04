@@ -13,7 +13,7 @@ Plug 'altercation/vim-colors-solarized'
 " Files
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
-Plug 'albfan/nerdtree-git-plugin'
+Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'benmills/vimux'
 
 " Navigation
