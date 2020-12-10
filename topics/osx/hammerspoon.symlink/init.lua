@@ -29,21 +29,45 @@ local function launch(app)
 end
 
 -- default grid
+function printGrid()
+    local s = string.format('%sx%s', gridDims[1], gridDims[2])
+    hs.alert(string.format("grid: %s", s))
+end
 function setGrid()
     local s = string.format('%sx%s', gridDims[1], gridDims[2])
-    hs.alert(string.format("Setting grid: %s", s))
     grid.setGrid(s)
 end
 
-function increaseWidth()
-    gridDims[1] = gridDims[1] + 1
-    setGrid()
-end
-function decreaseWidth()
-    if gridDims[1] > 1 then
-        gridDims[1] = gridDims[1] - 1
+function increaseGridDim(index, max)
+    if gridDims[index] < max then
+        gridDims[index] = gridDims[index] + 1
         setGrid()
     end
+    printGrid()
+end
+
+function decreaseGridDim(index)
+    if gridDims[index] > 1 then
+        gridDims[index] = gridDims[index] - 1
+        setGrid()
+    end
+    printGrid()
+end
+
+function increaseGridWidth()
+    increaseGridDim(1, 6)
+end
+
+function decreaseGridWidth()
+    decreaseGridDim(1)
+end
+
+function increaseGridHeight()
+    increaseGridDim(2, 4)
+end
+
+function decreaseGridHeight()
+    decreaseGridDim(2)
 end
 
 -- reload config
@@ -53,11 +77,14 @@ superbind("R", reloading)
 hs.window.animationDuration = 0 -- disable animations
 superbind('Y', grid.toggleShow)
 superbind(';', grid.snap)
-superbind('=', increaseWidth)
-superbind('-', decreaseWidth)
+superbind('=', increaseGridWidth)
+superbind('-', decreaseGridWidth)
+superbind('0', increaseGridHeight)
+superbind('9', decreaseGridHeight)
+
 
 -- move windows
-superbind('j', grid.pushWindowDown)
+superbind('J', grid.pushWindowDown)
 superbind('K', grid.pushWindowUp)
 superbind('H', grid.pushWindowLeft)
 superbind('L', grid.pushWindowRight)
