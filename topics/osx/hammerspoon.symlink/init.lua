@@ -1,6 +1,7 @@
 local hotkey = require "hs.hotkey"
 local grid = require "hs.grid"
 local app = require "hs.application"
+local gridDims = {4, 2}
 
 local mega = {"cmd", "alt", "shift"}
 local hyper = {"cmd", "ctrl", "shift"}
@@ -20,12 +21,30 @@ end
 
 local function launch(app)
     return function()
-        hs.application.launchOrFocus(app)
+        appFound = hs.application.find(app)
+        if appFound then
+            hs.application.launchOrFocusByBundleID(appFound:bundleID())
+        end
     end
 end
 
 -- default grid
-grid.setGrid('4x2')
+function setGrid()
+    local s = string.format('%sx%s', gridDims[1], gridDims[2])
+    hs.alert(string.format("Setting grid: %s", s))
+    grid.setGrid(s)
+end
+
+function increaseWidth()
+    gridDims[1] = gridDims[1] + 1
+    setGrid()
+end
+function decreaseWidth()
+    if gridDims[1] > 1 then
+        gridDims[1] = gridDims[1] - 1
+        setGrid()
+    end
+end
 
 -- reload config
 superbind("R", reloading)
@@ -34,6 +53,8 @@ superbind("R", reloading)
 hs.window.animationDuration = 0 -- disable animations
 superbind('Y', grid.toggleShow)
 superbind(';', grid.snap)
+superbind('=', increaseWidth)
+superbind('-', decreaseWidth)
 
 -- move windows
 superbind('j', grid.pushWindowDown)
@@ -52,6 +73,7 @@ superbind('M', grid.maximizeWindow)
 superbind('P', launch('Slack'))
 superbind('U', launch('iTerm'))
 superbind('O', launch('Google Chrome'))
-superbind('I', launch('IntelliJ Idea'))
+superbind('I', launch('IntelliJ IDEA'))
 
+setGrid()
 hs.alert('HS loaded')
