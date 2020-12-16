@@ -6,6 +6,14 @@ local gridDims = {4, 2}
 local mega = {"cmd", "alt", "shift"}
 local hyper = {"cmd", "ctrl", "shift"}
 
+local apps = {
+    P='Slack',
+    U='iTerm',
+    O='Google Chrome',
+    I='IntelliJ IDEA',
+    Y='Pocket Casts'
+}
+
 local function reloading()
     hs.alert("Reloading HS config...")
     hs.reload()
@@ -75,7 +83,7 @@ superbind("R", reloading)
 
 -- grid
 hs.window.animationDuration = 0 -- disable animations
-superbind('Y', grid.toggleShow)
+superbind('E', grid.toggleShow)
 superbind(';', grid.snap)
 superbind('=', increaseGridWidth)
 superbind('-', decreaseGridWidth)
@@ -96,11 +104,10 @@ superbind('.', grid.resizeWindowWider)
 superbind(',', grid.resizeWindowThinner)
 superbind('M', grid.maximizeWindow)
 
--- applications
-superbind('P', launch('Slack'))
-superbind('U', launch('iTerm'))
-superbind('O', launch('Google Chrome'))
-superbind('I', launch('IntelliJ IDEA'))
+-- bind applications
+for key, name in pairs(apps) do
+    superbind(key, launch(name))
+end
 
 setGrid()
 hs.alert('HS loaded')
