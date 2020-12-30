@@ -46,21 +46,21 @@ brew install direnv
 # Install native apps
 echo Installing applications...
 
-brew cask install iterm2
+brew install --cask iterm2
 
-brew cask install macdown
-brew cask install google-chrome
+brew install --cask macdown
+brew install --cask google-chrome
 
-brew cask install sourcetree
+brew install --cask sourcetree
 
-brew cask install hammerspoon
+brew install --cask hammerspoon
 
 echo Installing fonts...
 
-brew tap homebrew/cask-fonts
+#brew tap homebrew/cask-fonts
 
-brew cask install font-inconsolata
-brew cask install font-jetbrains-mono
+brew install --cask font-inconsolata
+brew install --cask font-jetbrains-mono
 
 # Upgrade any already installed
 brew upgrade
