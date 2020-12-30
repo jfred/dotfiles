@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# Checkout and fetch to ensure repos are up to date
+#
+# Expects a repos file in the current directory with the form:
+#  dir:cloneurl
+#
+# Example:
+#  mycode:git@github.com:username/code.git
+#  myothercode:https://github.com/username/othercode.git
+
+while read repo; do
+    dir=$( cut -d ':' -f 1 <<< "${repo}" )
+    clone=$( cut -d ':' -f 2- <<< "${repo}" )
+    if [ -d "${dir}" -a ! -h "${dir}" ]
+    then
+        echo Fetching ${dir}...
+        git -C ${dir} fetch
+    else
+        echo Cloning ${dir}...
+        git clone ${clone} ${dir}
+    fi
+done < repos
