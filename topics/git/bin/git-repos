@@ -7,6 +7,10 @@
 # Example:
 #  mycode:git@github.com:username/code.git
 #  myothercode:https://github.com/username/othercode.git
+if [ ! -f "repos" ]; then
+    echo $0: no repo file found
+    exit 1
+fi
 
 while read repo; do
     dir=$( cut -d ':' -f 1 <<< "${repo}" )
