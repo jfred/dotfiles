@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 set -e
 
 function usage() {
@@ -12,29 +12,32 @@ to pick from the available instances
 
   -h              Display help
   -r, REGION      EC2 Region, defaults to us-east-1
-  -t, TAG         Resolve insances with tag, defaults to Name
+  -t, TAG         Resolve instances with tag, defaults to Name
   -l              List hosts
-  -lv             List VPCs
-  -v, VPC_ID      Limit to one VPC
   -j, JUMP        Jump host (optional)
-  -L, FWD         Port forwarding - format port:host:hostport (if jump, proxies through JUMP_FWD)
-  -F, JUMP_FWD    Port to use on jump host, defaults to 9999    
+  -L, FWD         Port forwarding - format port:host:host_port (if jump, proxies through JUMP_FWD)
+  -F, JUMP_FWD    Port to use on jump host, defaults to 9999
   -p  TARGET      Output transform for target
+
+Examples:
+
+  ec2ssh -j jump-123 server-456 
+     ssh through server named "jump-123" to EC2 instance starting with "server-456"
+
+  ec2ssh -j jump-123 server-456 -F 7001 -L 7000:127.0.0.1:3000
+     ssh tunnel with port forwarding from localhost:7000 -> jump-123 -> server-456:3000
+
 EOF
 }
 
+##########################################################
+# Helper functions
+##########################################################
 function list {
   aws ec2 describe-instances \
     --region=${region} \
     ${filters} \
     --query "sort_by(Reservations[].Instances[].{InstanceId:InstanceId,${tag}:Tags[?Key==\`${tag}\`] | [0].Value,PublicIP:PublicIpAddress,PrivateIP:PrivateIpAddress,VPC:VpcId}, &${tag})" \
-    --output=table
-}
-
-function list_vpc {
-  aws ec2 describe-vpcs \
-    --region=${region} \
-    --query "sort_by(Vpcs[].{VpcId:VpcId,Name:(Tags[?Key==\`Name\`]) | [0].Value,VpcId:VpcId }, &Name)" \
     --output=table
 }
 
@@ -51,63 +54,11 @@ function get_instances {
   instance=${1}
   type=${2}
   aws ec2 describe-instances \
-    --region=us-east-1 \
+    --region=${region} \
     --query "sort_by(Reservations[].Instances[].{IP:${type}IpAddress,Name:Tags[?Key==\`${tag}\`].Value | [0]}, &Name)" \
-    --filter "Name=tag:Name,Values=${instance}*" "Name=instance-state-name,Values=pending,running,shutting-down,stopping" \
+    --filter "Name=tag:${tag},Values=${instance}*" "Name=instance-state-name,Values=pending,running,shutting-down,stopping" \
     --output=text
 }
-
-function add_filter {
-  if [[ "${filters}" -eq "" ]]; then
-    filters="--filters "
-  fi
-  filters="${filters}${1}"
-}
-
-function die {
-    echo >&2 $1
-    exit 1
-}
-
-type aws >/dev/null 2>&1 || die "AWS CLI is required, but it is not installed."
-
-tag="Name"
-region="us-east-1"
-jump=""
-target=""
-proxy=""
-jump_port="9999"
-filters=""
-
-CMD=""
-
-# parse options (and capture command for out of order)
-while test $# != 0; do
-    case "$1" in
-        -h) CMD=$1;;
-        -l) CMD=$1;;
-        -lv) CMD=$1;;
-        -p) CMD=$1;;
-        -r) region=$2; shift;;
-        -j) jump=$2; shift;;
-        -t) tag=$2; shift;;
-        -v)
-          add_filter "Name=vpc-id,Values=$2"
-          shift;;
-        -L)
-          proxy=(${2//:/ }); 
-          if [ ${#proxy[@]} != 3 ]; then
-            >&2 echo "ERROR: proxy port format must be [port]:[host]:[hostport]"
-            usage
-            exit 1
-          fi
-          shift
-          ;;
-        -F) jump_port=$2; shift;;
-        *)  target=$1
-    esac
-    shift
-done
 
 function transform_host {
     hostparts=(${1/@/ })
@@ -119,7 +70,7 @@ function transform_host {
         instance=${user}
         user=""
     fi
-  
+
     if [[ ${instance} =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
         # if it looks like an ip address...
         ipaddr=${instance}
@@ -142,22 +93,83 @@ function transform_host {
     fi
 }
 
+function add_filter {
+  if [[ "${filters}" -eq "" ]]; then
+    filters="--filters "
+  fi
+  filters="${filters}${1}"
+}
+
+function die {
+    echo >&2 $1
+    exit 1
+}
+
+##########################################################
+# Check for dependencies
+##########################################################
+type ssh >/dev/null 2>&1 || die "ssh is required, but can't be found."
+type awk >/dev/null 2>&1 || die "awk is required, but can't be found."
+type grep >/dev/null 2>&1 || die "grep is required, but can't be found."
+type aws >/dev/null 2>&1 || die "AWS CLI is required, but it is not installed."
+
+##########################################################
+# Runtime variables
+##########################################################
+tag="Name"
+region="us-east-1"
+jump=""
+target=""
+proxy=""
+jump_port="9999"
+filters=""
+
+CMD=""
+
+##########################################################
+# Parse arguments
+##########################################################
+
+# parse options (and capture command for out of order)
+while test $# != 0; do
+    case "$1" in
+        -h) CMD=$1;;
+        -l) CMD=$1;;
+        -p) CMD=$1;;
+        -r) region=$2; shift;;
+        -j) jump=$2; shift;;
+        -t) tag=$2; shift;;
+        -L)
+          proxy=(${2//:/ });
+          if [ ${#proxy[@]} != 3 ]; then
+            >&2 echo "ERROR: proxy port format must be [port]:[host]:[hostport]"
+            usage
+            exit 1
+          fi
+          shift
+          ;;
+        -F) jump_port=$2; shift;;
+        *)  target=$1
+    esac
+    shift
+done
+
+# target agnostic commands
 case "${CMD}" in
-  -p) echo `transform_host ${target}`; exit;;
+  -h) usage; exit;;
   -l) list; exit;;
-  -lv) list_vpc; exit;;
-  '');;
-  *) echo "Undandled command: ${CMD}"; exit 1;;
 esac
 
+# ensure we have a target now
 if [ -z "${target// }" ]; then
     usage
     exit 1
 fi
 
-cmd='ssh'
-
-# incase we are a set of servers, narrow the pick
+##########################################################
+# Transform target for multiple matches
+##########################################################
+# determine number of instances that matches the target, using jump to determine public or private ip
 instances=
 if [ -z "${jump}" ]; then
     instances=$(get_instances ${target} "Public")
@@ -165,31 +177,60 @@ else
     instances=$(get_instances ${target} "Private" | grep -v ${jump})
 fi
 
+target_name=${target}
 count=$(echo "${instances}" | wc -l)
 if [[ "${count}" -eq 0 ]]; then
+    # no matching instances of target, fail
     echo "Didn't find instance ${target}"
     exit 1
 elif [[ "${count}" -eq 1 ]]; then
+    # only one matching target, capture ip and move on
     target=$(echo "${instances}" | cut -f1)
+    target_name=$(echo "${instances}" | cut -f2)
 else
+    # print matching instance names and allow user to specify the choice by index
     echo "${instances}" | cut -f2 | awk '{printf "%d) %s\n", NR, $0}'
     read -p "pick (1): " pick
+
+    # if nothing was chosen default pick to first match
     if [[ "${pick}" -eq "" ]]; then
       pick=1
     fi
+
+    # ensure pick is within the valid range
     if [[ "${pick}" -lt 1 || "${pick}" -gt "${count}" ]]; then
         echo "Invalid pick"
         exit 1
     fi
+
+    # capture ip of target for use later
     target=$(echo "${instances}" | cut -f1 | sed -n "${pick}"p)
+    target_name=$(echo "${instances}" | cut -f2 | sed -n "${pick}"p)
 fi
 
+##########################################################
+# Target specific commands
+##########################################################
+case "${CMD}" in
+    -p)
+        add_filter "Name=tag:${tag},Values=${target_name}"
+        list
+        exit;;
+    '');; # no command falls through to ssh
+    *) echo "Unhandled command: ${CMD}"; exit 1;;
+esac
 
+cmd='ssh'
+
+##########################################################
+# Connect to target
+##########################################################
+# transform proxy name to ip
 if [ -n "${proxy[1]}" ]; then
   proxy[1]=`transform_host "${proxy[1]}" "Private"`
 fi
 
-
+# if no jump server, use public ip of target
 if [ -z "${jump}" ]; then
     public=`transform_host "${target}" "Public"`
     if [ -z "${proxy}" ]; then
@@ -198,6 +239,7 @@ if [ -z "${jump}" ]; then
       cmd="${cmd} -L ${proxy[0]}:${proxy[1]}:${proxy[2]} ${public}"
     fi
 else
+    # there is a jump server, use public ip jump host and private ip of target host
     public=`transform_host "${jump}" "Public"`
     private=`transform_host "${target}" "Private"`
     if [ -z "${proxy}" ]; then
