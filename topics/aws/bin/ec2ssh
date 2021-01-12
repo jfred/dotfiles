@@ -7,6 +7,9 @@ Usage: ec2ssh [-r REGION] [-j JUMP] [-t TAG] <TARGET>
 
 Open an ssh connection to EC2 instance named <TARGET>
 
+If more than one instance begins with <TARGET> then you will be prompted
+to pick from the available instances
+
   -h              Display help
   -r, REGION      EC2 Region, defaults to us-east-1
   -t, TAG         Resolve insances with tag, defaults to Name
@@ -42,6 +45,16 @@ function get_ip {
     --region=${region} \
     --query "Reservations[0].Instances[0].${type}IpAddress" \
     --filter "Name=tag:${tag},Values=${instance}*" "Name=instance-state-name,Values=pending,running,shutting-down,stopping"
+}
+
+function get_instances {
+  instance=${1}
+  type=${2}
+  aws ec2 describe-instances \
+    --region=us-east-1 \
+    --query "sort_by(Reservations[].Instances[].{IP:${type}IpAddress,Name:Tags[?Key==\`${tag}\`].Value | [0]}, &Name)" \
+    --filter "Name=tag:Name,Values=${instance}*" "Name=instance-state-name,Values=pending,running,shutting-down,stopping" \
+    --output=text
 }
 
 function add_filter {
@@ -144,9 +157,38 @@ fi
 
 cmd='ssh'
 
+# incase we are a set of servers, narrow the pick
+instances=
+if [ -z "${jump}" ]; then
+    instances=$(get_instances ${target} "Public")
+else
+    instances=$(get_instances ${target} "Private" | grep -v ${jump})
+fi
+
+count=$(echo "${instances}" | wc -l)
+if [[ "${count}" -eq 0 ]]; then
+    echo "Didn't find instance ${target}"
+    exit 1
+elif [[ "${count}" -eq 1 ]]; then
+    target=$(echo "${instances}" | cut -f1)
+else
+    echo "${instances}" | cut -f2 | awk '{printf "%d) %s\n", NR, $0}'
+    read -p "pick (1): " pick
+    if [[ "${pick}" -eq "" ]]; then
+      pick=1
+    fi
+    if [[ "${pick}" -lt 1 || "${pick}" -gt "${count}" ]]; then
+        echo "Invalid pick"
+        exit 1
+    fi
+    target=$(echo "${instances}" | cut -f1 | sed -n "${pick}"p)
+fi
+
+
 if [ -n "${proxy[1]}" ]; then
   proxy[1]=`transform_host "${proxy[1]}" "Private"`
 fi
+
 
 if [ -z "${jump}" ]; then
     public=`transform_host "${target}" "Public"`
