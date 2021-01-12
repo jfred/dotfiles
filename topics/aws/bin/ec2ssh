@@ -35,6 +35,15 @@ function list_vpc {
     --output=table
 }
 
+function get_ip {
+  instance=${1}
+  type=${2}
+  aws ec2 describe-instances \
+    --region=${region} \
+    --query "Reservations[0].Instances[0].${type}IpAddress" \
+    --filter "Name=tag:${tag},Values=${instance}*" "Name=instance-state-name,Values=pending,running,shutting-down,stopping"
+}
+
 function add_filter {
   if [[ "${filters}" -eq "" ]]; then
     filters="--filters "
@@ -91,6 +100,7 @@ function transform_host {
     hostparts=(${1/@/ })
     user="${hostparts[0]}"
     instance="${hostparts[1]}"
+    type=${2}
 
     if [ -z "${instance}" ]; then
         instance=${user}
@@ -101,7 +111,7 @@ function transform_host {
         # if it looks like an ip address...
         ipaddr=${instance}
     else
-        ipaddr=`aws ec2 describe-instances --region=${region} --query "Reservations[0].Instances[0].${2}IpAddress" --filter "Name=tag:${tag},Values=${instance}*" "Name=instance-state-name,Values=pending,running,shutting-down,stopping"`
+        ipaddr=`get_ip ${instance} ${type}`
         ipaddr=${ipaddr//\"}
         if [ "null" = "${ipaddr}" ]; then
           echo ${1}
