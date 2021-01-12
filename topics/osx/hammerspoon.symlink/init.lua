@@ -1,7 +1,7 @@
 local hotkey = require "hs.hotkey"
 local grid = require "hs.grid"
 local app = require "hs.application"
-local gridDims = {4, 2}
+local gridDims = {4, 3}
 
 local mega = {"cmd", "alt", "shift"}
 local hyper = {"cmd", "ctrl", "shift"}
