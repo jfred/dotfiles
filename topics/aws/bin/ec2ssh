@@ -34,10 +34,16 @@ EOF
 # Helper functions
 ##########################################################
 function list {
+  extras=""
+  add_filter "Name=tag:${tag},Values=${target}*"
+  if [[ "${tag}" != "Name" ]]; then
+    extras=",${tag}:Tags[?Key==\`${tag}\`] | [0].Value"
+  fi
+
   aws ec2 describe-instances \
     --region=${region} \
     ${filters} \
-    --query "sort_by(Reservations[].Instances[].{InstanceId:InstanceId,${tag}:Tags[?Key==\`${tag}\`] | [0].Value,PublicIP:PublicIpAddress,PrivateIP:PrivateIpAddress,VPC:VpcId}, &${tag})" \
+    --query "sort_by(Reservations[].Instances[].{InstanceId:InstanceId,Name:Tags[?Key==\`Name\`] | [0].Value,PublicIP:PublicIpAddress,PrivateIP:PrivateIpAddress,VPC:VpcId${extras}}, &Name)" \
     --output=table
 }
 
