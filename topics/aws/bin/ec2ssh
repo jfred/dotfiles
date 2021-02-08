@@ -18,6 +18,7 @@ to pick from the available instances
   -L, FWD         Port forwarding - format port:host:host_port (if jump, proxies through JUMP_FWD)
   -F, JUMP_FWD    Port to use on jump host, defaults to 9999
   -p  TARGET      Output transform for target
+  -d              Dry run of command
 
 Examples:
 
@@ -131,6 +132,7 @@ jump_port="9999"
 filters=""
 
 CMD=""
+DRY_RUN=false
 
 ##########################################################
 # Parse arguments
@@ -139,6 +141,7 @@ CMD=""
 # parse options (and capture command for out of order)
 while test $# != 0; do
     case "$1" in
+        -d) DRY_RUN=true;;
         -h) CMD=$1;;
         -l) CMD=$1;;
         -p) CMD=$1;;
@@ -256,4 +259,6 @@ else
 fi
 
 echo "executing: ${cmd}"
-${cmd}
+if [[ ${DRY_RUN} == false ]]; then
+  ${cmd}
+fi
