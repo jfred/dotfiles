@@ -57,7 +57,7 @@ brew install --cask hammerspoon
 
 echo Installing fonts...
 
-#brew tap homebrew/cask-fonts
+brew tap homebrew/cask-fonts
 
 brew install --cask font-inconsolata
 brew install --cask font-jetbrains-mono
