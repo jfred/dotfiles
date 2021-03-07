@@ -50,8 +50,7 @@ brew install --cask iterm2
 
 brew install --cask macdown
 brew install --cask google-chrome
-
-brew install --cask sourcetree
+brew install --cask brave-browser
 
 brew install --cask hammerspoon
 
