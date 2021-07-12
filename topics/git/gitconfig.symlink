@@ -51,3 +51,16 @@
     stat = true
 [pull]
     rebase = true
+
+[pager]
+    diff = delta
+    log = delta
+    reflog = delta
+    show = delta
+
+[delta]
+    navigate = true
+    line-numbers = true
+
+[interactive]
+    diffFilter = delta --color-only
