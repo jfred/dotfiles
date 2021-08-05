@@ -46,4 +46,4 @@ else
 	done
 fi
 
-git checkout ${branch}
+git switch ${branch}
