@@ -1,6 +1,5 @@
 [alias]
-    ci = commit
-    co = checkout
+    sw = switch
     aa = add --all .
     ap = add --all . -p
     bl = show-branch --list
