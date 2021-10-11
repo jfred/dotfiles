@@ -15,6 +15,7 @@
 .floo
 .flooignore
 .direnv
+.npm
 atlassian-ide-plugin.xml
 lude
 Pods
