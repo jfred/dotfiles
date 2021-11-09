@@ -46,7 +46,9 @@ brew install direnv
 # Install native apps
 echo Installing applications...
 
-brew install --cask iterm2
+brew tap homebrew/cask-versions
+
+brew install --cask iterm2-beta
 
 brew install --cask macdown
 brew install --cask google-chrome
