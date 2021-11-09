@@ -223,8 +223,10 @@ map <Leader>vi :VimuxInspectRunner<CR>
 let g:dark_scheme = 1
 function! ToggleColor()
   call SetColorScheme(!g:dark_scheme)
-  AirlineRefresh
+  "AirlineRefresh
 endfunction
+
+map <Leader>u :call ToggleColor()<CR>
 
 function! SetColorScheme(darkScheme)
   if a:darkScheme
@@ -250,7 +252,17 @@ function! SetColorScheme(darkScheme)
   endif
   highlight SpellBad cterm=underline,bold ctermbg=1 ctermfg=7
 endfunction
-call SetColorScheme(1)
+
+" Attempt to sync with OSX mode
+function! SetBackgroundMode()
+  let s:sys = system("defaults read -g AppleInterfaceStyle 2&>/dev/null")
+  if v:shell_error
+    call ToggleColor()
+  else
+    call SetColorScheme(1)
+  endif
+endfunction
+call SetBackgroundMode()
 
 +" Hack to get C-h working in neovim
 if has('nvim')
