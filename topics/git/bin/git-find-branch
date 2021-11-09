@@ -18,7 +18,7 @@ input=${1}
 regex='(https?|ftp|file)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
 # if URL grab last portion
 if [[ $input =~ $regex ]]; then 
-	input=${input%/} # remove trailing slash
+    input=${input%/} # remove trailing slash
     input=${input##*/} # use last segment
 fi
 
@@ -29,21 +29,31 @@ while IFS= read -r -d $'\n' f; do
 done < <(git list-branch ${input})
 
 if [[ ${#options[@]} == 0 ]]; then
-	# If no matching branches error
-	>&2 echo "Failed to find branch for input: ${input}"
-	exit 2
+    # If no matching branches error
+    >&2 echo "Failed to find branch for input: ${input}"
+    echo "Create branch?"
+    select opt in "task/${input}" "feature/${input}" "bug/${input}" "epic/${input}"; do
+	case $opt in 
+	    *) 
+		branch=${opt}
+		break
+		;;
+	esac
+    done
+    git switch -C ${branch}
+    exit
 elif [[ "${#options[@]}" -eq "1" ]]; then
-	# if only one branch check it out
-	branch=${options}
+    # if only one branch check it out
+    branch=${options}
 else
-	# if more than one branch present select
-	select opt in "${options[@]}"; do
-		case $opt in
-			*) 
-				branch=${opt}
-				break
-		esac
-	done
+    # if more than one branch present select
+    select opt in "${options[@]}"; do
+	case $opt in
+	    *) 
+		branch=${opt}
+		break
+	esac
+    done
 fi
 
 git switch ${branch}
