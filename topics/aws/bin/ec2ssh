@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -e
 
+CACHE_DIR=~/.ec2ssh
+CACHE_FILE=instances.json
+
 function usage() {
     cat<<EOF
 Usage: ec2ssh [-r REGION] [-j JUMP] [-t TAG] <TARGET>
@@ -10,6 +13,7 @@ Open an ssh connection to EC2 instance named <TARGET>
 If more than one instance begins with <TARGET> then you will be prompted
 to pick from the available instances
 
+  -c              Force cache population
   -h              Display help
   -r, REGION      EC2 Region, defaults to us-east-1
   -t, TAG         Resolve instances with tag, defaults to Name
@@ -17,7 +21,6 @@ to pick from the available instances
   -j, JUMP        Jump host (optional)
   -L, FWD         Port forwarding - format port:host:host_port (if jump, proxies through JUMP_FWD)
   -F, JUMP_FWD    Port to use on jump host, defaults to 9999
-  -p  TARGET      Output transform for target
   -d              Dry run of command
 
 Examples:
@@ -31,47 +34,51 @@ Examples:
 EOF
 }
 
+
 ##########################################################
 # Helper functions
 ##########################################################
-function list {
-  extras=""
-  add_filter "Name=tag:${tag},Values=${target}*"
-  if [[ "${tag}" != "Name" ]]; then
-    extras=",${tag}:Tags[?Key==\`${tag}\`] | [0].Value"
-  fi
 
-  aws ec2 describe-instances \
-    --region=${region} \
-    ${filters} \
-    --query "sort_by(Reservations[].Instances[].{InstanceId:InstanceId,Name:Tags[?Key==\`Name\`] | [0].Value,PublicIP:PublicIpAddress,PrivateIP:PrivateIpAddress,VPC:VpcId${extras}}, &Name)" \
-    --output=table
+function instance_cache {
+  mkdir -p ${CACHE_DIR}/${region}
+  if [ "${REFRESH_CACHE}" = true ] || [ ! -f ${CACHE_FILE} ]; then
+    aws ec2 describe-instances --region=${region}> ${CACHE_FILE}
+  fi
+  cat ${CACHE_FILE}
 }
 
+function list {
+  instance=${1}
+  instance_cache | jq  -r ".Reservations[].Instances[]
+    | select((.Tags[]|select(.Key==\"${tag}\")|.Value) | contains(\"${instance}\"))
+    | (.Tags[]|select(.Key==\"${tag}\")|.Value)
+    " | sort
+}
+
+# Only return first matching instance's ip
 function get_ip {
   instance=${1}
-  type=${2}
-  aws ec2 describe-instances \
-    --region=${region} \
-    --query "Reservations[0].Instances[0].${type}IpAddress" \
-    --filter "Name=tag:${tag},Values=${instance}*" "Name=instance-state-name,Values=pending,running,shutting-down,stopping"
+  ip_type=${2}
+  instance_cache | jq -r ".Reservations[].Instances[]
+    | select((.Tags[]|select(.Key==\"${tag}\")|.Value) | contains(\"${instance}\"))
+    | .${ip_type}IpAddress
+    " | head -n 1
 }
 
+# return instances matching name
 function get_instances {
   instance=${1}
-  type=${2}
-  aws ec2 describe-instances \
-    --region=${region} \
-    --query "sort_by(Reservations[].Instances[].{IP:${type}IpAddress,Name:Tags[?Key==\`${tag}\`].Value | [0]}, &Name)" \
-    --filter "Name=tag:${tag},Values=${instance}*" "Name=instance-state-name,Values=pending,running,shutting-down,stopping" \
-    --output=text
+  instance_cache | jq  -r ".Reservations[].Instances[]
+    | select((.Tags[]|select(.Key==\"${tag}\")|.Value) | contains(\"${instance}\"))
+    | (.Tags[]|select(.Key==\"${tag}\")|.Value)
+    " | sort
 }
 
 function transform_host {
     hostparts=(${1/@/ })
     user="${hostparts[0]}"
     instance="${hostparts[1]}"
-    type=${2}
+    ip_type=${2}
 
     if [ -z "${instance}" ]; then
         instance=${user}
@@ -82,7 +89,7 @@ function transform_host {
         # if it looks like an ip address...
         ipaddr=${instance}
     else
-        ipaddr=`get_ip ${instance} ${type}`
+        ipaddr=`get_ip ${instance} ${ip_type}`
         ipaddr=${ipaddr//\"}
         if [ "null" = "${ipaddr}" ]; then
           echo ${1}
@@ -118,7 +125,9 @@ function die {
 type ssh >/dev/null 2>&1 || die "ssh is required, but can't be found."
 type awk >/dev/null 2>&1 || die "awk is required, but can't be found."
 type grep >/dev/null 2>&1 || die "grep is required, but can't be found."
+type jq >/dev/null 2>&1 || die "jq is required, but it is not installed."
 type aws >/dev/null 2>&1 || die "AWS CLI is required, but it is not installed."
+
 
 ##########################################################
 # Runtime variables
@@ -132,7 +141,9 @@ jump_port="9999"
 filters=""
 
 CMD=""
+REFRESH_CACHE=false
 DRY_RUN=false
+CACHE_FILE="${CACHE_DIR}/${region}/${CACHE_FILE}"
 
 ##########################################################
 # Parse arguments
@@ -141,10 +152,10 @@ DRY_RUN=false
 # parse options (and capture command for out of order)
 while test $# != 0; do
     case "$1" in
+        -c) REFRESH_CACHE=true;;
         -d) DRY_RUN=true;;
         -h) CMD=$1;;
         -l) CMD=$1;;
-        -p) CMD=$1;;
         -r) region=$2; shift;;
         -j) jump=$2; shift;;
         -t) tag=$2; shift;;
@@ -163,10 +174,15 @@ while test $# != 0; do
     shift
 done
 
+if [ "${REFRESH_CACHE}" = false ] && [ -f ${CACHE_FILE} ]; then
+  cache_age=$(echo $((($(date +%s) - $(date +%s -r ${CACHE_FILE})) / 3600)))
+  echo "Using instance cache: ${CACHE_FILE} (${cache_age} hrs ago)"
+fi
+
 # target agnostic commands
 case "${CMD}" in
   -h) usage; exit;;
-  -l) list; exit;;
+  -l) list ${target}; exit;;
 esac
 
 # ensure we have a target now
@@ -181,9 +197,9 @@ fi
 # determine number of instances that matches the target, using jump to determine public or private ip
 instances=
 if [ -z "${jump}" ]; then
-    instances=$(get_instances ${target} "Public")
+    instances=$(get_instances ${target})
 else
-    instances=$(get_instances ${target} "Private" | grep -v ${jump})
+    instances=$(get_instances ${target} | grep -v ${jump})
 fi
 
 target_name=${target}
