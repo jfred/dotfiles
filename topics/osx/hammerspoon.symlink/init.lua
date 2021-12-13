@@ -117,6 +117,7 @@ local apps = {
   P=launcher('Slack'),
   O=launcher('Google Chrome'),
   I=launcher('iTerm'),
+  J=launcher('IntelliJ IDEA'),
 }
 
 local launch_modifier = {"ctrl", "alt"}
