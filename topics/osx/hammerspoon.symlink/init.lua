@@ -6,6 +6,8 @@ local gridDims = {6, 4}
 local mega = {"cmd", "alt", "shift"}
 local hyper = {"cmd", "ctrl", "shift"}
 
+local logger = hs.logger.new('init', 5)
+
 local function reloading()
   hs.alert("Reloading HS config...")
   hs.reload()
@@ -116,7 +118,7 @@ end
 local apps = {
   P=launcher('Slack'),
   O=launcher('Google Chrome'),
-  I=launcher('iTerm'),
+  I=launcher('iTerm2'),
   J=launcher('IntelliJ IDEA'),
 }
 
@@ -125,6 +127,18 @@ for char, launcher in pairs(apps) do
   hotkey.deleteAll(launch_modifier, char)
   hotkey.bind(launch_modifier, char, launcher)
 end
+
+-- layouts
+-- get screen names from hs.screen.allScreens()[1]:name() or similar in the console
+superbind('1', function ()
+  -- local laptopScreen = 'Built-in Retina Display'
+  local laptopScreen = nil
+  local laptopLayout = {
+    {'Slack', nil, laptopScreen, hs.layout.maximized, nil, nil},
+    {'iTerm2', nil, laptopScreen, nil, nil, has.grid.getGridFrame()}
+  }
+  hs.layout.apply(laptopLayout)
+end)
 
 setGrid()
 hs.alert('HS loaded')
