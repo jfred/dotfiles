@@ -11,8 +11,8 @@ if [[ $# -eq 0 ]]; then
     exit 1
 fi
 
-for dir in `find . -name ".git" -type d -depth 2 | sed 's/\/.git$//g'`; do
-    echo Executing in ${dir}
+for dir in `find . -name ".git" -type d -maxdepth 2 | sed 's/\/.git$//g'`; do
+    echo "Executing 'git ${@}' in ${dir}"
     git -C ${dir} $@
     if [[ $? -ne 0 ]]; then
         echo "Aborting, last execution failed"
