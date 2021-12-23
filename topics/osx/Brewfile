@@ -1,0 +1,51 @@
+brew "coreutils"
+brew "moreutils"
+brew "gnu-sed"
+brew "zsh", link: true
+brew "bat"
+brew "ranger"
+
+brew "tree"
+
+brew "zsh"
+brew "git"
+brew "gh"
+brew "python"
+brew "ruby"
+
+brew "lynx"
+brew "pv"
+brew "zopfli"
+brew "pstree"
+brew "ctags"
+brew "fzf"
+brew "ripgrep"
+
+brew "vim"
+
+# config
+brew "autoenv"
+
+# tmux
+brew "tmux"
+brew "reattach-to-user-namespace"
+
+brew "imagemagick"
+
+brew "direnv"
+
+# native apps
+tap "homebrew/cask-versions"
+
+cask "iterm2-beta"
+cask "macdown"
+cask "google-chrome"
+cask "brave-browser"
+cask "hammerspoon"
+
+# fonts
+
+tap "homebrew/cask-fonts"
+
+cask "font-inconsolata"
+cask "font-jetbrains-mono"
