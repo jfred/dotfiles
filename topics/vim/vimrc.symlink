@@ -53,7 +53,7 @@ set foldlevelstart=20 " Don't start folded
 set history=1000      " keep 50 lines of command line history
 set undolevels=1000
 set wildmode=list:longest 
-set wildignore=*.swp,*.bak,*.pyc,*.class,target
+set wildignore=*.swp,*.bak,*.pyc,*.class,target,build,node_modules,logs,out
 
 set nobackup          " do not keep a backup file, use versions instead
 set noswapfile
@@ -132,10 +132,12 @@ cnoremap <C-n> <Down>
 " ctrl-l is normally mapped as redraw so now I redraw and window naviagte
 nnoremap <C-l> <C-w>l:redraw!<CR>
 
-nnoremap <silent> <Leader>nt :NERDTreeToggle<CR>
-nnoremap <silent> <Leader>v :NERDTreeFind<CR>
 let NERDTreeMinimalUI = 1
 let NERDTreeDirArrows = 1
+let g:NERDTreeRespectWildIgnore = 1
+nnoremap <silent> <Leader>nt :NERDTreeToggle<CR>
+nnoremap <silent> <Leader>v :NERDTreeFind<CR>
+
 
 let g:ranger_map_keys = 0
 " fzf commands
