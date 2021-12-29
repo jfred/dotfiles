@@ -5,6 +5,8 @@ BASEDIR=$(dirname $0)
 # base system settings
 $BASEDIR/settings.sh
 
+cd $BASEDIR
+
 # Make sure we’re using the latest Home
 echo Updating homebrew...
 brew update

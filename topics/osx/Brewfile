@@ -49,3 +49,5 @@ tap "homebrew/cask-fonts"
 
 cask "font-inconsolata"
 cask "font-jetbrains-mono"
+cask "font-inconsolata-nerd-font"
+cask "font-jetbrains-mono-nerd-font"
