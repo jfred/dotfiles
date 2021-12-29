@@ -42,7 +42,7 @@ set smartindent
 set cindent
 set copyindent
 
-set hidden            " allow for editied buffers in the background 
+set hidden            " allow for editied buffers in the background
 set cursorline
 set nowrap
 set ruler             " show the cursor position all the time
@@ -52,7 +52,7 @@ set showmatch
 set foldlevelstart=20 " Don't start folded
 set history=1000      " keep 50 lines of command line history
 set undolevels=1000
-set wildmode=list:longest 
+set wildmode=list:longest
 set wildignore=*.swp,*.bak,*.pyc,*.class,target,build,node_modules,logs,out
 
 set nobackup          " do not keep a backup file, use versions instead
@@ -112,7 +112,7 @@ if has("autocmd")
 endif " has("autocmd")
 
 " Use whole "words" when opening URLs.
-" This avoids cutting off parameters (after '?') and anchors (after '#'). 
+" This avoids cutting off parameters (after '?') and anchors (after '#').
 " See https://vi.stackexchange.com/a/2980
 let g:netrw_gx="<cWORD>"
 
