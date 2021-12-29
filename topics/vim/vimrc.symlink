@@ -138,10 +138,12 @@ let NERDTreeMinimalUI = 1
 let NERDTreeDirArrows = 1
 
 let g:ranger_map_keys = 0
+" fzf commands
 map <Leader>f :GFiles<CR>
 map <Leader>F :Files<CR>
 map <Leader>l :Lines<CR>
 map <Leader>L :Rg<CR>
+map <Leader>b :Buffers<CR>
 
 " Use ag for search
 if executable('ag')
