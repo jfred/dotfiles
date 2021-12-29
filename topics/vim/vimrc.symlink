@@ -180,15 +180,6 @@ nmap <F8> :TagbarToggle<CR>
 execute "map <F9> :!".ctags_cmd." -V -f '.tags' --exclude='build' --exclude='node_modules' --exclude='.git' --exclude='*.html' --exclude='*.js' --extra=+f -R .<CR>"
 
 
-" markdown
-au BufRead,BufNewFile *.md set filetype=markdown
-
-" ruby
-au FileType ruby setl sw=2 sts=2 et
-
-" coffee
-au FileType coffee setl sw=2 sts=2 et
-
 for f in split(glob('${DOTFILES}/topics/vim/lang/*.vim'), '\n')
     exe 'source' f
 endfor
@@ -273,10 +264,6 @@ call SetBackgroundMode()
 if has('nvim')
     nnoremap <silent> <BS> :TmuxNavigateLeft<cr>
 endif
-
-" java
-autocmd FileType java setlocal omnifunc=javacomplete#Complete
-let g:JavaComplete_ShowExternalCommandsOutput=1
 
 " system specific ************************************************************
 if filereadable(expand("~/.vimrc_local"))
