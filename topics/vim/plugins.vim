@@ -30,6 +30,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-surround'
 Plug 'Yggdroot/indentLine'
+Plug 'neomake/neomake'
 
 if g:has_async
   Plug 'w0rp/ale'
@@ -42,6 +43,7 @@ Plug 'nsf/gocode', {'rtp': 'vim/', 'for': 'go'}
 " java
 Plug 'tpope/vim-classpath', {'for': 'java'}
 Plug 'tfnico/vim-gradle', {'for': 'java'}
+Plug 'artur-shaik/vim-javacomplete2', {'for': 'java'}
 
 " clojure
 Plug 'tpope/vim-fireplace', {'for': 'clojure'}
