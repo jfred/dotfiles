@@ -132,7 +132,10 @@ cnoremap <C-n> <Down>
 " ctrl-l is normally mapped as redraw so now I redraw and window naviagte
 nnoremap <C-l> <C-w>l:redraw!<CR>
 
-nmap <silent> <Leader>nt :Ranger<CR>
+nnoremap <silent> <Leader>nt :NERDTreeToggle<CR>
+nnoremap <silent> <Leader>v :NERDTreeFind<CR>
+let NERDTreeMinimalUI = 1
+let NERDTreeDirArrows = 1
 
 let g:ranger_map_keys = 0
 map <Leader>f :GFiles<CR>
@@ -273,3 +276,11 @@ endif
 if filereadable(expand("~/.vimrc_local"))
   source ~/.vimrc_local
 endif
+
+" open NERDTree by default
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | wincmd p | endif
+
+" xxit Vim if NERDTree is the only window left.
+autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() |
+    \ quit | endif

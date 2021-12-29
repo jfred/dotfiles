@@ -11,11 +11,12 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'altercation/vim-colors-solarized'
 
 " Files
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
-Plug 'francoiscabrol/ranger.vim'
+Plug 'preservim/nerdtree'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'benmills/vimux'
+Plug 'francoiscabrol/ranger.vim'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 
 " Navigation
 Plug 'christoomey/vim-tmux-navigator'
@@ -28,6 +29,7 @@ Plug 'tpope/vim-projectionist'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-surround'
+Plug 'Yggdroot/indentLine'
 
 if g:has_async
   Plug 'w0rp/ale'
@@ -39,6 +41,7 @@ Plug 'nsf/gocode', {'rtp': 'vim/', 'for': 'go'}
 
 " java
 Plug 'tpope/vim-classpath', {'for': 'java'}
+Plug 'tfnico/vim-gradle', {'for': 'java'}
 
 " clojure
 Plug 'tpope/vim-fireplace', {'for': 'clojure'}
