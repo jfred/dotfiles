@@ -42,8 +42,8 @@ Plug 'fatih/vim-go', {'for': 'go'}
 Plug 'nsf/gocode', {'rtp': 'vim/', 'for': 'go'}
 
 " java
+Plug 'hdiniz/vim-gradle'
 Plug 'tpope/vim-classpath', {'for': 'java'}
-Plug 'tfnico/vim-gradle', {'for': 'java'}
 Plug 'artur-shaik/vim-javacomplete2', {'for': 'java'}
 
 " clojure
