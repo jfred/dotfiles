@@ -32,6 +32,7 @@ Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-surround'
 Plug 'Yggdroot/indentLine'
 Plug 'neomake/neomake'
+Plug 'vim-test/vim-test'
 
 if g:has_async
   Plug 'w0rp/ale'
