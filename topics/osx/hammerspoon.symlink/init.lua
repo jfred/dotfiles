@@ -1,7 +1,7 @@
 local hotkey = require "hs.hotkey"
 local grid = require "hs.grid"
 local app = require "hs.application"
-local gridDims = {6, 4}
+local gridDims = {6, 5}
 
 local mega = {"cmd", "alt", "shift"}
 local hyper = {"cmd", "ctrl", "shift"}
@@ -56,7 +56,7 @@ function decreaseGridWidth()
 end
 
 function increaseGridHeight()
-  increaseGridDim(2, 4)
+  increaseGridDim(2, 5)
 end
 
 function decreaseGridHeight()
