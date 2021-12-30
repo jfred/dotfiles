@@ -136,7 +136,7 @@ let NERDTreeMinimalUI = 1
 let NERDTreeDirArrows = 1
 let g:NERDTreeRespectWildIgnore = 1
 nnoremap <silent> <Leader>nt :NERDTreeToggle<CR>
-nnoremap <silent> <Leader>v :NERDTreeFind<CR>
+nnoremap <silent> <Leader>nf :NERDTreeFind<CR>
 
 
 let g:ranger_map_keys = 0
@@ -220,6 +220,12 @@ let g:VimuxUseNearestPane = 1
 map <Leader>vp :VimuxPromptCommand<CR>
 map <Leader>vl :VimuxRunLastCommand<CR>
 map <Leader>vi :VimuxInspectRunner<CR>
+map <Leader>vc :VimuxCloseRunner<CR>
+
+" vim-test
+let test#strategy='vimux'
+map <Leader>Tf :TestFile<CR>
+map <Leader>Tn :TestNearest<CR>
 
 " Style
 let g:dark_scheme = 1
