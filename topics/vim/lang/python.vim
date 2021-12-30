@@ -5,7 +5,7 @@ if filereadable($VIRTUAL_ENV . '/bin/activate_this.py')
   sys.path.insert(0, os.environ['VIRTUAL_ENV'])
   activate_this = os.environ['VIRTUAL_ENV'] + '/bin/activate_this.py'
   execfile(activate_this, dict(__file__=activate_this))
-  EOF
+EOF
 endif
 
 " preview rst
