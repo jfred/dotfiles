@@ -32,7 +32,7 @@ if [[ ${#options[@]} == 0 ]]; then
     # If no matching branches error
     >&2 echo "Failed to find branch for input: ${input}"
     echo "Create branch?"
-    select opt in "task/${input}" "feature/${input}" "bug/${input}" "epic/${input}"; do
+    select opt in "task/${input}" "feature/${input}" "bug/${input}" "epic/${input}" "hotfix/${input}"; do
 	case $opt in 
 	    *) 
 		branch=${opt}
