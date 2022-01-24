@@ -4,8 +4,13 @@ set -e
 CACHE_DIR=~/.ec2ssh
 CACHE_FILE=instances.json
 
+# regexes for checking if names should be looked up
+MATCH_IPV4="^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$"
+MATCH_IPV6="^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$";
+MATCH_HOSTNAME="^([a-z0-9]{1,}\.){1,}[a-z0-9]{3}$";
+
 function usage() {
-    cat<<EOF
+  cat<<EOF
 Usage: ec2ssh [-r REGION] [-j JUMP] [-t TAG] <TARGET>
 
 Open an ssh connection to EC2 instance named <TARGET>
@@ -50,9 +55,9 @@ function instance_cache {
 function list {
   instance=${1}
   instance_cache | jq  -r ".Reservations[].Instances[]
-    | select((.Tags[]|select(.Key==\"${tag}\")|.Value) | contains(\"${instance}\"))
-    | (.Tags[]|select(.Key==\"${tag}\")|.Value)
-    " | sort
+  | select((.Tags[]|select(.Key==\"${tag}\")|.Value) | contains(\"${instance}\"))
+  | (.Tags[]|select(.Key==\"${tag}\")|.Value)
+  " | sort
 }
 
 # Only return first matching instance's ip
@@ -60,18 +65,18 @@ function get_ip {
   instance=${1}
   ip_type=${2}
   instance_cache | jq -r ".Reservations[].Instances[]
-    | select((.Tags[]|select(.Key==\"${tag}\")|.Value) | contains(\"${instance}\"))
-    | .${ip_type}IpAddress
-    " | head -n 1
+  | select((.Tags[]|select(.Key==\"${tag}\")|.Value) | contains(\"${instance}\"))
+  | .${ip_type}IpAddress
+  " | head -n 1
 }
 
 # return instances matching name
 function get_instances {
   instance=${1}
   instance_cache | jq  -r ".Reservations[].Instances[]
-    | select((.Tags[]|select(.Key==\"${tag}\")|.Value) | contains(\"${instance}\"))
-    | (.Tags[]|select(.Key==\"${tag}\")|.Value)
-    " | sort
+  | select((.Tags[]|select(.Key==\"${tag}\")|.Value) | contains(\"${instance}\"))
+  | (.Tags[]|select(.Key==\"${tag}\")|.Value)
+  " | sort
 }
 
 function transform_host {
@@ -79,31 +84,34 @@ function transform_host {
   user="${hostparts[0]}"
   instance="${hostparts[1]}"
   ip_type=${2}
+  resolved=${instance}
 
   if [ -z "${instance}" ]; then
     instance=${user}
     user=""
   fi
 
-  if [[ ${instance} =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
-    # if it looks like an ip address...
-    ipaddr=${instance}
+  if [[ ${instance} =~ ${MATCH_IPV4} 
+    || ${isntance} =~ ${MATCH_IPV6} 
+    || ${instance} =~ ${MATCH_HOSTNAME}
+    ]]; then
+    resolved=${instance}
   else
-    ipaddr=`get_ip ${instance} ${ip_type}`
-    ipaddr=${ipaddr//\"}
-    if [ "null" = "${ipaddr}" ]; then
+    resolved=`get_ip ${instance} ${ip_type}`
+    resolved=${resolved//\"}
+    if [ "null" = "${resolved}" ]; then
       echo ${1}
       exit
     fi
-    if [ -z "${ipaddr}" ]; then
+    if [ -z "${resolved}" ]; then
       die "Failed to find instance tagged ${tag}:${instance} in ${region}"
     fi
   fi
 
   if [ -z "${user}" ]; then
-    echo "${ipaddr}"
+    echo "${resolved}"
   else
-    echo "${user}@${ipaddr}"
+    echo "${user}@${resolved}"
   fi
 }
 
