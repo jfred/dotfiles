@@ -22,6 +22,9 @@ local function superbind(char, func)
 end
 
 -- default grid
+hs.grid.ui.textSize = 60
+hs.grid.ui.showExtraKeys = false
+hs.grid.ui.highlightStrokeWidth = 10
 function printGrid()
   local s = string.format('%sx%s', gridDims[1], gridDims[2])
   hs.alert(string.format("grid: %s", s))
