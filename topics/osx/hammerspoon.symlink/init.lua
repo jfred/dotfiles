@@ -92,6 +92,11 @@ superbind('.', grid.resizeWindowWider)
 superbind(',', grid.resizeWindowThinner)
 superbind('M', grid.maximizeWindow)
 
+superbind('C', function()
+  local win = hs.window.focusedWindow()
+  win:centerOnScreen()
+end)
+
 -- move windows
 superbind('N', function()
   -- get the focused window
