@@ -2,7 +2,7 @@
 set -e
 
 CACHE_DIR=~/.ec2ssh
-CACHE_FILE=instances.json
+CACHE_FILE_NAME=instances.json
 
 # regexes for checking if names should be looked up
 MATCH_IPV4="^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$"
@@ -44,10 +44,28 @@ EOF
 # Helper functions
 ##########################################################
 
+function time_ago {
+  if [ ${1} -gt 3599 ]; then
+    echo "$(($1/3600))h";
+    return
+  fi
+  if [ ${1} -gt 59 ]; then
+    echo "$(($1/60))m";
+    return
+  fi
+  echo "${1}s";
+}
+
+function populate_cache {
+  mkdir -p ${CACHE_DIR}/${REGION}
+  aws ec2 describe-instances --region=${region}> ${CACHE_FILE}.new
+  mv ${CACHE_FILE}.new ${CACHE_FILE}
+}
+
 function instance_cache {
   mkdir -p ${CACHE_DIR}/${region}
-  if [ "${REFRESH_CACHE}" = true ] || [ ! -f ${CACHE_FILE} ]; then
-    aws ec2 describe-instances --region=${region}> ${CACHE_FILE}
+  if [ ! -f ${CACHE_FILE} ]; then
+    populate_cache
   fi
   cat ${CACHE_FILE}
 }
@@ -151,7 +169,7 @@ filters=""
 CMD=""
 REFRESH_CACHE=false
 DRY_RUN=false
-CACHE_FILE="${CACHE_DIR}/${region}/${CACHE_FILE}"
+CACHE_FILE="${CACHE_DIR}/${region}/${CACHE_FILE_NAME}"
 
 ##########################################################
 # Parse arguments
@@ -159,7 +177,7 @@ CACHE_FILE="${CACHE_DIR}/${region}/${CACHE_FILE}"
 
 # parse options (and capture command for out of order)
 while test $# != 0; do case "$1" in
-  -c) REFRESH_CACHE=true;;
+  -c) populate_cache;;
   -d) DRY_RUN=true;;
   -h) CMD=$1;;
   -l) CMD=$1;;
@@ -181,9 +199,9 @@ while test $# != 0; do case "$1" in
   shift
 done
 
-if [ "${REFRESH_CACHE}" = false ] && [ -f ${CACHE_FILE} ]; then
-  cache_age=$(echo $((($(date +%s) - $(date +%s -r ${CACHE_FILE})) / 3600)))
-  echo "Using instance cache: ${CACHE_FILE} (${cache_age} hrs ago)"
+if [ -f ${CACHE_FILE} ]; then
+  cache_age=$(echo $((($(date +%s) - $(date +%s -r ${CACHE_FILE})))))
+  echo "Using instance cache: ${CACHE_FILE} (age: $(time_ago ${cache_age}))"
 fi
 
 # target agnostic commands
@@ -285,3 +303,14 @@ echo "executing: ${cmd}"
 if [[ ${DRY_RUN} == false ]]; then
   ${cmd}
 fi
+
+# auto update cache
+if [ -f ${CACHE_FILE} ]; then
+  cache_age=$(echo $((($(date +%s) - $(date +%s -r ${CACHE_FILE})))))
+  if [ $cache_age -gt 86400 ]; then
+    echo -n "Cache is old updating..."
+    populate_cache
+    echo "done"
+  fi
+fi
+
