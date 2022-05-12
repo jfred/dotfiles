@@ -5,9 +5,9 @@ source "$(dirname "$0")/ec2util"
 
 function usage() {
   cat<<EOF
-Usage: ec2ssh [-r REGION] [-J JUMP] [-t TAG] <TARGET>
+Usage: ec2scp [-r REGION] [-J JUMP] [-t TAG] <TARGET>:<PATH> <LOCAL_PATH>
 
-Open an ssh connection to EC2 instance named <TARGET>
+Copy <PATH> via scp from EC2 instance named <TARGET> to <LOCAL_PATH>
 
 If more than one instance begins with <TARGET> then you will be prompted
 to pick from the available instances
@@ -16,19 +16,15 @@ to pick from the available instances
   -h             Display help
   -r REGION      EC2 Region, defaults to us-east-1
   -t TAG         Resolve instances with tag, defaults to Name
-  -l             List hosts
-  -J JUMP        Jump host (optional) - legacy -j flag supported
+  -J JUMP        Jump host (optional)
   -L FWD         Port forwarding - format port:host:host_port (if jump, proxies through JUMP_FWD)
   -F JUMP_FWD    Port to use on jump host, defaults to 9999
   -d             Dry run of command
 
 Examples:
 
-  ec2ssh -J jump-123 server-456 
-     ssh through server named "jump-123" to EC2 instance starting with "server-456"
-
-  ec2ssh -J jump-123 server-456 -F 7001 -L 7000:127.0.0.1:3000
-     ssh tunnel with port forwarding from localhost:7000 -> jump-123 -> server-456:3000
+  ec2scp -J jump-123 server-456:some-file /tmp/some-file
+     scp some-file through server named "jump-123" from EC2 instance starting with "server-456" to /tmp/some-file
 
 EOF
 }
@@ -36,7 +32,8 @@ EOF
 ##########################################################
 # Check for dependencies
 ##########################################################
-type ssh >/dev/null 2>&1 || die "ssh is required, but can't be found."
+type scp >/dev/null 2>&1 || die "ERROR: scp is required, but can't be found."
+type sed >/dev/null 2>&1 || die "ERROR: sed is required, but can't be found."
 
 
 ##########################################################
@@ -45,9 +42,9 @@ type ssh >/dev/null 2>&1 || die "ssh is required, but can't be found."
 tag="Name"
 jump=""
 target=""
-proxy=""
-jump_port="9999"
 filters=""
+src=""
+dst=""
 
 CMD=""
 DRY_RUN=false
@@ -57,78 +54,64 @@ while test $# != 0; do case "$1" in
   -d) DRY_RUN=true;;
   -c) CMD=$1;;
   -h) CMD=$1;;
-  -l) CMD=$1;;
   -r) set_region $2; shift;;
-  -j) jump=$2; shift;;
   -J) jump=$2; shift;;
   -t) tag=$2; shift;;
-  -L)
-    proxy=(${2//:/ });
-      if [ ${#proxy[@]} != 3 ]; then
-        >&2 echo "ERROR: proxy port format must be [port]:[host]:[hostport]"
-        usage
-        exit 1
+  *)
+    if [ -z "${src}" ]; then
+      src=${1}
+    else
+      if [ -z "${dst}" ]; then
+        dst=${1}
       fi
-      shift
-      ;;
-    -F) jump_port=$2; shift;;
-    *)  target=$1
+    fi
   esac
   shift
 done
+
 
 # target agnostic commands
 case "${CMD}" in
   -c) populate_cache; exit;;
   -h) usage; exit;;
-  -l) list ${target}; exit;;
 esac
 
-init_cache
-
 # ensure we have a target now
-if [ -z "${target// }" ]; then
+if [ -z "${src}" ] || [ -z "${dst}" ]; then
   usage
-  exit 1
+  die
 fi
+
+if [[ ! "${src}" =~ ^[^:]{1,}:.{1,}$ ]]; then
+  die "<TARGET>:<PATH> not in the right form"
+fi
+
+target=$(echo ${src} | sed "s/:.*//g")
+path=$(echo ${src} | sed "s/.*://")
+
+init_cache
 
 ##########################################################
 # Target specific commands
 ##########################################################
 if [[ ! -z "${jump}" ]]; then
-  find_target "${jump}"
-  jump=${found_target}
+    find_target "${jump}"
+    jump=${found_target}
 fi
 find_target "${target}"
 target=${found_target}
 
-##########################################################
-# Connect to target
-##########################################################
-cmd='ssh'
-# transform proxy name to ip
-if [ -n "${proxy[1]}" ]; then
-  proxy[1]=`transform_host "${proxy[1]}" "Private"`
-fi
+
+cmd='scp'
 
 # if no jump server, use public ip of target
 if [ -z "${jump}" ]; then
-  transform_host "${target}" "Public"
   public=`transform_host "${target}" "Public"`
-  if [ -z "${proxy}" ]; then
-    cmd="${cmd} ${public}"
-  else
-    cmd="${cmd} -L ${proxy[0]}:${proxy[1]}:${proxy[2]} ${public}"
-  fi
+  cmd="${cmd} ${public}:${path} ${dst}"
 else
-  # there is a jump server, use public ip jump host and private ip of target host
   public=`transform_host "${jump}" "Public"`
   private=`transform_host "${target}" "Private"`
-  if [ -z "${proxy}" ]; then
-    cmd="${cmd} -J ${public} ${private}"
-  else
-    cmd="${cmd} -A -L ${proxy[0]}:localhost:${jump_port} -t ${public} ssh -A -L ${jump_port}:${proxy[1]}:${proxy[2]} ${private}"
-  fi
+  cmd="${cmd} -J ${public} ${private}:${path} ${dst}"
 fi
 
 echo "executing: ${cmd}"

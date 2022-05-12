@@ -1,0 +1,190 @@
+#!/usr/bin/env bash
+set -e
+
+REGION="us-east-1"
+CACHE_DIR=~/.ec2ssh
+CACHE_FILE_NAME=instances.json
+CACHE_FILE="${CACHE_DIR}/${REGION}/${CACHE_FILE_NAME}"
+
+# regexes for checking if names should be looked up
+MATCH_IPV4="^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$"
+MATCH_IPV6="^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$";
+MATCH_HOSTNAME="^([a-z0-9]{1,}\.){1,}[a-z0-9]{3}$";
+
+##########################################################
+# Helper functions
+##########################################################
+function set_region {
+  REGION=$1
+  CACHE_FILE="${CACHE_DIR}/${REGION}/${CACHE_FILE_NAME}"
+}
+
+function time_ago {
+  if [ ${1} -gt 3599 ]; then
+    echo "$(($1/3600))h";
+    return
+  fi
+  if [ ${1} -gt 59 ]; then
+    echo "$(($1/60))m";
+    return
+  fi
+  echo "${1}s";
+}
+
+function populate_cache {
+  echo "Populating instance cache ${CACHE_FILE}"
+  mkdir -p ${CACHE_DIR}/${REGION}
+  aws ec2 describe-instances --region=${REGION}> ${CACHE_FILE}.new
+  mv ${CACHE_FILE}.new ${CACHE_FILE}
+}
+
+function instance_cache {
+  mkdir -p ${CACHE_DIR}/${REGION}
+  if [ ! -f ${CACHE_FILE} ]; then
+    populate_cache
+  fi
+  cat ${CACHE_FILE}
+}
+
+function list {
+  local instance=${1}
+  instance_cache | jq  -r ".Reservations[].Instances[]
+  | select((.Tags[]|select(.Key==\"${tag}\")|.Value) | contains(\"${instance}\"))
+  | (.Tags[]|select(.Key==\"${tag}\")|.Value)
+  " | sort
+}
+
+# Only return first matching instance's ip
+function get_ip {
+  local instance=${1}
+  local ip_type=${2}
+  instance_cache | jq -r ".Reservations[].Instances[]
+  | select((.Tags[]|select(.Key==\"${tag}\")|.Value) | contains(\"${instance}\"))
+  | .${ip_type}IpAddress
+  " | head -n 1
+}
+
+# return instances matching name
+function get_instances {
+  local instance=${1}
+  instance_cache | jq  -r ".Reservations[].Instances[]
+  | select((.Tags[]|select(.Key==\"${tag}\")|.Value) | contains(\"${instance}\"))
+  | (.Tags[]|select(.Key==\"${tag}\")|.Value)
+  " | sort
+}
+
+function transform_host {
+  local hostparts=(${1/@/ })
+  local user="${hostparts[0]}"
+  local instance="${hostparts[1]}"
+  local ip_type=${2}
+  local resolved=${instance}
+
+  if [ -z "${instance}" ]; then
+    instance=${user}
+    user=""
+  fi
+
+  if [[ ${instance} =~ ${MATCH_IPV4} 
+    || ${isntance} =~ ${MATCH_IPV6} 
+    || ${instance} =~ ${MATCH_HOSTNAME}
+    ]]; then
+    resolved=${instance}
+  else
+    resolved=`get_ip ${instance} ${ip_type}`
+    resolved=${resolved//\"}
+    if [ "null" = "${resolved}" ]; then
+      die "ERROR: Failed to find ${ip_type} ip for instance tagged ${tag}:${instance} in ${REGION}"
+    fi
+    if [ -z "${resolved}" ]; then
+      die "ERROR: Failed to find instance tagged ${tag}:${instance} in ${REGION}"
+    fi
+  fi
+
+  if [ -z "${user}" ]; then
+    echo "${resolved}"
+  else
+    echo "${user}@${resolved}"
+  fi
+}
+
+function add_filter {
+  if [[ "${filters}" -eq "" ]]; then
+    filters="--filters "
+  fi
+  filters="${filters}${1}"
+}
+
+function die {
+  if [[ ! -z "${1}" ]]; then
+    echo >&2 $1
+  fi
+  exit 1
+}
+
+##########################################################
+# Check for dependencies
+##########################################################
+type awk >/dev/null 2>&1 || die "ERROR: awk is required, but can't be found."
+type grep >/dev/null 2>&1 || die "ERROR: grep is required, but can't be found."
+type jq >/dev/null 2>&1 || die "ERROR: jq is required, but it is not installed."
+type aws >/dev/null 2>&1 || die "ERROR: AWS CLI is required, but it is not installed."
+
+##########################################################
+# Runtime variables
+##########################################################
+tag="Name"
+filters=""
+target=
+
+REFRESH_CACHE=false
+
+function init_cache() {
+  if [ -f ${CACHE_FILE} ]; then
+    local cache_age=$(echo $((($(date +%s) - $(date +%s -r ${CACHE_FILE})))))
+    echo "Using instance cache: ${CACHE_FILE} (age: $(time_ago ${cache_age}))"
+    # auto update cache in background if old
+    if [ $cache_age -gt 86400 ]; then
+      populate_cache > /dev/null &
+    fi
+  fi
+}
+
+# determine number of instances that matches the target optional filter
+function find_target {
+  local target=$1
+
+  local instances
+  local pick
+  local count
+
+  instances=$(get_instances ${target})
+  count=$(echo "${instances}" | wc -l)
+
+  if [[ -z "${instances}" ]]; then
+    # no matching instances of target, fail
+    die "ERROR: Didn't find instance ${target}"
+  elif [[ "${count}" -eq 1 ]]; then
+    # only one matching target, capture ip and move on
+    target=$(echo "${instances}" | cut -f1)
+  else
+    # print matching instance names and allow user to specify the choice by index
+    echo "pick instance matching '${target}'"
+    echo "${instances}" | cut -f2 | awk '{printf "%d) %s\n", NR, $0}'
+    read -p "pick (1): " pick
+
+    # if nothing was chosen default pick to first match
+    if [[ "${pick}" -eq "" ]]; then
+      pick=1
+    fi
+
+    # ensure pick is within the valid range
+    if [[ "${pick}" -lt 1 || "${pick}" -gt "${count}" ]]; then
+      die "ERROR: Invalid pick"
+    fi
+
+    # capture ip of target for use later
+    target=$(echo "${instances}" | cut -f1 | sed -n "${pick}"p)
+  fi
+  found_target=${target}
+}
