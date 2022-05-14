@@ -1,0 +1,4 @@
+VALUE=$1
+LIST=$2
+DELIMITER=${3:- }
+[[ "$LIST" =~ ($DELIMITER|^)$VALUE($DELIMITER|$) ]]
