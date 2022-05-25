@@ -5,6 +5,7 @@ local gridDims = {6, 5}
 
 local mega = {"cmd", "alt", "shift"}
 local hyper = {"cmd", "ctrl", "shift"}
+local super = {"ctrl", "alt", "cmd"}
 
 local logger = hs.logger.new('init', 5)
 
@@ -13,12 +14,21 @@ local function reloading()
   hs.reload()
 end
 
-local function superbind(char, func)
-  hotkey.deleteAll(mega, char)
-  hotkey.bind(mega, char, func)
+local function rebinder(mod)
+  return function(char, func)
+    hotkey.deleteAll(mod, char)
+    hotkey.bind(mod, char, func)
+  end
+end
 
-  hotkey.deleteAll(hyper, char)
-  hotkey.bind(hyper, char, func)
+local bindMega = rebinder(mega)
+local bindHyper = rebinder(hyper)
+local bindSuper = rebinder(super)
+
+local function bindAll(char, func)
+  bindMega(char, func)
+  bindHyper(char, func)
+  bindSuper(char, func)
 end
 
 -- default grid
@@ -67,38 +77,59 @@ function decreaseGridHeight()
 end
 
 -- reload config
-superbind("R", reloading)
+bindAll("R", reloading)
 
 -- grid
 hs.window.animationDuration = 0 -- disable animations
-superbind('E', grid.toggleShow)
-superbind(';', grid.snap)
-superbind('=', increaseGridWidth)
-superbind('-', decreaseGridWidth)
-superbind('0', increaseGridHeight)
-superbind('9', decreaseGridHeight)
+bindAll('E', grid.toggleShow)
+bindAll(';', grid.snap)
+bindAll('=', increaseGridWidth)
+bindAll('-', decreaseGridWidth)
+bindAll('0', increaseGridHeight)
+bindAll('9', decreaseGridHeight)
 
 
 -- move windows
-superbind('J', grid.pushWindowDown)
-superbind('K', grid.pushWindowUp)
-superbind('H', grid.pushWindowLeft)
-superbind('L', grid.pushWindowRight)
+bindAll('J', grid.pushWindowDown)
+bindAll('K', grid.pushWindowUp)
+bindAll('H', grid.pushWindowLeft)
+bindAll('L', grid.pushWindowRight)
 
 -- resize windows
-superbind('[', grid.resizeWindowShorter)
-superbind(']', grid.resizeWindowTaller)
-superbind('.', grid.resizeWindowWider)
-superbind(',', grid.resizeWindowThinner)
-superbind('M', grid.maximizeWindow)
+bindAll('[', grid.resizeWindowShorter)
+bindAll(']', grid.resizeWindowTaller)
+bindAll('.', grid.resizeWindowWider)
+bindAll(',', grid.resizeWindowThinner)
+bindAll('M', grid.maximizeWindow)
 
-superbind('C', function()
+bindAll('C', function()
   local win = hs.window.focusedWindow()
   win:centerOnScreen()
 end)
 
+-- major moves
+local function genFocusWinModder(mod)
+  return function()
+    -- get the focused window
+    local win = hs.window.focusedWindow()
+    local screengrid = grid.getGrid(winscreen)
+    local target = {
+      screengrid.w * mod[1],
+      screengrid.h * mod[2],
+      screengrid.w * mod[3],
+      screengrid.h * mod[4]
+    }
+    grid.set(win, target)
+  end
+end
+
+bindSuper('Right', genFocusWinModder({.5, 0, 1, 1}))
+bindSuper('Left', genFocusWinModder({0, 0, .5, 1}))
+bindSuper('Up', genFocusWinModder({0, 0, 1, .5}))
+bindSuper('Down', genFocusWinModder({0, .5, 1, 1}))
+
 -- move windows
-superbind('N', function()
+bindAll('N', function()
   -- get the focused window
   local win = hs.window.focusedWindow()
   -- get the screen where the focused window is displayed, a.k.a. current screen
@@ -138,7 +169,7 @@ end
 
 -- layouts
 -- get screen names from hs.screen.allScreens()[1]:name() or similar in the console
-superbind('1', function ()
+bindAll('1', function ()
   -- local laptopScreen = 'Built-in Retina Display'
   local laptopScreen = nil
   local laptopLayout = {
