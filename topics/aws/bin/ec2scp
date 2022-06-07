@@ -5,9 +5,13 @@ source "$(dirname "$0")/ec2util"
 
 function usage() {
   cat<<EOF
-Usage: ec2scp [-r REGION] [-J JUMP] [-t TAG] <TARGET>:<PATH> <LOCAL_PATH>
+Usage: ec2scp [-r REGION] [-J JUMP] [-t TAG] [SOURCE] [DESTINATION]
 
-Copy <PATH> via scp from EC2 instance named <TARGET> to <LOCAL_PATH>
+Copy via scp from SOURCE to DESTINATION.
+
+SOURCE and DESTINATION can be in one of the following forms:
+- local path - e.g. /some/local/path
+- remote path - e.g. servername:/some/remote/path
 
 If more than one instance begins with <TARGET> then you will be prompted
 to pick from the available instances
@@ -25,6 +29,9 @@ Examples:
 
   ec2scp -J jump-123 server-456:some-file /tmp/some-file
      scp some-file through server named "jump-123" from EC2 instance starting with "server-456" to /tmp/some-file
+
+  ec2scp -J jump-123 /tmp/some-file server-456:some-file
+     scp /tmp/some-file through server named "jump-123" to EC2 instance starting with "server-456" 
 
 EOF
 }
@@ -82,37 +89,55 @@ if [ -z "${src}" ] || [ -z "${dst}" ]; then
   die
 fi
 
-if [[ ! "${src}" =~ ^[^:]{1,}:.{1,}$ ]]; then
-  die "<TARGET>:<PATH> not in the right form"
-fi
+#if [[ ! "${src}" =~ ^[^:]{1,}:.{1,}$ ]]; then
+#  die "<TARGET>:<PATH> not in the right form"
+#fi
 
-target=$(echo ${src} | sed "s/:.*//g")
-path=$(echo ${src} | sed "s/.*://")
 
 init_cache
+
+transform_type="Public"
+transformed_loc=""
+function transform_loc() {
+  transformed_loc=""
+  if [[ "$1" =~ .*":".* ]]; then
+    echo "transforming $1"
+
+    local target=$(echo ${1} | sed "s/:.*//g")
+    local path=$(echo ${1} | sed "s/.*://")
+    find_target "${target}"
+    target=${found_target}
+
+    echo "checking $1 ${transform_type}"
+    target=`transform_host "${target}" "${transform_type}"`
+    transformed_loc=${target}:${path}
+  else
+    echo "Not transforming $1"
+    transformed_loc=$1
+  fi
+}
 
 ##########################################################
 # Target specific commands
 ##########################################################
-if [[ ! -z "${jump}" ]]; then
-    find_target "${jump}"
-    jump=${found_target}
-fi
-find_target "${target}"
-target=${found_target}
-
-
 cmd='scp'
 
-# if no jump server, use public ip of target
-if [ -z "${jump}" ]; then
-  public=`transform_host "${target}" "Public"`
-  cmd="${cmd} ${public}:${path} ${dst}"
-else
-  public=`transform_host "${jump}" "Public"`
-  private=`transform_host "${target}" "Private"`
-  cmd="${cmd} -J ${public} ${private}:${path} ${dst}"
+if [[ ! -z "${jump}" ]]; then
+  # get jump
+  find_target "${jump}"
+  jump=${found_target}
+  jump=`transform_host "${jump}" "Public"`
+
+  # set transform to private and transform
+  transform_type="Private"
+  cmd="${cmd} -J ${jump}"
 fi
+
+transform_loc "${src}"
+src=${transformed_loc}
+transform_loc "${dst}"
+dst=${transformed_loc}
+cmd="${cmd} ${src} ${dst}"
 
 echo "executing: ${cmd}"
 if [[ ${DRY_RUN} == false ]]; then

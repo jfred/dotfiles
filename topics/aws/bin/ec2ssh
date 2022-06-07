@@ -125,7 +125,7 @@ else
   public=`transform_host "${jump}" "Public"`
   private=`transform_host "${target}" "Private"`
   if [ -z "${proxy}" ]; then
-    cmd="${cmd} -J ${public} ${private}"
+    cmd="${cmd} -A -J ${public} ${private}"
   else
     cmd="${cmd} -A -L ${proxy[0]}:localhost:${jump_port} -t ${public} ssh -A -L ${jump_port}:${proxy[1]}:${proxy[2]} ${private}"
   fi
