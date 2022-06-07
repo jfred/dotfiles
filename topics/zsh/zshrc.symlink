@@ -23,6 +23,12 @@ tmux_add_profile() {
     tmux_profile_bgmap[$1]=${3:-default}
 }
 
+# default tmux profiles
+tmux_add_profile prod colour196
+tmux_add_profile stg colour214
+tmux_add_profile test colour40
+tmux_add_profile dev colour33
+
 declare -A iterm_profiles
 iterm_profile() {
     profile=${iterm_profiles[$1]:-Default}
@@ -34,15 +40,21 @@ iterm_add_profile() {
     iterm_profiles[${1}]=${2}
 }
 
+# default iterm profiles
+iterm_add_profile prod prod
+iterm_add_profile stg stage
+iterm_add_profile test test
+iterm_add_profile dev test
+
 profile_switch () {
-    if tmux info &> /dev/null; then
+    if [[ "${TERM_PROGRAM}" = "tmux" ]]; then
         # tmux pane
         tmux_profile $1
     elif [[ "${TERM_PROGRAM}" = "iTerm.app" ]]; then
         # iterm pane
         iterm_profile $1
     else
-        echo "Warn: unsupported terminal for profile switch"
+        echo "Warn: unsupported terminal (${TERM_PROGRAM}) for profile switch"
     fi
 }
 
