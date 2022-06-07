@@ -41,7 +41,7 @@ function populate_cache {
 function instance_cache {
   mkdir -p ${CACHE_DIR}/${REGION}
   if [ ! -f ${CACHE_FILE} ]; then
-    populate_cache
+    populate_cache > /dev/null
   fi
   cat ${CACHE_FILE}
 }
