@@ -22,6 +22,12 @@ jump () {
         echo "Usage: jump env [target] ...ec2ssh params" >&2
         return 1
     fi
+
+    if [[ "${1}" == "-c" ]]; then
+        ec2ssh -r ${JUMP_REGION} -c
+        return
+    fi
+
     local vpc=${1}
     local svr=${2}
     local jump_svr='jump'
