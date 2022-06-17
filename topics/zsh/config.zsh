@@ -7,6 +7,8 @@ select-word-style bash
 
 bindkey -e
 
+setopt +o nomatch
+
 # term colors
 export CLICOLOR=1
 export LSCOLORS=GxFxCxDxBxegedabagacad
