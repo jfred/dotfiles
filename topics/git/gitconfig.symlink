@@ -4,6 +4,7 @@
     ap = add --all . -p
     bl = show-branch --list
     st = status -sb
+    du = diff @{upstream}
     dh = diff HEAD
     dd = diff -b -w --word-diff-regex=.
     lg = log --graph --pretty=format:'%C(red)%h%C(reset) : %C(yellow)%d%C(reset) %s %C(green)(%an %cr)%C(reset)' --abbrev-commit --date=relative
