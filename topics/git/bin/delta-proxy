@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+cmd=delta
+if [ "$(uname)" == "Darwin" ]; then
+	defaults read -g AppleInterfaceStyle 2>/dev/null | grep -i Dark >/dev/null
+	if [[ $? -eq 1 ]]; then
+		cmd="${cmd} --light"
+	fi
+fi
+${cmd} $@

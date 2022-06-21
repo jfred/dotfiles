@@ -52,14 +52,14 @@
     rebase = true
 
 [pager]
-    diff = delta
-    log = delta
-    reflog = delta
-    show = delta
+    diff = delta-proxy
+    log = delta-proxy
+    reflog = delta-proxy
+    show = delta-proxy
 
 [delta]
     navigate = true
     line-numbers = true
 
 [interactive]
-    diffFilter = delta --color-only
+    diffFilter = delta-proxy --color-only
