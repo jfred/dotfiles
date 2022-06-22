@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# Uses sqlit3 to run SQL against a CSV file
+#
+# From https://til.simonwillison.net/sqlite/one-line-csv-operations
+
+if [ $# -ne 2 ]; then
+  echo "Usage: csvql [CSV] [SQL]"
+  echo "Uses sqlit3 to run SQL against a CSV file"
+  echo ""
+  echo "Examples:"
+  echo "  csvql some.csv \"select count(1) from csv\""
+  exit 1
+fi
+
+csv=$1
+sql=$2
+
+sqlite3 :memory: \
+  -cmd '.mode csv' -cmd ".import ${csv} csv" \
+  -cmd '.mode column' "${sql}"
