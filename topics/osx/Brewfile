@@ -21,6 +21,7 @@ brew "ctags"
 brew "fzf"
 brew "ripgrep"
 
+brew "dict"
 brew "vim"
 
 # config
