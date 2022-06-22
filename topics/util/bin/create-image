@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+color=${1:-white}
+bgColor=${2:-green}
+filename=${color}-${bgColor}.jpg
+
+echo -n "Creating ${filename}..."
+
+convert -size 1024x1024 xc:${bgColor} \
+            -fill ${color} \
+            -pointsize 128 \
+            -gravity center -draw 'text 0,0 "X"' \
+            -pointsize 450 \
+            -draw 'text 0,-256 "1024"' \
+            -draw 'text 0,256 "1024"' \
+            ${filename}
+
+echo "done"
