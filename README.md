@@ -31,12 +31,8 @@ The following example would disable java and vagrant:
 OSX Specifics
 -------------
 
-1. install XCode
-2. install homebrew
-
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-3. set shell
+1. [install homebrew](https://docs.brew.sh/Installation)
+2. set shell
 
     echo /usr/local/bin/zsh | sudo tee -a /etc/shells
     chsh -s /usr/local/bin/zsh 
