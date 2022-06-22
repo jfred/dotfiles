@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# from: https://gist.github.com/thcipriani/915b47d59308db2bd9ea8a70e6719b1c
+
+set -euo pipefail
+
+printf '%s°C\n' "$(units "tempF($@)" 'tempC' | xargs)"
+printf '%s°F\n' "$(units "tempC($@)" 'tempF' | xargs)"
