@@ -40,5 +40,7 @@ case $REMOTE_URL in
         launch "https://github.com/${REMOTE_ID}/tree/${REMOTE_BRANCH}" ;;
     *@bitbucket.org:*)
         launch "https://bitbucket.org/${REMOTE_ID}/src?at=${REMOTE_BRANCH}" ;;
+    git@git.sr.ht:*)
+        launch "https://git.sr.ht/${REMOTE_ID}/tree/${REMOTE_BRANCH}" ;;
     *) die "Unsupported remote: ${REMOTE_URL}" ;;
 esac
