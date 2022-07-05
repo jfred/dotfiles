@@ -6,16 +6,6 @@ function die() {
     exit 1
 }
 
-function launch() {
-    echo "Opening ${1}"
-    UNAME=$(uname | tr "[:upper:]" "[:lower:]")
-    if [ "$UNAME" == "linux" ]; then
-        xdg-open ${1}
-    else
-        open ${1}
-    fi
-}
-
 if [ "$CI_URL" == "" ]; then
     die "Error: No CI_URL is set"
 fi
@@ -34,4 +24,4 @@ BUILD_URL=${CI_URL}
 BUILD_URL=$(echo "${BUILD_URL}" | sed "s|_BRANCH_ESCAPED_|${BRANCH_ESCAPED}|g")
 BUILD_URL=$(echo "${BUILD_URL}" | sed "s|_BRANCH_|${BRANCH}|g")
 
-launch ${BUILD_URL}
+git web--browse ${BUILD_URL}

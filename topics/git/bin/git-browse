@@ -15,12 +15,7 @@ function die() {
 
 function launch() {
     echo "Opening ${1}"
-    UNAME=$(uname | tr "[:upper:]" "[:lower:]")
-    if [ "$UNAME" == "linux" ]; then
-        xdg-open ${1}
-    else
-        open ${1}
-    fi
+    git web--browse ${1}
 }
 
 REMOTE_NAME=$(git rev-parse --abbrev-ref --symbolic-full-name @{u} | sed 's/^remotes\///')

@@ -19,15 +19,5 @@ function current_branch() {
     git rev-parse --abbrev-ref HEAD
 }
 
-function launch() {
-    echo "Opening ${1}"
-    UNAME=$(uname | tr "[:upper:]" "[:lower:]")
-    if [ "$UNAME" == "linux" ]; then
-        xdg-open ${1}
-    else
-        open ${1}
-    fi
-}
-
-launch "${JIRA_URL}/browse/$(ticket $(current_branch))"
+git web--browse "${JIRA_URL}/browse/$(ticket $(current_branch))"
 
