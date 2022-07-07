@@ -18,6 +18,7 @@ input=${1}
 regex='(https?|ftp|file)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
 # if URL grab last portion
 if [[ $input =~ $regex ]]; then 
+    input=${input%\?*} # remove query params
     input=${input%/} # remove trailing slash
     input=${input##*/} # use last segment
 fi
