@@ -46,14 +46,6 @@ function instance_cache {
   cat ${CACHE_FILE}
 }
 
-function list {
-  local instance=${1}
-  instance_cache | jq  -r ".Reservations[].Instances[]
-  | select((.Tags[]|select(.Key==\"${tag}\")|.Value) | contains(\"${instance}\"))
-  | (.Tags[]|select(.Key==\"${tag}\")|.Value)
-  " | sort
-}
-
 # Only return first matching instance's ip
 function get_ip {
   local instance=${1}

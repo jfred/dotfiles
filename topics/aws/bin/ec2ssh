@@ -16,7 +16,6 @@ to pick from the available instances
   -h             Display help
   -r REGION      EC2 Region, defaults to us-east-1
   -t TAG         Resolve instances with tag, defaults to Name
-  -l             List hosts
   -J JUMP        Jump host (optional) - legacy -j flag supported
   -L FWD         Port forwarding - format port:host:host_port (if jump, proxies through JUMP_FWD)
   -F JUMP_FWD    Port to use on jump host, defaults to 9999
@@ -81,7 +80,6 @@ done
 case "${CMD}" in
   -c) populate_cache; exit;;
   -h) usage; exit;;
-  -l) list ${target}; exit;;
 esac
 
 init_cache
