@@ -27,6 +27,9 @@
     fb = find-branch
     clone-user = "!f() { curl -sL \"https://api.github.com/users/$1/repos?per_page=1000\" | jq -r '.[]| select( .fork == false ) |.clone_url' | xargs -L1 git clone; }; f"
     reword = commit --amend
+    user = config --get-regex "user\\.[name|email]"
+    name = config --local --add user.name
+    email = config --local --add user.email
 [color]
     diff = auto
     branch = auto
@@ -34,7 +37,7 @@
     status = auto
 [user]
     name = Joshua Frederick
-    email = josh@jfred.net
+    useConfigOnly = true
 [core]
     excludesfile = ~/.gitignore
     autocrlf = input
@@ -50,16 +53,3 @@
     stat = true
 [pull]
     rebase = true
-
-[pager]
-    diff = delta-proxy
-    log = delta-proxy
-    reflog = delta-proxy
-    show = delta-proxy
-
-[delta]
-    navigate = true
-    line-numbers = true
-
-[interactive]
-    diffFilter = delta-proxy --color-only
