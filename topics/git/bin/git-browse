@@ -6,7 +6,7 @@ error() {
     sed "${ln}!d" ${src}
     exit 1
 }
-trap 'error "${BASH_SOURCE}" "${LINENO}"' ERR
+#trap 'error "${BASH_SOURCE}" "${LINENO}"' ERR
 
 function die() {
     echo $1
