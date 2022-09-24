@@ -23,7 +23,6 @@ Plug 'junegunn/fzf.vim'
 Plug 'christoomey/vim-tmux-navigator'
 
 " general code
-Plug 'vim-scripts/tComment'
 Plug 'majutsushi/tagbar'
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-projectionist'

@@ -7,6 +7,9 @@
 --langdef=js
 --langmap=plain:.txt|.css,js:.js|.json|.xml|README|LICENSE|.conf
 
+--exclude=node_modules
+--exclude=bower_components
+
 --exclude=*/vendor/*.js
 --exclude=*/ckeditor/*
 --exclude=*/baron/*
