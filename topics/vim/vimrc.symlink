@@ -17,7 +17,6 @@ nnoremap ; :
 nnoremap <C-d> :q<CR>
 
 " defaults *******************************************************************
-let ctags_cmd='/usr/local/bin/ctags'
 
 "set number
 set pastetoggle=<F3>
@@ -27,7 +26,7 @@ set clipboard=unnamed
 " Invisible characters *******************************************************
 set listchars=tab:❘-,trail:·,extends:»,precedes:«,nbsp:×
 set nolist
-:noremap <Leader>i :set list!<CR> " Toggle invisible chars
+"noremap <Leader>i :set list!<CR> " Toggle invisible chars
 
 " Tabs ***********************************************************************
 set softtabstop=4
@@ -36,7 +35,7 @@ set tabstop=4
 set expandtab
 set smarttab
 
-" Indents ********************************************************************
+" Indents
 set autoindent
 set smartindent
 set cindent
@@ -65,16 +64,6 @@ if has('mouse')
     endif
 endif
 
-" ALE linting events
-if g:has_async
-    set updatetime=1000
-    let g:ale_lint_on_text_changed = 0
-    " autocmd CursorHold * call ale#Lint()
-    " autocmd CursorHoldI * call ale#Lint()
-    " autocmd InsertEnter * call ale#Lint()
-    " autocmd InsertLeave * call ale#Lint()
-endif
-
 " Switch syntax highlighting on, when the terminal has colors
 if &t_Co > 2 || has("gui_running")
     set t_Co=256
@@ -87,9 +76,6 @@ if has("gui_running")
     set guioptions=egt
     set guioptions-=mrT
 endif
-
-" Sudo file if you must
-cmap w!! %!sudo tee > /dev/null %
 
 " Only do this part when compiled with support for autocommands.
 if has("autocmd")
@@ -116,142 +102,34 @@ endif " has("autocmd")
 " See https://vi.stackexchange.com/a/2980
 let g:netrw_gx="<cWORD>"
 
-let g:airline_powerline_fonts=0
 set ttimeoutlen=50
-
-" Navigation *****************************************************************
-map <Leader>p <C-^>
-" Easy window navigation
-nnoremap <C-h> <C-w>h
-nnoremap <C-j> <C-w>j
-nnoremap <C-k> <C-w>k
-" Remap for history scrolling
-cnoremap <C-p> <Up>
-cnoremap <C-n> <Down>
-
-" ctrl-l is normally mapped as redraw so now I redraw and window naviagte
-nnoremap <C-l> <C-w>l:redraw!<CR>
-
-" NERDTree *******************************************************************
-let NERDTreeMinimalUI = 1
-let NERDTreeDirArrows = 1
-let g:NERDTreeRespectWildIgnore = 1
-nnoremap <silent> <Leader>nt :NERDTreeToggle<CR>
-nnoremap <silent> <Leader>nf :NERDTreeFind<CR>
-
-" open NERDTree by default
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | wincmd p | endif
-
-" exit Vim if NERDTree is the only window left.
-autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() |
-    \ quit | endif
-
-let g:ranger_map_keys = 0
-
-map <Leader>/ :Commentary<CR>
-
-" fzf commands
-map <Leader>f :GFiles<CR>
-map <Leader>F :Files<CR>
-map <Leader>l :Lines<CR>
-map <Leader>L :Rg<CR>
-map <Leader>b :Buffers<CR>
-
-" projectionist
-map <Leader>,s :Esource<CR>
-map <Leader>,t :Etest<CR>
-map <Leader>,i :Eitest<CR>
-
-" Use ag for search
-if executable('ag')
-  let g:unite_source_grep_command = 'ag'
-  let g:unite_source_grep_default_opts = '--nogroup --nocolor --column -g'
-  let g:unite_source_grep_recursive_opt = ''
-endif
-
-" Custom mappings for the unite buffer
-autocmd FileType unite call s:unite_settings()
-function! s:unite_settings()
-  " Enable navigation with control-j and control-k in insert mode
-  imap <buffer> <C-j>   <Plug>(unite_select_next_line)
-  imap <buffer> <C-k>   <Plug>(unite_select_previous_line)
-endfunction
-
-let g:unite_source_file_rec_ignore_pattern=
- \'\%(^\|/\)\.$\|\~$\|\.\%(o\|exe\|dll\|ba\?k\|sw[po]\|tmp\)$\|\%(^\|/\)\.\%(hg\|git\|bzr\|svn\|jruby\|idea\|vagrant\)\%($\|/\)\|node_modules'
-
-" File search ****************************************************************
-set incsearch         " do incremental searching
-set nohlsearch        " turn off highlight searches, but:
-
-" Turn hlsearch off/on with CTRL-N
-map <silent> <C-N> :set invhlsearch<CR>
 
 set invnumber
 nmap <Leader>N :set invnumber<CR>
 
-" tags ***********************************************************************
-set tags=tags,.tags,/
+let g:ranger_map_keys = 0
 
-nmap <F8> :TagbarToggle<CR>
-execute "map <F9> :!".ctags_cmd." -V -f '.tags' --exclude='build' --exclude='node_modules' --exclude='.git' --exclude='*.html' --exclude='*.js' --extra=+f -R .<CR>"
-
-for f in split(glob($DOTFILES.'/topics/vim/lang/*.vim'), '\n')
-    exe 'source' f
-endfor
-
-" Status line
-set laststatus=2
-set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
-
-nmap <Leader>jt <Esc>:%!python -m json.tool<CR><Esc>:set filetype=json<CR>
-
-" Search mappings: These will make it so that going to the next one in a
-" search will center on the line it's found in.
-map N Nzz
-map n nzz
-
-" prevent falling back on bad habits
-" unmap arrow keys
-nmap <right> <nop>
-nmap <left> <nop>
-nmap <up> <nop>
-nmap <down> <nop>
-imap <right> <nop>
-imap <left> <nop>
-imap <up> <nop>
-imap <down> <nop>
+" Sudo file if you must
+cmap w!! %!sudo tee > /dev/null %
 
 " Showmarks
 let g:showmarks_enable=0
-
-" Vimux
-let g:VimuxUseNearestPane = 1
-map <Leader>vp :VimuxPromptCommand<CR>
-map <Leader>vl :VimuxRunLastCommand<CR>
-map <Leader>vi :VimuxInspectRunner<CR>
-map <Leader>vc :VimuxCloseRunner<CR>
-
-" vim-test
-let test#strategy='vimux'
-map <Leader>Tf :TestFile<CR>
-map <Leader>Tn :TestNearest<CR>
-
-map <Leader>u :call ToggleColor()<CR>
-
-
-" Hack to get C-h working in neovim
-if has('nvim')
-    nnoremap <silent> <BS> :TmuxNavigateLeft<cr>
-endif
 
 " default colorscheme - can override in ~/.vimrc_local
 let g:solarized_termtrans=1
 colorscheme solarized
 
-" system specific ************************************************************
+" extra configurations
+for f in split(glob($DOTFILES.'/topics/vim/config/*.vim'), '\n')
+    exe 'source' f
+endfor
+
+" language specific configuration
+for f in split(glob($DOTFILES.'/topics/vim/lang/*.vim'), '\n')
+    exe 'source' f
+endfor
+
+" system specific
 if filereadable(expand("~/.vimrc_local"))
   source ~/.vimrc_local
 endif
-
