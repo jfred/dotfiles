@@ -113,9 +113,6 @@ let g:ranger_map_keys = 0
 " Sudo file if you must
 cmap w!! %!sudo tee > /dev/null %
 
-" Showmarks
-let g:showmarks_enable=0
-
 " default colorscheme - can override in ~/.vimrc_local
 let g:solarized_termtrans=1
 colorscheme solarized

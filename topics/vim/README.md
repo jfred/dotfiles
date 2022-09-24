@@ -33,13 +33,6 @@ an alternate js command (etc. node) in the install specific `~/.localrc`
 * `,b` - Find open buffer
 * `,l` - Find line
 
-##### Show Marks
-
-* `,mt` - Toggles ShowMarks on and off.
-* `,mh` - Hides an individual mark.
-* `,ma` - Hides all marks in the current buffer.
-* `,mm` - Places the next available mark.
-
 ##### Tags (ctags)
 
 * `F8` - Show Tag List
