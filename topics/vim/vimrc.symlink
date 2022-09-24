@@ -132,14 +132,25 @@ cnoremap <C-n> <Down>
 " ctrl-l is normally mapped as redraw so now I redraw and window naviagte
 nnoremap <C-l> <C-w>l:redraw!<CR>
 
+" NERDTree *******************************************************************
 let NERDTreeMinimalUI = 1
 let NERDTreeDirArrows = 1
 let g:NERDTreeRespectWildIgnore = 1
 nnoremap <silent> <Leader>nt :NERDTreeToggle<CR>
 nnoremap <silent> <Leader>nf :NERDTreeFind<CR>
 
+" open NERDTree by default
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | wincmd p | endif
+
+" exit Vim if NERDTree is the only window left.
+autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() |
+    \ quit | endif
 
 let g:ranger_map_keys = 0
+
+map <Leader>/ :Commentary<CR>
+
 " fzf commands
 map <Leader>f :GFiles<CR>
 map <Leader>F :Files<CR>
@@ -227,65 +238,20 @@ let test#strategy='vimux'
 map <Leader>Tf :TestFile<CR>
 map <Leader>Tn :TestNearest<CR>
 
-" Style
-let g:dark_scheme = 1
-function! ToggleColor()
-  call SetColorScheme(!g:dark_scheme)
-  "AirlineRefresh
-endfunction
-
 map <Leader>u :call ToggleColor()<CR>
 
-function! SetColorScheme(darkScheme)
-  if a:darkScheme
-    set background=dark
-    try
-        colorscheme solarized
-    catch /^Vim\%((\a\+)\)\=:E185/
-        colorscheme desert
-    endtry
-    let g:airline_theme='badwolf'
 
-    if exists('+colorcolumn')
-        set colorcolumn=80,120
-        highlight ColorColumn guibg=#373737 ctermbg=235
-    endif
-
-    let g:dark_scheme = 1
-  else
-    set background=light
-    colorscheme solarized
-    let g:airline_theme='light'
-    let g:dark_scheme = 0
-  endif
-  highlight SpellBad cterm=underline,bold ctermbg=1 ctermfg=7
-endfunction
-
-" Attempt to sync with OSX mode
-function! SetBackgroundMode()
-  let s:sys = system("defaults read -g AppleInterfaceStyle 2&>/dev/null")
-  if v:shell_error
-    call ToggleColor()
-  else
-    call SetColorScheme(1)
-  endif
-endfunction
-call SetBackgroundMode()
-
-+" Hack to get C-h working in neovim
+" Hack to get C-h working in neovim
 if has('nvim')
     nnoremap <silent> <BS> :TmuxNavigateLeft<cr>
 endif
+
+" default colorscheme - can override in ~/.vimrc_local
+let g:solarized_termtrans=1
+colorscheme solarized
 
 " system specific ************************************************************
 if filereadable(expand("~/.vimrc_local"))
   source ~/.vimrc_local
 endif
 
-" open NERDTree by default
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | wincmd p | endif
-
-" xxit Vim if NERDTree is the only window left.
-autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() |
-    \ quit | endif
