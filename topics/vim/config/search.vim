@@ -15,6 +15,7 @@ map <Leader>F :Files<CR>
 map <Leader>l :Lines<CR>
 map <Leader>L :Rg<CR>
 map <Leader>b :Buffers<CR>
+map <Leader>t :Tags<CR>
 
 " Use ag for search
 if executable('ag')

@@ -26,7 +26,8 @@ set clipboard=unnamed
 " Invisible characters *******************************************************
 set listchars=tab:❘-,trail:·,extends:»,precedes:«,nbsp:×
 set nolist
-"noremap <Leader>i :set list!<CR> " Toggle invisible chars
+" Toggle invisible chars
+noremap <Leader>? :set list!<CR>
 
 " Tabs ***********************************************************************
 set softtabstop=4
