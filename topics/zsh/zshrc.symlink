@@ -1,86 +1,29 @@
-# uncomment for profiling - makesure to uncomment the last line as well
-#zmodload zsh/zprof
+# set to 1 for profiling
+local -i profile_me=0
+if [[ 1 -eq ${profile_me} ]]; then
+    zmodload zsh/zprof
+fi
 
 # Override in ~/.localrc to disable modules
 # The following example would disable java and vagrant
 #     DOT_EXCLUDE='(java|vagrant)' 
 DOT_EXCLUDE='_no_matches_'
-# number of milliseconds a source can run before warning would be printed
-WARN_THRESHOLD=30
-
-# Terminal color profile helpers
-declare -A tmux_envs_fgmap
-declare -A tmux_envs_bgmap
-tmux_env() {
-    fgcolour=${tmux_envs_fgmap[$1]:-default}
-    bgcolour=${tmux_envs_bgmap[$1]:-default}
-    tmux select-pane -P "bg=${bgcolour},fg=${fgcolour}"
-}
-
-# usage: tmux_add_profile name fgcolor bgcolor
-tmux_add_env() {
-    tmux_envs_fgmap[$1]=${2}
-    tmux_envs_bgmap[$1]=${3:-default}
-}
-
-# default tmux env profiles
-tmux_add_env prod default colour52
-tmux_add_env stg default colour58
-tmux_add_env test default colour22
-tmux_add_env dev default colour18
-
-declare -A iterm_envs
-iterm_env() {
-    profile=${iterm_envs[$1]:-Default}
-    echo -n -e "\033]50;SetProfile=${profile}\a"
-}
-
-# usage: iterm_add_profile name profilename
-iterm_add_env() {
-    iterm_envs[${1}]=${2}
-}
-
-# default iterm env profiles
-iterm_add_env prod prod
-iterm_add_env stg stage
-iterm_add_env test test
-iterm_add_env dev test
-
-env_switch () {
-    if [[ "${TERM_PROGRAM}" = "tmux" ]]; then
-        # tmux pane
-        tmux_env $1
-    elif [[ "${TERM_PROGRAM}" = "iTerm.app" ]]; then
-        # iterm pane
-        iterm_env $1
-    else
-        echo "Warn: unsupported terminal (${TERM_PROGRAM}) for env switch"
-    fi
-}
 
 # load config and system specific
 [[ -f ~/.localrc ]] && source ~/.localrc
 setopt extendedglob
 
-export PATH=$PATH:~/bin:$DOTFILES/bin
-
-function source_warn {
-    local -i t0 t1
-    t0=$(date '+%s%3N')
-    source $1
-    runtime=$(($(date '+%s%3N') - $t0))
-    [[ $runtime -gt $WARN_THRESHOLD ]] && echo "WARN sourcing $1 took ${runtime}ms"
-}
+export PATH=${PATH}:~/bin:${DOTFILES}/bin
 
 # load all zsh and bin for enabled topics
-for config_file ($DOTFILES/**/*.zsh) do
-    if [[ ! $config_file =~ $DOT_EXCLUDE ]]; then
-        source_warn $config_file
+for config_file (${DOTFILES}/**/*.zsh) do
+    if [[ ! ${config_file} =~ ${DOT_EXCLUDE} ]]; then
+        source ${config_file}
     fi
 done
-for bin ($DOTFILES/**/bin); do
-    if [[ ! $bin =~ $DOT_EXCLUDE ]]; then
-        export PATH=$PATH:$bin
+for bin (${DOTFILES}/**/bin); do
+    if [[ ! ${bin} =~ ${DOT_EXCLUDE} ]]; then
+        export PATH=${PATH}:${bin}
     fi
 done
 
@@ -95,27 +38,9 @@ fi;
 # matches case insensitive for lowercase
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 
-[ -n ${DOTFILES_POST_INIT+1} ] && eval $DOTFILES_POST_INIT
+[ -n ${DOTFILES_POST_INIT+1} ] && eval ${DOTFILES_POST_INIT}
 
-# Update time to output extra info
-if [[ `uname` == Darwin ]]; then
-TIMEFMT='%J   %U  user %S system %P cpu %*E total'$'\n'\
-'avg shared (code):         %X KB'$'\n'\
-'avg unshared (data/stack): %D KB'$'\n'\
-'total (sum):               %K KB'$'\n'\
-'max memory:                %M KB'$'\n'\
-'page faults from disk:     %F'$'\n'\
-'other page faults:         %R'
-else
-TIMEFMT='%J   %U  user %S system %P cpu %*E total'$'\n'\
-'avg shared (code):         %X KB'$'\n'\
-'avg unshared (data/stack): %D KB'$'\n'\
-'total (sum):               %K KB'$'\n'\
-'max memory:                %M MB'$'\n'\
-'page faults from disk:     %F'$'\n'\
-'other page faults:         %R'
+# for profiling
+if [[ 1 -eq ${profile_me} ]]; then
+    zprof
 fi
-
-
-# uncomment for profiling
-#zprof
