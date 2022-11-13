@@ -1,5 +1,9 @@
 # set to 1 for profiling
 local -i profile_me=0
+if [ -f ~/.zsh_debug ]; then
+    profile_me=1
+fi
+
 if [[ 1 -eq ${profile_me} ]]; then
     zmodload zsh/zprof
 fi
