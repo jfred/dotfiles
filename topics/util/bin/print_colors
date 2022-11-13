@@ -1,0 +1,15 @@
+#!/usr/bin/env zsh
+for i in {0..255}; do
+    if [ $i -gt 0 ] && [ `expr $i % 8` -eq 0 ]; then
+        printf "\n"
+    fi
+    printf " "
+    if [ $i -lt 10 ]; then
+        printf " "
+    fi
+    if [ $i -lt 100 ]; then
+        printf " "
+    fi
+    printf "\x1b[38;5;${i}mcolour${i}\x1b[0m"
+done
+printf "\n"
