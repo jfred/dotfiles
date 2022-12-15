@@ -1,6 +1,8 @@
 # setting up dir colors
 if [ -e ~/.dir_colors ]; then
-    eval `dircolors ~/.dir_colors`
+    if type dircolors > /dev/null; then
+        eval `dircolors ~/.dir_colors`
+    fi
 fi
 
 # direnv if available

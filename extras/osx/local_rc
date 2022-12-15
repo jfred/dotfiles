@@ -2,7 +2,7 @@ export TERM=screen-256color
 
 # generate brew env once a day
 if [[ ! -f ~/.brew_env || $(find ~/.brew_env -mtime +100 -print) ]]; then
-	/usr/local/bin/brew --env > ~/.brew_env;
+	brew --env > ~/.brew_env;
 fi;
 source ~/.brew_env
 export PATH=/usr/local/opt/coreutils/libexec/gnubin:/usr/local/bin:/usr/bin:$PATH
