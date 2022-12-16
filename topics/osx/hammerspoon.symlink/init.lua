@@ -159,6 +159,7 @@ local apps = {
   O=launcher('Google Chrome'),
   I=launcher('iTerm2'),
   J=launcher('IntelliJ IDEA'),
+  U=launcher('Safari'),
 }
 
 local launch_modifier = {"ctrl", "alt"}
