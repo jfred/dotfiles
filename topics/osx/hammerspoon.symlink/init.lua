@@ -144,23 +144,18 @@ hs.application.enableSpotlightForNameSearches(true)
 
 local function launcher(app)
   return function()
-    appFound = hs.application.find(app)
-    if appFound then
-      hs.application.launchOrFocusByBundleID(appFound:bundleID())
-    else
-      hs.alert("No app found: " .. app)
-    end
+    hs.application.launchOrFocus(app)
   end
 end
 
 
-local apps = {
-  P=launcher('Slack'),
-  O=launcher('Google Chrome'),
-  I=launcher('iTerm2'),
-  J=launcher('IntelliJ IDEA'),
-  U=launcher('Safari'),
-}
+local apps = {}
+apps["P"]=launcher('Slack')
+apps["O"]=launcher('Google Chrome')
+apps["I"]=launcher('iTerm')
+apps["J"]=launcher('IntelliJ IDEA')
+apps["U"]=launcher('Safari')
+apps["["]=launcher('Obsidian')
 
 local launch_modifier = {"ctrl", "alt"}
 for char, launcher in pairs(apps) do
