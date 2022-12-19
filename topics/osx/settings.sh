@@ -91,3 +91,6 @@ defaults write com.apple.dock autohide -bool true
 
 # Use plain text mode for new TextEdit documents
 defaults write com.apple.TextEdit RichText -int 0
+
+# Update repeat key setting
+defaults write -g ApplePressAndHoldEnabled -bool false
