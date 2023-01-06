@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+REMOTE=${1:-origin}
+BRANCH=`git rev-parse --abbrev-ref HEAD`
+
+echo git push -u ${REMOTE} ${BRANCH}:${BRANCH}
+read -p "Execute? [y/n]: " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    git push -u ${REMOTE} ${BRANCH}:${BRANCH}
+fi
