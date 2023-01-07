@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -e
+
+git rev-parse --abbrev-ref HEAD | sed 's/.*\/\([A-Z]*-[0-9]*\).*/\1/g'

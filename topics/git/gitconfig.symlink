@@ -25,6 +25,7 @@
     fix = "!f() { ${EDITOR} `git diff --name-only | uniq`; }; f"
     list-branch = "!f() { git branch -a | sed 's/remotes\\/[^/]*\\///g' | sed 's/^[* ]*//g' | sort -u | grep -v ' -> ' | grep $1; }; f"
     fb = find-branch
+    tm = ticket-message
     clone-user = "!f() { curl -sL \"https://api.github.com/users/$1/repos?per_page=1000\" | jq -r '.[]| select( .fork == false ) |.clone_url' | xargs -L1 git clone; }; f"
     reword = commit --amend
     user = config --get-regex "user\\.[name|email]"

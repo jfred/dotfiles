@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -e
+
+TICKET=`git ticket`
+git commit -m "${TICKET} $1"

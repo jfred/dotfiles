@@ -10,14 +10,4 @@ if [ "$JIRA_URL" == "" ]; then
     die "Error: No JIRA_URL is set"
 fi
 
-function ticket() {
-    local branch=$1
-    echo ${branch} | sed 's/.*\/\([A-Z]*-[0-9]*\).*/\1/g'
-}
-
-function current_branch() {
-    git rev-parse --abbrev-ref HEAD
-}
-
-git web--browse "${JIRA_URL}/browse/$(ticket $(current_branch))"
-
+git web--browse "${JIRA_URL}/browse/$(git ticket)"
