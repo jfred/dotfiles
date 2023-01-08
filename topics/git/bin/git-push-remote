@@ -1,10 +1,36 @@
 #!/usr/bin/env bash
-REMOTE=${1:-origin}
+
+# default remote
+REMOTE=origin
+CONFIRM=true
+GIT_PUSH_ARGS=()
+
+for var in "$@"; do
+    case ${var} in
+        -f)
+            CONFIRM=false
+            ;;
+        *)
+            if [[ "${var}" =~ ^\-.* ]]; then
+                GIT_PUSH_ARGS+=(${var})
+            else
+                REMOTE=${var}
+            fi
+    esac
+done
+
 BRANCH=`git rev-parse --abbrev-ref HEAD`
 
-echo git push -u ${REMOTE} ${BRANCH}:${BRANCH}
-read -p "Execute? [y/n]: " -n 1 -r
-echo
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-    git push -u ${REMOTE} ${BRANCH}:${BRANCH}
+GIT_PUSH_ARGS+=(${REMOTE})
+GIT_PUSH_ARGS+=("${BRANCH}:${BRANCH}")
+
+
+if [[ ${CONFIRM} == true ]]; then
+    echo cmd: git push "${GIT_PUSH_ARGS[@]}"
+    read -p "Execute? [y/n]: " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        exit 1
+    fi
 fi
+git push "${GIT_PUSH_ARGS[@]}"
