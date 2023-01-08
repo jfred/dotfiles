@@ -7,30 +7,27 @@
     du = diff @{upstream}
     dh = diff HEAD
     dd = diff -b -w --word-diff-regex=.
-    lg = log --graph --pretty=format:'%C(red)%h%C(reset) : %C(yellow)%d%C(reset) %s %C(green)(%an %cr)%C(reset)' --abbrev-commit --date=relative
-    ll = log --pretty=format:'%C(red)%h%C(yellow)%d %C(reset)%s%C(green) [%cn]' --stat
-    lb = "!git branch --sort=-committerdate --format='%(refname:short)|%(contents:subject) - %(authorname) (%(committerdate:relative))' | column -t -s '|' | sort -u"
     ds = diff --shortstat
-    fl = !git flow feature list
-    fs = !git flow feature start
-    fc = !git flow feature checkout
-    ff = !git flow feature finish
-    fp = !git flow feature publish
-    frelease = "!f() { git flow release start $1 && git flow release finish $1; }; f"
-    vtag = "!git tag | sort --version-sort"
-    last = "!git tag | sort --version-sort | tail -n 1"
+    pushr = push-remote
+    reword = commit --amend
     type = cat-file -t
     dump = cat-file -p
     find = "!git ls-files | grep -i"
     fix = "!f() { ${EDITOR} `git diff --name-only | uniq`; }; f"
-    list-branch = "!f() { git branch -a | sed 's/remotes\\/[^/]*\\///g' | sed 's/^[* ]*//g' | sort -u | grep -v ' -> ' | grep $1; }; f"
     fb = find-branch
     tm = ticket-message
-    clone-user = "!f() { curl -sL \"https://api.github.com/users/$1/repos?per_page=1000\" | jq -r '.[]| select( .fork == false ) |.clone_url' | xargs -L1 git clone; }; f"
-    reword = commit --amend
+    # config based aliases
     user = config --get-regex "user\\.[name|email]"
     name = config --local --add user.name
     email = config --local --add user.email
+    # log aliases
+    lg = log --graph --pretty=format:'%C(red)%h%C(reset) : %C(yellow)%d%C(reset) %s %C(green)(%an %cr)%C(reset)' --abbrev-commit --date=relative
+    ll = log --pretty=format:'%C(red)%h%C(yellow)%d %C(reset)%s%C(green) [%cn]' --stat
+    lb = "!git branch --sort=-committerdate --format='%(refname:short)|%(contents:subject) - %(authorname) (%(committerdate:relative))' | column -t -s '|' | sort -u"
+    # tag aliases
+    vtag = "!git tag | sort --version-sort"
+    last = "!git tag | sort --version-sort | tail -n 1"
+    clone-github-user = "!f() { curl -sL \"https://api.github.com/users/$1/repos?per_page=1000\" | jq -r '.[]| select( .fork == false ) |.clone_url' | xargs -L1 git clone; }; f"
 [color]
     diff = auto
     branch = auto
