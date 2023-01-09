@@ -1,0 +1,34 @@
+zmodload zsh/datetime
+
+# Override in ~/.localrc to disable modules
+# The following example would disable java and vagrant
+#     DOT_EXCLUDE='(java|vagrant)' 
+DOT_EXCLUDE='_no_matches_'
+
+# load config and system specific
+[[ -f ~/.localrc ]] && source ~/.localrc
+
+export PATH=${PATH}:~/bin:${DOTFILES}/bin
+
+# allow overloading sourcing of config zsh
+# used by zshrc to warn about source timings
+if ! type source_config &>/dev/null; then
+    function source_config {
+        source ${1}
+    }
+fi
+
+
+# load all zsh and bin for enabled topics
+for config_file (${DOTFILES}/**/*.zsh) do
+    if [[ ! ${config_file} =~ ${DOT_EXCLUDE} ]]; then
+        source_config ${config_file}
+    fi
+done
+for bin (${DOTFILES}/**/bin); do
+    if [[ ! ${bin} =~ ${DOT_EXCLUDE} ]]; then
+        export PATH=${PATH}:${bin}
+    fi
+done
+
+[ -n ${DOTFILES_POST_INIT+1} ] && eval ${DOTFILES_POST_INIT}

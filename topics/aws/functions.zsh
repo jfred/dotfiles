@@ -3,17 +3,17 @@
 # Works by providing a means to define a sever convention and pre/post
 #
 # Usage:
-#    create a `jump_transform` function that accepts region, vpc and name and 
+#    create a `jump_transform` script or function that accepts region, vpc and name and 
 #    returns the name as defined in ec2. Will be passed to ec2ssh for any 
 #    additional narrowing
 # 
 # Optional:
-#    create jump_pre and jump_post functions that are called prior to 
+#    create jump_pre and jump_post scripts or functions that are called prior to 
 #    initiating the ssh connection. Can be used to change profile or term
 #    settings.
 
 fn_exists() {
-    LC_ALL=C type $1 | grep -q 'shell function'
+    command -v $1 > /dev/null
 }
 
 JUMP_REGION=us-east-1
