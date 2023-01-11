@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+
+SYNC_ARGS=()
+
+while getopts 'dh' opt; do
+  case "$opt" in
+    ?|h)
+      echo "Usage: $(basename $0) [-d] <SRC> <DST>"
+      exit 1
+      ;;
+  esac
+done
+shift "$(($OPTIND -1))"
+
+if [ "$#" -ne 2 ]; then
+  echo "Error: Illegal number of parameters"
+  echo "Usage: $(basename $0) [-d] <SRC> <DST>"
+  exit 1
+fi
+
+SRC=${1}
+DST=${2}
+
+if [[ ! -d ${SRC} ]]; then
+  echo "Error: src ${SRC} is not a directory"
+  exit 1
+fi
+
+if [[ ! -d ${DST} ]]; then
+  echo "Error: dst ${DST} is not a directory"
+  exit 1
+fi
+
+SYNC_ARGS+=(
+    "--exclude" ".git/"
+    "--exclude" ".DS_Store"
+    "--delete-after"
+    "--human-readable"
+    "--verbose"
+    "--recursive"
+    "--progress"
+    "--times"
+    ${SRC}
+    ${DST}
+)
+
+# print out dry run
+rsync --dry-run "${SYNC_ARGS[@]}"
+
+#confirm
+read -p "Execute? " -n 1 -r
+echo
+if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+  exit
+fi
+
+run
+rsync "${SYNC_ARGS[@]}"
