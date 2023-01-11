@@ -10,7 +10,7 @@ if [[ "${TERM_PROGRAM}" = "tmux" ]]; then
 
     # default tmux env profiles
     tmux_add_env prod default colour52
-    tmux_add_env stg default colour58
+    tmux_add_env stg color00 colour58
     tmux_add_env test default colour22
     tmux_add_env dev default colour18
 
