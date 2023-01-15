@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 
 SYNC_ARGS=()
+DRYRUN_ONLY=false
 
 while getopts 'dh' opt; do
   case "$opt" in
+    d)
+      DRYRUN_ONLY=true
+      ;;
     ?|h)
       echo "Usage: $(basename $0) [-d] <SRC> <DST>"
       exit 1
@@ -24,11 +28,15 @@ DST=${2}
 if [[ ! -d ${SRC} ]]; then
   echo "Error: src ${SRC} is not a directory"
   exit 1
+else
+  SRC="${SRC}/"
 fi
 
 if [[ ! -d ${DST} ]]; then
   echo "Error: dst ${DST} is not a directory"
   exit 1
+else
+  DST="${DST}/"
 fi
 
 SYNC_ARGS+=(
@@ -46,6 +54,10 @@ SYNC_ARGS+=(
 
 # print out dry run
 rsync --dry-run "${SYNC_ARGS[@]}"
+
+if [ ${DRYRUN_ONLY} = true ]; then
+  exit 0
+fi
 
 #confirm
 read -p "Execute? " -n 1 -r
