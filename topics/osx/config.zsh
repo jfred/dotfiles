@@ -12,7 +12,7 @@ if [[ "${TERM_PROGRAM}" = "iTerm.app" ]]; then
     iterm_add_env prod prod
     iterm_add_env stg stage
     iterm_add_env test test
-    iterm_add_env dev test
+    iterm_add_env dev dev
 
     # setup iterm specific env_switch
     env_switch() {
