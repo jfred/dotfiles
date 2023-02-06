@@ -139,6 +139,11 @@ bindAll('N', function()
   win:move(win:frame():toUnitRect(screen:frame()), screen:next(), true, 0)
 end)
 
+-- toggle dark mode
+bindHyper('U', function()
+  hs.applescript('tell application "System Events"\ntell appearance preferences\nset dark mode to not dark mode\nend tell\nend tell\n')
+end)
+
 -- bind applications
 hs.application.enableSpotlightForNameSearches(true)
 
