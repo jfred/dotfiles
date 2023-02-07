@@ -57,8 +57,12 @@ jump () {
     fi
 }
 
-TUNNEL_JUMP_PORT=7044
+TUNNEL_JUMP_PORT=
 tunnel() {
+    if [ "${TUNNEL_JUMP_PORT}" -eq "" ]; then
+        echo "ERROR: TUNNEL_JUMP_PORT not set" >&2
+        return 1
+    fi
     if [ "$#" -lt 3 ]; then
         echo "Usage: tunnel env target remoteport [localport] [remote target] [jumpport] " >&2
         return 1
