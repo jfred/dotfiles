@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# Functions to ease using ec2ssh to tunnel
+
+set -e
+
+function tunnel() {
+    if [[ "${TUNNEL_JUMP_PORT}" -eq "" ]]; then
+        echo "ERROR: TUNNEL_JUMP_PORT not set" >&2
+        return 1
+    fi
+
+    if [[ "$#" -lt 3 ]]; then
+        echo "Usage: ${0} env target remoteport [localport] [remote target] [jumpport] " >&2
+        return 1
+    fi
+
+    ec2jump $1 $2 -F ${6:-${TUNNEL_JUMP_PORT}} -L ${4:-${3}}:${5:-127.0.0.1}:$3
+}
+
+tunnel $@
