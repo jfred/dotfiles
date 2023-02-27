@@ -2,6 +2,7 @@ brew "coreutils"
 brew "moreutils"
 brew "gnu-sed"
 brew "gnu-units"
+brew "parallel"
 brew "zsh", link: true
 brew "bat"
 brew "ranger"

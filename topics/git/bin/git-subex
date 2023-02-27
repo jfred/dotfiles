@@ -11,11 +11,16 @@ if [[ $# -eq 0 ]]; then
     exit 1
 fi
 
-for dir in `find . -name ".git" -type d -maxdepth 2 | sed 's/\/.git$//g'`; do
-    echo "Executing 'git ${@}' in ${dir}"
-    git -C ${dir} $@
-    if [[ $? -ne 0 ]]; then
-        echo "Aborting, last execution failed"
-        exit 1
-    fi
+repos=()
+for dir in `find . -name ".git" -type d -maxdepth 2 | sed 's/^\.\///g' | sed 's/\/.git$//g'`; do
+    repos[${#repos[@]}]=${dir}
 done
+
+if parallel --version > /dev/null 2>&1; then
+    parallel --tag git -C {} $@ ::: ${repos[@]}
+else
+    for dir in "${repos[@]}"; do
+        echo git -C ${dir} $@
+        git -C ${dir} $@
+    done
+fi

@@ -12,15 +12,24 @@ if [ ! -f "repos" ]; then
     exit 1
 fi
 
+fetch=()
+
 while read repo; do
     dir=$( cut -d ':' -f 1 <<< "${repo}" )
     clone=$( cut -d ':' -f 2- <<< "${repo}" )
-    if [ -d "${dir}" -a ! -h "${dir}" ]
-    then
-        echo Fetching ${dir}...
-        git -C ${dir} fetch
-    else
+    if [ ! -d "${dir}" ]; then
         echo Cloning ${dir}...
         git clone ${clone} ${dir}
+    else
+        fetch[${#fetch[@]}]=${dir}
     fi
 done < repos
+
+if parallel --version > /dev/null 2>&1; then
+    parallel --tag git -C {} fetch ::: ${fetch[@]}
+else
+    for dir in "${fetch[@]}"; do
+        echo git -C ${dir} fetch
+        git -C ${dir} fetch
+    done
+fi
