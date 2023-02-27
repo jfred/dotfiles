@@ -51,7 +51,7 @@ function get_ip {
   local instance=${1}
   local ip_type=${2}
   instance_cache | jq -r ".Reservations[].Instances[]
-  | select((.Tags[]|select(.Key==\"${tag}\")|.Value) | contains(\"${instance}\"))
+  | select((.Tags[]?|select(.Key==\"${tag}\")|.Value) | contains(\"${instance}\"))
   | .${ip_type}IpAddress
   " | head -n 1
 }
@@ -60,8 +60,8 @@ function get_ip {
 function get_instances {
   local instance=${1}
   instance_cache | jq  -r ".Reservations[].Instances[]
-  | select((.Tags[]|select(.Key==\"${tag}\")|.Value) | contains(\"${instance}\"))
-  | (.Tags[]|select(.Key==\"${tag}\")|.Value)
+  | select((.Tags[]?|select(.Key==\"${tag}\")|.Value) | contains(\"${instance}\"))
+  | (.Tags[]?|select(.Key==\"${tag}\")|.Value)
   " | sort
 }
 
