@@ -13,7 +13,6 @@ let mapleader = ","
 inoremap <C-j> <Esc>
 inoremap <F2> <C-o>:w<CR>
 nnoremap <F2> :w<CR>
-nnoremap ; :
 nnoremap <C-d> :q<CR>
 
 " defaults *******************************************************************
