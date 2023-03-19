@@ -67,7 +67,7 @@ if [ ! -f ~/.localrc ]; then
     echo "export DOTFILES=$(pwd)" >> ~/.localrc
     if [[ ${platform} == 'Darwin' ]]
     then
-        echo "source ${DOTFILES}/extras/osx/local_rc" >> ~/.localrc
+        echo "source \${DOTFILES}/extras/osx/local_rc" >> ~/.localrc
     fi
     echo "export DOT_EXCLUDE='${DOT_EXCLUDE}'" >> ~/.localrc
 fi
