@@ -12,11 +12,15 @@ Also I'm not a fan of projects where the top level contains a ton of folders.
 Install
 -------
 
-After clone run:
+1. If running OSX [install homebrew](https://docs.brew.sh/Installation)
+
+2. Clone the repo.
+
+3. In terminal, navigate to repo and run:
 
     ./install.sh
 
-You can allso call `./install.sh` with `-i` (or `--interactive`) to confirm
+You can run `./install.sh` with `-i` (or `--interactive`) to confirm
 each step of the install process.
 
 Disabling 'Topics'
@@ -27,15 +31,6 @@ If you want to disable any 'topics' set DOT\_EXCLUDE to match the topic names.
 The following example would disable java and vagrant:
 
     DOT_EXCLUDE='(java|vagrant)'
-
-OSX Specifics
--------------
-
-1. [install homebrew](https://docs.brew.sh/Installation)
-2. set shell
-
-    echo /usr/local/bin/zsh | sudo tee -a /etc/shells
-    chsh -s /usr/local/bin/zsh 
 
 Other
 -----
