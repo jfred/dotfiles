@@ -25,6 +25,7 @@
     lg = log --graph --pretty=format:'%C(red)%h%C(reset) : %C(yellow)%d%C(reset) %s %C(green)(%an %cr)%C(reset)' --abbrev-commit --date=relative
     ll = log --pretty=format:'%C(red)%h%C(yellow)%d %C(reset)%s%C(green) [%cn]' --stat
     lb = "!git branch --sort=-committerdate --format='%(refname:short)|%(contents:subject) - %(authorname) (%(committerdate:relative))' | column -t -s '|' | sort -u"
+    lbr = "!git branch -r --sort=-committerdate --format='%(refname:short)|%(contents:subject) - %(authorname) (%(committerdate:relative))' | column -t -s '|' | sort -u"
     # tag aliases
     vtag = "!git tag | sort --version-sort"
     last = "!git tag | sort --version-sort | tail -n 1"
