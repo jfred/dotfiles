@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+set -e
+
+# List models
+if [[ "${1}" == "-l" ]]; then
+    curl https://api.openai.com/v1/models -H "Authorization: Bearer ${OPENAI_API_KEY}" 2>/dev/null | jq '.data[].id' | sort
+    exit
+fi
+
+if [[ "${1}" == "-m" ]]; then
+    curl https://api.openai.com/v1/models/${2} -H "Authorization: Bearer ${OPENAI_API_KEY}" 2>/dev/null | jq '.'
+    exit
+fi
+
+model=${OPENAI_MODEL:-gpt-3.5-turbo}
+
+prompt=$@
+if [[ "${prompt}" == "" ]]; then
+    echo -n "prompt: "
+    read prompt
+fi
+
+request='{
+    "messages": [{"role": "user"}],
+    "temperature": 0.7
+}'
+
+request=`echo ${request} | jq ".model |= \"${model}\""`
+request=`echo ${request} | jq ".messages[0].content |= \"${prompt}\""`
+
+response=`curl https://api.openai.com/v1/chat/completions -s \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer ${OPENAI_API_KEY}" \
+    -d "${request}"`
+
+
+# incase we need to inspect it
+echo ${response} | jq . > /tmp/openai_last.json
+echo ${response} | jq -r '.choices[0].message.content // .error.message'
