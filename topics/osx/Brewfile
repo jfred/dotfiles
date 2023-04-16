@@ -46,6 +46,7 @@ cask "google-chrome"
 cask "hammerspoon"
 cask "devutils"
 cask "choosy"
+cask "visual-studio-code"
 
 # fonts
 
