@@ -10,14 +10,21 @@ DOT_EXCLUDE='_no_matches_'
 
 export PATH=${PATH}:~/bin:${DOTFILES}/bin
 
-# allow overloading sourcing of config zsh
-# used by zshrc to warn about source timings
-if ! type source_config &>/dev/null; then
+if [[ $- == *i* ]]; then
+    # threshold where config is configured slow
+    WARN_THRESHOLD=1.0
+    function source_config {
+        local -i t0
+        t0=$EPOCHREALTIME
+        source ${1}
+        runtime=$[EPOCHREALTIME-t0]
+        [[ $runtime -gt $WARN_THRESHOLD ]] && echo "WARN sourcing $1 took ${runtime}s"
+    }
+else
     function source_config {
         source ${1}
     }
 fi
-
 
 # load all zsh and bin for enabled topics
 for config_file (${DOTFILES}/**/*.zsh) do

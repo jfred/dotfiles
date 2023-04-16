@@ -1,22 +1,4 @@
-# for profiling
-[[ -v ZSH_PROFILE ]] && zmodload zsh/zprof
-
-zmodload zsh/datetime
-
-[[ -v ZSH_TIME_STARTUP ]] && t0=$EPOCHREALTIME
-
 setopt extendedglob
-
-# threshold where config is configured slow
-WARN_THRESHOLD=1.0
-function source_config {
-    local -i t0
-    t0=$EPOCHREALTIME
-    source ${1}
-    runtime=$[EPOCHREALTIME-t0]
-    [[ $runtime -gt $WARN_THRESHOLD ]] && echo "WARN sourcing $1 took ${runtime}s"
-}
-source ~/.zshenv
 
 # checking cached .zcompdump only once a day
 autoload -Uz compinit
@@ -28,9 +10,9 @@ fi;
 
 # matches case insensitive for lowercase
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
+setopt promptsubst
 
-[ -n ${DOTFILES_POST_INIT+1} ] && eval ${DOTFILES_POST_INIT}
-
-# for profiling
-[[ -v ZSH_PROFILE ]] && zprof
-[[ -v ZSH_TIME_STARTUP ]] && echo $[EPOCHREALTIME-t0]
+# Load the prompt theme system
+autoload -U promptinit
+promptinit
+prompt jfred
