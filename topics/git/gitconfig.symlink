@@ -30,6 +30,7 @@
     vtag = "!git tag | sort --version-sort"
     last = "!git tag | sort --version-sort | tail -n 1"
     clone-github-user = "!f() { curl -sL \"https://api.github.com/users/$1/repos?per_page=1000\" | jq -r '.[]| select( .fork == false ) |.clone_url' | xargs -L1 git clone; }; f"
+    pc = hook run pre-commit
 [color]
     diff = auto
     branch = auto
