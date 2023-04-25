@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+color=${1:-white}
+bgColor=${2:-green}
+filename=${color}-${bgColor}.mp4
+
+echo -n "Creating ${filename}..."
+
+ffmpeg -f lavfi -i color=size=1024x768:duration=20:rate=25:color=${bgColor} \
+            -vf "drawtext=fontfile=/path/to/font.ttf:fontsize=500:fontcolor=${color}:x=(w-text_w)/2:y=(h-text_h)/2:text='%{eif\:20-t\:d}',scale=1024:768:force_original_aspect_ratio=decrease" \
+            ${filename}
+
+echo "done"
