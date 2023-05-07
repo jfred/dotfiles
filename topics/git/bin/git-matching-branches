@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# Print branches whose last commit is the provided commit
+# Conditionally pass --short if matching short hash
+
+set -e
+
+# Check if the first argument is --short
+if [ "$1" == "--short" ]; then
+  short=true
+  shift
+else
+  short=false
+fi
+
+commit_hash=${1}
+
+branches=$(git for-each-ref --format='%(refname:short)' refs/heads/ refs/remotes/)
+
+for branch in $branches; do
+    if [ "$short" == true ]; then
+        last_commit=$(git rev-parse --short "${branch}")
+    else
+        last_commit=$(git rev-parse "${branch}")
+    fi
+
+    if [ "${last_commit}" == "${commit_hash}" ]; then
+        echo "${branch}"
+    fi
+done
