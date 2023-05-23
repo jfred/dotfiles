@@ -168,6 +168,13 @@ for char, launcher in pairs(apps) do
   hotkey.bind(launch_modifier, char, launcher)
 end
 
+-- text
+hotkey.bind(hyper, "V", function()
+  local time = os.date("%Y-%m-%d %H:%M %Z")
+  hs.alert.show(time)
+  hs.pasteboard.setContents(time)
+end)
+
 -- layouts
 -- get screen names from hs.screen.allScreens()[1]:name() or similar in the console
 bindAll('1', function ()
