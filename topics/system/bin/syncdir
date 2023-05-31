@@ -59,12 +59,12 @@ if [ ${DRYRUN_ONLY} = true ]; then
   exit 0
 fi
 
-#confirm
+# confirm
 read -p "Execute? " -n 1 -r
 echo
 if [[ ! $REPLY =~ ^[Yy]$ ]]; then
   exit
 fi
 
-run
+# run
 rsync "${SYNC_ARGS[@]}"
