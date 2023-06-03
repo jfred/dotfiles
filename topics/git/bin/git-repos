@@ -15,6 +15,11 @@ fi
 fetch=()
 
 while read repo; do
+    # skip empty lines
+    if [[ -z "$repo" ]]; then
+        continue
+    fi
+
     dir=$( cut -d ':' -f 1 <<< "${repo}" )
     clone=$( cut -d ':' -f 2- <<< "${repo}" )
     if [ ! -d "${dir}" ]; then
