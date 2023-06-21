@@ -6,16 +6,6 @@ function die() {
     exit 1
 }
 
-if [[ "$1" == "-h" ]]; then
-    echo "Attempt to launch aht build url for the current branch"
-    echo ""
-    echo "Uses env var CI_URL to create the build url"
-    echo " - Replaces _BRANCH_ with the branch name"
-    echo " - Replaces _BRANCH_ESCAPED_ with the branch name with / encoded as %252F"
-    exit 0
-fi
-
-
 if [ "$CI_URL" == "" ]; then
     die "Error: No CI_URL is set"
 fi
@@ -26,12 +16,4 @@ if [ "$BRANCH" == "" ]; then
     die "Error: no upstream found, push before checking build"
 fi
 
-
-BRANCH_ESCAPED=$(echo ${BRANCH} | sed 's/\//%252F/g')
-
-BUILD_URL=${CI_URL}
-
-BUILD_URL=$(echo "${BUILD_URL}" | sed "s|_BRANCH_ESCAPED_|${BRANCH_ESCAPED}|g")
-BUILD_URL=$(echo "${BUILD_URL}" | sed "s|_BRANCH_|${BRANCH}|g")
-
-git web--browse ${BUILD_URL}
+git browse-template ${CI_URL}

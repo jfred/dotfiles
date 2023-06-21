@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -e
+
+function die() {
+    echo $1
+    exit 1
+}
+
+if [ "$TRACKER_URL" == "" ]; then
+    die "Error: No TRACKER_URL is set (e.g. https://some.atlassian.net/browse/_TICKET_)"
+fi
+
+git browse-template ${TRACKER_URL}

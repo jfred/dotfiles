@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+set -e
+
+function die() {
+    echo $1
+    exit 1
+}
+
+function usage() {
+    echo "Attempt to launch a url for the current branch"
+    echo ""
+    echo "usage: ${0} [template url]"
+    echo " - Replaces _BRANCH_ with the branch name"
+    echo " - Replaces _BRANCH_ESCAPED_ with the branch name with / encoded as %252F"
+    echo " - Replaces _TICKET_ with the result of `git ticket`"
+}
+
+if [[ "$1" == "-h" ]]; then
+    usage
+    exit 0
+fi
+
+if [ "$1" == "" ]; then
+    die "Error: No TEMPLATE_URL passed"
+fi
+RESULT_URL=${1}
+
+BRANCH=$(git rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null | cut -d'/' -f2-)
+BRANCH_ESCAPED=$(echo ${BRANCH} | sed 's/\//%252F/g')
+TICKET=$(git ticket)
+
+
+RESULT_URL=$(echo "${RESULT_URL}" | sed "s|_BRANCH_ESCAPED_|${BRANCH_ESCAPED}|g")
+RESULT_URL=$(echo "${RESULT_URL}" | sed "s|_BRANCH_|${BRANCH}|g")
+RESULT_URL=$(echo "${RESULT_URL}" | sed "s|_TICKET_|${TICKET}|g")
+
+git web--browse ${RESULT_URL}
