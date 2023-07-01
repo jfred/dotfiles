@@ -2,14 +2,38 @@
 
 SYNC_ARGS=()
 DRYRUN_ONLY=false
+REMOVE=false
+ECHO_ONLY=false
 
-while getopts 'dh' opt; do
+function usage {
+  echo "Usage: $(basename $0) [-dehr] <SRC> <DST>"
+  echo "Options:"
+  echo "  -h: print usage"
+  echo "  -d: dry run only"
+  echo "  -e: echo the rsync command only"
+  echo "  -r: remove files from DST not in SRC"
+}
+
+function error {
+  echo $1 >&2
+  usage
+  exit 1
+}
+
+
+while getopts 'erdh' opt; do
   case "$opt" in
+    r)
+      REMOVE=true
+      ;;
+    e)
+      ECHO_ONLY=true
+      ;;
     d)
       DRYRUN_ONLY=true
       ;;
-    ?|h)
-      echo "Usage: $(basename $0) [-d] <SRC> <DST>"
+    h)
+      usage
       exit 1
       ;;
   esac
@@ -17,24 +41,20 @@ done
 shift "$(($OPTIND -1))"
 
 if [ "$#" -ne 2 ]; then
-  echo "Error: Illegal number of parameters"
-  echo "Usage: $(basename $0) [-d] <SRC> <DST>"
-  exit 1
+  error "Error: Illegal number of parameters"
 fi
 
 SRC=${1}
 DST=${2}
 
 if [[ ! -d ${SRC} ]]; then
-  echo "Error: src ${SRC} is not a directory"
-  exit 1
+  error "Error: src ${SRC} is not a directory"
 else
   SRC="${SRC}/"
 fi
 
 if [[ ! -d ${DST} ]]; then
-  echo "Error: dst ${DST} is not a directory"
-  exit 1
+  error "Error: dst ${DST} is not a directory"
 else
   DST="${DST}/"
 fi
@@ -42,24 +62,37 @@ fi
 SYNC_ARGS+=(
     "--exclude" ".git/"
     "--exclude" ".DS_Store"
-    "--delete-after"
     "--human-readable"
     "--verbose"
     "--recursive"
     "--progress"
     "--times"
-    ${SRC}
-    ${DST}
 )
 
-# print out dry run
-rsync --dry-run "${SYNC_ARGS[@]}"
+if [ ${REMOVE} = true ]; then
+  SYNC_ARGS+=(
+    "--delete-after"
+  )
+fi
 
+SYNC_ARGS+=(
+  ${SRC}
+  ${DST}
+)
+
+if [ ${ECHO_ONLY} = true ]; then
+  echo rsync "${SYNC_ARGS[@]}"
+  exit 0
+fi
+
+# print out dry run
 if [ ${DRYRUN_ONLY} = true ]; then
+  rsync --dry-run "${SYNC_ARGS[@]}"
   exit 0
 fi
 
 # confirm
+echo rsync "${SYNC_ARGS[@]}"
 read -p "Execute? " -n 1 -r
 echo
 if [[ ! $REPLY =~ ^[Yy]$ ]]; then
