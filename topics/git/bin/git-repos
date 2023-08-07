@@ -30,11 +30,16 @@ while read repo; do
     fi
 done < repos
 
+if [[ ${#fetch[@]} -eq 0 ]]; then
+    exit
+fi
+
 if parallel --version > /dev/null 2>&1; then
+    parallel echo running: git -C {} fetch ::: ${fetch[@]}
     parallel --tag git -C {} fetch ::: ${fetch[@]}
 else
     for dir in "${fetch[@]}"; do
-        echo git -C ${dir} fetch
+        echo running: git -C ${dir} fetch
         git -C ${dir} fetch
     done
 fi
