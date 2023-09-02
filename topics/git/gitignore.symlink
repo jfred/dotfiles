@@ -20,3 +20,5 @@
 atlassian-ide-plugin.xml
 lude
 Pods
+coverage.coverage
+coverage.xml
