@@ -23,6 +23,12 @@ if [[ $input =~ $regex ]]; then
     input=${input##*/} # use last segment
 fi
 
+# default branch options
+echo ${BRANCH_OPTIONS_STR}
+if [[ -z "${BRANCH_OPTIONS_STR}" ]]; then
+    BRANCH_OPTIONS_STR="task/_input_,feature/_input_,bug/_input_,epic/_input_,hotfix/_input_,spike/_input_"
+fi
+
 # find matching branches
 unset options i
 while IFS= read -r -d $'\n' f; do
@@ -33,7 +39,14 @@ if [[ ${#options[@]} == 0 ]]; then
     # If no matching branches error
     >&2 echo "Failed to find branch for input: ${input}"
     echo "Create branch?"
-    select opt in "task/${input}" "feature/${input}" "bug/${input}" "epic/${input}" "hotfix/${input}"; do
+
+    # replace placeholder in branch name templates
+    IFS=', ' read -r -a BRANCH_OPTIONS <<< "${BRANCH_OPTIONS_STR}"
+    for i in "${!BRANCH_OPTIONS[@]}"; do
+	BRANCH_OPTIONS[$i]=${BRANCH_OPTIONS[$i]//_input_/${input}}
+    done
+
+    select opt in ${BRANCH_OPTIONS[@]}; do
 	case $opt in 
 	    *) 
 		branch=${opt}
