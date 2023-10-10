@@ -67,6 +67,7 @@ SYNC_ARGS+=(
     "--recursive"
     "--progress"
     "--times"
+    "--size-only"
 )
 
 if [ ${REMOVE} = true ]; then
