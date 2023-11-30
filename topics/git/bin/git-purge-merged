@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
-# exclude current branch, master and develop
-EXCLUDE_MATCH='\*\|master\|develop'
+# exclude current branch, main, master and develop
+EXCLUDE_MATCH='\*\|main\|master\|develop'
 
 git fetch -p
 if [ "$1" = "-f" ]; then
