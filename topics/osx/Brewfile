@@ -15,6 +15,7 @@ brew "gh"
 brew "python"
 brew "ruby"
 brew "pyenv"
+brew "pyenv-virtualenv"
 
 brew "lynx"
 brew "pv"
