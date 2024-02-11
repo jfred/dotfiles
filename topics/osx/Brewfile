@@ -2,20 +2,13 @@ brew "coreutils"
 brew "moreutils"
 brew "gnu-sed"
 brew "gnu-units"
-brew "parallel"
-brew "zsh", link: true
+
 brew "bat"
 brew "ranger"
 
 brew "tree"
 
-brew "zsh"
-brew "git"
-brew "gh"
-brew "python"
 brew "ruby"
-brew "pyenv"
-brew "pyenv-virtualenv"
 
 brew "lynx"
 brew "pv"
@@ -26,38 +19,10 @@ brew "fzf"
 brew "ripgrep"
 
 brew "dict"
-brew "vim"
-brew "nvim"
 
 # config
 brew "autoenv"
 
-# tmux
-brew "tmux"
-brew "reattach-to-user-namespace"
-
 brew "imagemagick"
 
 brew "direnv"
-
-# native apps
-tap "homebrew/cask-versions"
-
-cask "iterm2-beta"
-cask "macdown"
-cask "google-chrome"
-cask "hammerspoon"
-cask "devutils"
-cask "choosy"
-cask "visual-studio-code"
-
-# fonts
-
-tap "homebrew/cask-fonts"
-
-cask "font-inconsolata"
-cask "font-jetbrains-mono"
-cask "font-inconsolata-nerd-font"
-cask "font-jetbrains-mono-nerd-font"
-
-cask "betterdisplay"

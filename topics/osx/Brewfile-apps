@@ -1,0 +1,20 @@
+tap "homebrew/cask-versions"
+
+cask "iterm2-beta"
+cask "macdown"
+cask "hammerspoon"
+cask "devutils"
+cask "choosy"
+# cask "google-chrome"
+# cask "visual-studio-code"
+
+# fonts
+
+tap "homebrew/cask-fonts"
+
+cask "font-inconsolata"
+cask "font-jetbrains-mono"
+cask "font-inconsolata-nerd-font"
+cask "font-jetbrains-mono-nerd-font"
+
+cask "betterdisplay"

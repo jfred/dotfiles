@@ -3,8 +3,8 @@
 INTER=1
 
 # set exclude defaults
-DOT_EXCLUDE="osx"
-DOT_INCLUDE=
+DOT_EXCLUDE="${DOT_EXCLUDE:-osx}"
+DOT_EXCLUDE="${DOT_INCLUDE}"
 platform=$(uname -o 2> /dev/null || uname)
 if [ -z "${DOT_EXCLUDE}" ]; then
     DOT_EXCLUDE="osx"
