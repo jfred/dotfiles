@@ -79,6 +79,25 @@ end
 -- reload config
 bindAll("R", reloading)
 
+-- move mouse
+local function moveMouseToNextScreen()
+    local currentScreen = hs.mouse.getCurrentScreen()
+    local nextScreen = currentScreen:next()
+
+    local currentPos = hs.mouse.getAbsolutePosition()
+    local newFrame = nextScreen:frame()
+
+    -- Calculate new mouse position relative to the next screen
+    local newX = newFrame.x + (currentPos.x - currentScreen:frame().x) / currentScreen:frame().w * nextScreen:frame().w
+    local newY = newFrame.y + (currentPos.y - currentScreen:frame().y) / currentScreen:frame().h * nextScreen:frame().h
+
+    -- Move the mouse to the new position
+    hs.mouse.setAbsolutePosition({x = newX, y = newY})
+end
+
+bindAll("8", moveMouseToNextScreen)
+
+
 -- grid
 hs.window.animationDuration = 0 -- disable animations
 bindAll('E', grid.toggleShow)
