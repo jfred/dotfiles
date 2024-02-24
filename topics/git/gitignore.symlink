@@ -1,25 +1,43 @@
-*.class
-*.pyc
-*.iml
-.DS_Store
+# Env specific
 .env
 .envrc
-.idea
+.direnv
+
+# python
+*.pyc
 .pt
 .ropeproject
 .projections.json
-.ruby-gemset
-.ruby-version
-.tags
-.jruby
-.sass-cache
-.floo
-.flooignore
-.direnv
-.npm
-atlassian-ide-plugin.xml
-lude
-Pods
 coverage.coverage
 coverage.xml
+
+# ruby
+.ruby-gemset
+.ruby-version
+.jruby
+
+# fe
+.sass-cache
+.npm
+
+atlassian-ide-plugin.xml
+lude
+
+# ctag
 tags
+.tags
+
+# java projects
+.floo
+.flooignore
+.project
+.settings
+.idea
+*.class
+*.iml
+*.ipr
+*.iws
+
+# Mac stuff, ios
+.DS_Store
+Pods

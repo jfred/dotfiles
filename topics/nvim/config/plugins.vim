@@ -1,6 +1,6 @@
-let g:has_async = v:version >= 800 || has('nvim')
+let g:has_async = 1
 
-call plug#begin('~/.vim/plugged')
+call plug#begin()
 
 " utils
 Plug 'vim-scripts/L9'
@@ -45,7 +45,7 @@ Plug 'nsf/gocode', {'rtp': 'vim/', 'for': 'go'}
 " java
 Plug 'hdiniz/vim-gradle'
 Plug 'tpope/vim-classpath', {'for': 'java'}
-Plug 'artur-shaik/vim-javacomplete2', {'for': 'java'}
+Plug 'mfussenegger/nvim-jdtls'
 
 " clojure
 Plug 'tpope/vim-fireplace', {'for': 'clojure'}

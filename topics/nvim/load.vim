@@ -2,7 +2,7 @@ set nocompatible
 
 filetype off
 
-source plugins.vim
+source config/plugins.vim
 if filereadable(expand("~/.nvimrc_local"))
   source ~/.nvimrc_local
 endif
