@@ -27,6 +27,7 @@ brew "ripgrep"
 
 brew "dict"
 brew "vim"
+brew "nvim"
 
 # config
 brew "autoenv"
