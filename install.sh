@@ -22,8 +22,7 @@ while [[ $# -gt 0 ]]; do
             ;;
         -h)
             echo "usage: $0 [-i|--interactive]"
-            exit 0
-            ;;
+            exit 0 ;;
         *)
             # Default case: set DOT_EXCLUDE to the first argument
             DOT_INCLUDE="$1"
@@ -51,7 +50,7 @@ should_include() {
     local result=1
     if [[ "${filename}" =~ ${DOT_EXCLUDE} ]]; then
         result=1
-    elif [ -z "${DOT_INCLUDE}" ] || [[ "${filename}" =~ ${DOT_INCLUDE} ]]; then
+    elif [ -z "${DOT_INCLUDE}" ] || [[ "${filename}" =~ "/${DOT_INCLUDE}/" ]]; then
         result=0 # Filename is included or include pattern is empty
     fi
     return $result  # Filename is not included
