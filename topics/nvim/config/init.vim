@@ -116,17 +116,7 @@ cmap w!! %!sudo tee > /dev/null %
 let g:solarized_termtrans=1
 colorscheme solarized
 
-" extra configurations
-for f in split(glob($DOTFILES.'/topics/vim/config/*.vim'), '\n')
-    exe 'source' f
-endfor
-
-" language specific configuration
-for f in split(glob($DOTFILES.'/topics/vim/lang/*.vim'), '\n')
-    exe 'source' f
-endfor
-
 " system specific
-if filereadable(expand("~/.vimrc_local"))
-  source ~/.vimrc_local
+if filereadable(expand("~/.nvimrc_local"))
+  source ~/.nvimrc_local
 endif
