@@ -66,5 +66,5 @@ instance_cache | jq  -r ".Reservations[].Instances[]
 | select((.Tags[]?|select(.Key==\"${tag}\")|.Value) | contains(\"${target}\"))
 | [(.Tags[]?|select(.Key==\"${tag}\")|.Value), .fake, .PublicIpAddress, .PrivateIpAddress]
 | @tsv
-" | sort
+" | sort | column -t
 
