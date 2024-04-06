@@ -64,7 +64,16 @@ init_cache
 
 instance_cache | jq  -r ".Reservations[].Instances[]
 | select((.Tags[]?|select(.Key==\"${tag}\")|.Value) | contains(\"${target}\"))
-| [(.Tags[]?|select(.Key==\"${tag}\")|.Value), .fake, .PublicIpAddress, .PrivateIpAddress]
-| @tsv
-" | sort | column -t
-
+| [(.Tags[]?|select(.Key==\"Name\")|.Value), .PublicIpAddress // .PrivateIpAddress
+  ,(
+    .Tags? | map(
+      select(.Key != \"Name\")
+      | select(.Key | startswith(\"aws\") | not)
+      | .Key + \":\" + .Value
+      | gsub(\" \";\"\u00A0\")
+      )
+    | sort
+    | join(\",\u00A0\")
+    )
+]
+| @tsv" | column -t
