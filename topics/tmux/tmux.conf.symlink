@@ -3,6 +3,9 @@ set -g prefix C-a
 unbind C-b
 bind C-a send-prefix
 
+# Color window with env colors
+bind e command-prompt -p "Enter environment:" "run-shell 'tmux.env_switch %%'"
+
 # Relax!
 set -sg escape-time 0
 set -sg repeat-time 600
@@ -13,7 +16,7 @@ setw -g pane-base-index 1
 
 set-option -g renumber-windows on
 
-bind m command-prompt -p "move window to:"  "run-shell 'tmux.number.sh %%'"
+bind m command-prompt -p "move window to:"  "run-shell 'tmux.number %%'"
 
 # Clear screen
 bind b send-keys -R \; clear-history
