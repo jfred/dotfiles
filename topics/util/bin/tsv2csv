@@ -1,0 +1,30 @@
+#!/usr/bin/env python
+import csv
+import sys
+
+def print_help():
+    print("Usage: tsv2csv <input_tsv_file> <output_csv_file>")
+    print("Converts a TSV file to a CSV file.")
+    print("Arguments:")
+    print("  input_tsv_file: Path to the input TSV file.")
+    print("  output_csv_file: Path to the output CSV file.")
+
+if len(sys.argv) != 3:
+    print_help()
+    sys.exit(1)
+
+input_file = sys.argv[1]  # First argument is the input file path
+output_file = sys.argv[2]  # Second argument is the output file path
+
+with open(input_file, 'r') as tsvfile, open(output_file, 'w') as csvfile:
+    tsvreader = csv.reader(tsvfile, delimiter='\t')
+    csvwriter = csv.writer(csvfile)
+    row_count = 0
+    print("Starting conversion...", end='', flush=True)
+    for row in tsvreader:
+        csvwriter.writerow(row)
+        row_count += 1
+        if row_count % 10000 == 0:
+            print(".", end='', flush=True)
+    print(" complete")
+    print(f"Total rows converted: {row_count}")
