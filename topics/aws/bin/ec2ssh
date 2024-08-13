@@ -15,19 +15,23 @@ to pick from the available instances
   -c             Force cache population
   -h             Display help
   -r REGION      EC2 Region, defaults to us-east-1
-  -t TAG         Resolve instances with tag, defaults to Name
+  -t TAG         Resolve instances with tag, defaults to Name (can be set before JUMP or TARGET)
   -J JUMP        Jump host (optional) - legacy -j flag supported
-  -L FWD         Port forwarding - format port:host:host_port (if jump, proxies through JUMP_FWD)
-  -F JUMP_FWD    Port to use on jump host, defaults to 9999
+  -L FWD         Port forwarding - format port:host:host_port
   -d             Dry run of command
+  -v             Verbose output
 
 Examples:
 
-  ec2ssh -J jump-123 server-456 
+  ec2ssh -J jump-123 server-456
      ssh through server named "jump-123" to EC2 instance starting with "server-456"
 
-  ec2ssh -J jump-123 server-456 -F 7001 -L 7000:127.0.0.1:3000
+  ec2ssh -J jump-123 server-456 -L 7000:127.0.0.1:3000
      ssh tunnel with port forwarding from localhost:7000 -> jump-123 -> server-456:3000
+
+ENVIRONMENT VARIABLES:
+  EC2_USER       User to connect to EC2 instances with, defaults to shell user
+  EC2_SSH_OPTS   Additional options to pass to ssh
 
 EOF
 }
@@ -37,48 +41,52 @@ EOF
 ##########################################################
 type ssh >/dev/null 2>&1 || die "ssh is required, but can't be found."
 
-
 ##########################################################
 # Runtime variables
 ##########################################################
 tag="Name"
+jump_tag="Name"
+target_tag="Name"
 jump=""
 target=""
-proxy=""
-jump_port="9999"
-filters=""
+proxies_local=()
+proxies_target=()
+proxies_remote=()
 
 CMD=""
 DRY_RUN=false
+VERBOSE=false
 
 # parse options (and capture command for out of order)
 while test $# != 0; do case "$1" in
   -d) DRY_RUN=true;;
-  -c) CMD=$1;;
+  -v) VERBOSE=true;;
+  -c) populate_cache;;
   -h) CMD=$1;;
-  -l) CMD=$1;;
   -r) set_region $2; shift;;
-  -j) jump=$2; shift;;
-  -J) jump=$2; shift;;
+  -j) jump=$2; jump_tag=${tag}; shift;;
+  -J) jump=$2; jump_tag=${tag}; shift;;
   -t) tag=$2; shift;;
   -L)
-    proxy=(${2//:/ });
+      proxy=(${2//:/ });
       if [ ${#proxy[@]} != 3 ]; then
         >&2 echo "ERROR: proxy port format must be [port]:[host]:[hostport]"
         usage
         exit 1
       fi
+      # capture proxy as arrays
+      proxies_local+=("${proxy[0]}")
+      proxies_target+=("${proxy[1]}")
+      proxies_remote+=("${proxy[2]}")
       shift
       ;;
-    -F) jump_port=$2; shift;;
-    *)  target=$1
+  *) target=$1; target_tag=${tag};;
   esac
   shift
 done
 
 # target agnostic commands
 case "${CMD}" in
-  -c) populate_cache; exit;;
   -h) usage; exit;;
 esac
 
@@ -93,10 +101,12 @@ fi
 ##########################################################
 # Target specific commands
 ##########################################################
-if [[ ! -z "${jump}" ]]; then
+if [[ -n "${jump}" ]]; then
+  tag=${jump_tag}
   find_target "${jump}"
   jump=${found_target}
 fi
+tag=${target_tag}
 find_target "${target}"
 target=${found_target}
 
@@ -104,33 +114,52 @@ target=${found_target}
 # Connect to target
 ##########################################################
 cmd='ssh'
-# transform proxy name to ip
-if [ -n "${proxy[1]}" ]; then
-  proxy[1]=`transform_host "${proxy[1]}" "Private"`
+if [ -n "${EC2_SSH_OPTS}" ]; then
+  cmd="${cmd} ${EC2_SSH_OPTS}"
 fi
 
 # if no jump server, use public ip of target
 if [ -z "${jump}" ]; then
-  transform_host "${target}" "Public"
   public=`transform_host "${target}" "Public"`
-  if [ -z "${proxy}" ]; then
+  # set user is specified
+  if [ -n "${EC2_USER}" ]; then
+    public="${EC2_USER}@${public}"
+    private="${EC2_USER}@${private}"
+  fi
+
+  if [ -n "${proxy}" ]; then
     cmd="${cmd} ${public}"
   else
     cmd="${cmd} -L ${proxy[0]}:${proxy[1]}:${proxy[2]} ${public}"
   fi
 else
   # there is a jump server, use public ip jump host and private ip of target host
+  tag=${jump_tag}
   public=`transform_host "${jump}" "Public"`
+  tag=${target_tag}
   private=`transform_host "${target}" "Private"`
-  if [ -z "${proxy}" ]; then
-    cmd="${cmd} -A -J ${public} ${private}"
-  else
-    cmd="${cmd} -A -L ${proxy[0]}:localhost:${jump_port} -t ${public} ssh -A -L ${jump_port}:${proxy[1]}:${proxy[2]} ${private}"
+
+  # set user is specified
+  if [ -n "${EC2_USER}" ]; then
+    public="${EC2_USER}@${public}"
+    private="${EC2_USER}@${private}"
+  fi
+
+  cmd="${cmd} -A -J ${public} ${private}"
+  if [ ${#proxies_local[@]} -gt 0 ]; then
+    cmd="${cmd} "
+
+    # add target proxies
+    for i in "${!proxies_local[@]}"; do
+      cmd+="-L ${proxies_local[$i]}:${proxies_target[$i]}:${proxies_remote[$i]} "
+    done
   fi
 fi
 
+if [[ ${VERBOSE} == true ]]; then
+  cmd="${cmd} -v"
+fi
 echo "executing: ${cmd}"
 if [[ ${DRY_RUN} == false ]]; then
   ${cmd}
 fi
-

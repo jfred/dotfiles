@@ -5,6 +5,7 @@ REGION="us-east-1"
 CACHE_DIR=~/.ec2ssh
 CACHE_FILE_NAME=instances.json
 CACHE_FILE="${CACHE_DIR}/${REGION}/${CACHE_FILE_NAME}"
+CACHE_MAX_AGE=${EC2_CACHE_AGE:-86400}
 
 # regexes for checking if names should be looked up
 MATCH_IPV4="^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$"
@@ -20,11 +21,11 @@ function set_region {
 }
 
 function time_ago {
-  if [ ${1} -gt 3599 ]; then
+  if [ "${1}" -gt 3599 ]; then
     echo "$(($1/3600))h";
     return
   fi
-  if [ ${1} -gt 59 ]; then
+  if [ "${1}" -gt 59 ]; then
     echo "$(($1/60))m";
     return
   fi
@@ -32,7 +33,6 @@ function time_ago {
 }
 
 function populate_cache {
-  echo "Populating instance cache ${CACHE_FILE}"
   mkdir -p ${CACHE_DIR}/${REGION}
   aws ec2 describe-instances --region=${REGION}> ${CACHE_FILE}.new
   mv ${CACHE_FILE}.new ${CACHE_FILE}
@@ -40,7 +40,9 @@ function populate_cache {
 
 function instance_cache {
   mkdir -p ${CACHE_DIR}/${REGION}
-  if [ ! -f ${CACHE_FILE} ]; then
+  # check if cache exists and is not empty
+  if [ ! -f ${CACHE_FILE} ] || [ ! -s ${CACHE_FILE} ]; then
+    echo "Populating instance cache ${CACHE_FILE}"
     populate_cache > /dev/null
   fi
   cat ${CACHE_FILE}
@@ -51,7 +53,7 @@ function get_ip {
   local instance=${1}
   local ip_type=${2}
   instance_cache | jq -r ".Reservations[].Instances[]
-  | select((.Tags[]?|select(.Key==\"${tag}\")|.Value) | contains(\"${instance}\"))
+  | select((.Tags[]?|select(.Key==\"${tag}\")|.Value) == \"${instance}\")
   | .${ip_type}IpAddress
   " | head -n 1
 }
@@ -60,15 +62,17 @@ function get_ip {
 function get_instances {
   local instance=${1}
   instance_cache | jq  -r ".Reservations[].Instances[]
+  | select(.State.Name == \"running\")
   | select((.Tags[]?|select(.Key==\"${tag}\")|.Value) | contains(\"${instance}\"))
   | (.Tags[]?|select(.Key==\"${tag}\")|.Value)
   " | sort
 }
 
 function transform_host {
-  local hostparts=(${1/@/ })
-  local user="${hostparts[0]}"
-  local instance="${hostparts[1]}"
+  # shellcheck disable=SC2206
+  local host_parts=(${1/@/ })
+  local user="${host_parts[0]}"
+  local instance="${host_parts[1]}"
   local ip_type=${2}
   local resolved=${instance}
 
@@ -77,13 +81,13 @@ function transform_host {
     user=""
   fi
 
-  if [[ ${instance} =~ ${MATCH_IPV4} 
-    || ${isntance} =~ ${MATCH_IPV6} 
+  if [[ ${instance} =~ ${MATCH_IPV4}
+    || ${instance} =~ ${MATCH_IPV6}
     || ${instance} =~ ${MATCH_HOSTNAME}
     ]]; then
     resolved=${instance}
   else
-    resolved=`get_ip ${instance} ${ip_type}`
+    resolved=$(get_ip "${instance}" "${ip_type}")
     resolved=${resolved//\"}
     if [ "null" = "${resolved}" ]; then
       die "ERROR: Failed to find ${ip_type} ip for instance tagged ${tag}:${instance} in ${REGION}"
@@ -108,8 +112,8 @@ function add_filter {
 }
 
 function die {
-  if [[ ! -z "${1}" ]]; then
-    echo >&2 $1
+  if [[ -n "${1}" ]]; then
+    echo >&2 "$1"
   fi
   exit 1
 }
@@ -119,8 +123,23 @@ function die {
 ##########################################################
 type awk >/dev/null 2>&1 || die "ERROR: awk is required, but can't be found."
 type grep >/dev/null 2>&1 || die "ERROR: grep is required, but can't be found."
-type jq >/dev/null 2>&1 || die "ERROR: jq is required, but it is not installed."
-type aws >/dev/null 2>&1 || die "ERROR: AWS CLI is required, but it is not installed."
+if ! type jq >/dev/null 2>&1; then
+  # if osx and homebrew installed - try to install awscli
+  if [[ $(uname) == "Darwin" ]] && type brew >/dev/null 2>&1; then
+    echo "Installing jq with brew..."
+    brew install jq
+  fi
+  type jq >/dev/null 2>&1 || die "ERROR: jq is required, but it is not installed."
+fi
+
+if ! type aws >/dev/null 2>&1; then
+  # if osx and homebrew installed - try to install awscli
+  if [[ $(uname) == "Darwin" ]] && type brew >/dev/null 2>&1; then
+    echo "Installing awscli with brew..."
+    brew install awscli
+  fi
+  type aws >/dev/null 2>&1 || die "ERROR: AWS CLI is required, but it is not installed."
+fi
 
 ##########################################################
 # Runtime variables
@@ -129,15 +148,25 @@ tag="Name"
 filters=""
 target=
 
-REFRESH_CACHE=false
-
 function init_cache() {
-  if [ -f ${CACHE_FILE} ]; then
-    local cache_age=$(echo $((($(date +%s) - $(date -r ${CACHE_FILE} +%s)))))
-    echo "Using instance cache: ${CACHE_FILE} (age: $(time_ago ${cache_age}))"
+  # if CACHE_MAX_AGE is set to 0, always refresh cache
+  if [ "${CACHE_MAX_AGE}" -eq 0 ]; then
+    populate_cache
+    return
+  fi
+
+  # check if cache is valid, if not populate
+  if ! jq "." "${CACHE_FILE}" > /dev/null 2>&1; then
+    echo "Populating instance cache ${CACHE_FILE}"
+    populate_cache
+  elif [ -f "${CACHE_FILE}" ]; then
+    local cache_age=$(($(date +%s) - $(date -r ${CACHE_FILE} +%s)))
     # auto update cache in background if old
-    if [ $cache_age -gt 86400 ]; then
-      populate_cache > /dev/null &
+    if [ $cache_age -gt "${CACHE_MAX_AGE}" ]; then
+      echo "Cache expired repopulating: ${CACHE_FILE} (age: $(time_ago ${cache_age}))"
+      populate_cache
+    else
+      echo "Using instance cache: ${CACHE_FILE} (age: $(time_ago ${cache_age}))"
     fi
   fi
 }
@@ -150,12 +179,12 @@ function find_target {
   local pick
   local count
 
-  instances=$(get_instances ${target})
+  instances=$(get_instances "${target}")
   count=$(echo "${instances}" | wc -l)
 
   if [[ -z "${instances}" ]]; then
     # no matching instances of target, fail
-    die "ERROR: Didn't find instance ${target}"
+    die "ERROR: Didn't find instance with tag \"${tag}\" matching \"${target}\""
   elif [[ "${count}" -eq 1 ]]; then
     # only one matching target, capture ip and move on
     target=$(echo "${instances}" | cut -f1)
@@ -163,7 +192,7 @@ function find_target {
     # print matching instance names and allow user to specify the choice by index
     echo "pick instance matching '${target}'"
     echo "${instances}" | cut -f2 | awk '{printf "%d) %s\n", NR, $0}'
-    read -p "pick (1): " pick
+    read -r -p "pick (1): " pick
 
     # if nothing was chosen default pick to first match
     if [[ "${pick}" -eq "" ]]; then
@@ -180,3 +209,15 @@ function find_target {
   fi
   found_target=${target}
 }
+
+# if running as a command output, match the target and print the instance json
+if [[ "${0}" =~ "ec2util" ]]; then
+  if [ "$#" -lt 1 ]; then
+    echo "Usage: ${0} <instance name>"
+    exit 1
+  fi
+
+  init_cache
+  find_target "$1"
+  instance_cache | jq  -r ".Reservations[].Instances[] | select(.Tags[]?|select(.Key==\"${tag}\")|.Value == \"${found_target}\")"
+fi

@@ -1,60 +1,104 @@
 #!/usr/bin/env bash
-#set -o localoptions -o localtraps
-# set -e
+# Functions to ease using ec2ssh to jump through a bastion host
+set -e
 
-# Script to ease using ec2ssh to jump
-# Usage:
-#    create a `jump_transform` script or function that accepts region, vpc and name and 
-#    returns the name as defined in ec2. Will be passed to ec2ssh for any 
-#    additional narrowing
-# 
-# Optional:
-#    create jump_pre and jump_post scripts or functions that are called prior to 
-#    initiating the ssh connection. Can be used to change profile or term
-#    settings.
-
-fn_exists() {
-    command -v $1 > /dev/null
-}
-
+# shellcheck disable=SC2086
+SCRIPT=$(basename $0)
 JUMP_REGION=${JUMP_REGION:-us-east-1}
-jump () {
-    if [ "$#" -lt 1 ]; then
-        echo "Usage: jump env [target] ...ec2ssh params" >&2
-        return 1
-    fi
 
-    if [[ "${1}" == "-c" ]]; then
-        ec2ssh -r ${JUMP_REGION} -c
-        return
-    fi
+function usage() {
+    cat<<EOF
+Usage: ${SCRIPT} env [target] ...ec2ssh params
 
-    local vpc=${1}
-    local svr=${2}
-    local jump_svr='jump'
+Jump through a bastion host to an EC2 instance
 
-    # if jump name transformation is available use it
-    if fn_exists 'jump_transform'; then
-        svr=$(jump_transform ${JUMP_REGION} ${vpc} ${2})
-        jump_svr=$(jump_transform ${JUMP_REGION} ${vpc} jump)
-    fi
+  env             Environment (e.g. dev, test, stg, prod)
+  target          EC2 instance name (e.g. "test-web01")
+  ...ec2ssh params  Additional parameters to pass to ec2ssh
 
-    # call pre helper if defined
-    if fn_exists 'jump_pre'; then
-        jump_pre ${vpc}
-    fi
+Uses JUMP_REGION environment variable to determine the region of the bastion host defaulting to us-east-1
 
-    # register post helper call if defined
-    if fn_exists 'jump_post'; then
-        trap 'jump_post; return 1' INT
-    fi
+Examples:
 
-    ec2ssh -r ${JUMP_REGION} -j ${jump_svr} ${svr} ${@:3}
+  ${SCRIPT} dev portal3
+    Jump to portal3 dev in the dev environment
 
-    # call post helper if defined
-    if fn_exists 'jump_post'; then
-        jump_post ${vpc}
-    fi
+  ${SCRIPT} test web
+    Jump to a web server in the test environment
+
+EOF
 }
 
+function fn_exists() {
+  command -v "$1" > /dev/null
+}
+
+function cleanup() {
+  # call post helper if defined
+  if fn_exists 'ec2jump_post'; then
+    ec2jump_post "${vpc}"
+  fi
+}
+trap cleanup EXIT
+
+function jump() {
+  local vpc jump_tag jump_svr jump_transform target_tag target_svr target_transform ec2ssh_params
+  # loop through params, setting vpc and target_svr
+  while [ "$#" -gt 0 ]; do
+      # if argument starts with - captures
+      if [[ "${1}" != -* ]]; then
+          if [ -z "${vpc}" ]; then
+              vpc=${1}
+              shift
+          # if target_svr not set set it
+          elif [ -z "${target_svr}" ]; then
+              target_svr=${1}
+              shift
+          else
+              ec2ssh_params="${ec2ssh_params} ${1}"
+              shift
+          fi
+      else
+          ec2ssh_params="${ec2ssh_params} ${1}"
+          shift
+      fi
+  done
+
+  jump_tag="Name"
+  target_tag="Name"
+
+  # if jump name transformation is available use it
+  if fn_exists 'ec2jump_transform'; then
+      jump_transform=$(ec2jump_transform "${JUMP_REGION}" "${vpc}" jump)
+      if [[ "${jump_transform}" == *":"* ]]; then
+          jump_tag=$(echo "${jump_transform}" | cut -d':' -f1)
+          jump_svr=$(echo "${jump_transform}" | cut -d':' -f2)
+      else
+          jump_svr=${jump_transform}
+      fi
+
+      target_transform=$(ec2jump_transform "${JUMP_REGION}" "${vpc}" "${target_svr}")
+      if [[ "${target_transform}" == *":"* ]]; then
+          target_tag=$(echo "${target_transform}" | cut -d':' -f1)
+          target_svr=$(echo "${target_transform}" | cut -d':' -f2)
+      else
+          target_svr=${target_transform}
+      fi
+  fi
+
+  # call pre helper if defined
+  if fn_exists 'ec2jump_pre'; then
+    ec2jump_pre "${vpc}"
+  fi
+
+  # shellcheck disable=SC2086
+  "$(dirname "$0")/ec2ssh" -r "${JUMP_REGION}" -t "${jump_tag}" -J "${jump_svr}" -t "${target_tag}" "${target_svr}" ${ec2ssh_params}
+}
+
+if [ "$#" -lt 1 ]; then
+    usage
+    exit 1
+fi
+
+# shellcheck disable=SC2068
 jump $@

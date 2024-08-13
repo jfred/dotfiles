@@ -1,20 +1,63 @@
 #!/usr/bin/env bash
-# Functions to ease using ec2ssh to tunnel
-
+# Function to ease using ec2ssh to tunnel
 set -e
 
-function tunnel() {
-    if [[ "${TUNNEL_JUMP_PORT}" -eq "" ]]; then
-        echo "ERROR: TUNNEL_JUMP_PORT not set" >&2
-        return 1
-    fi
+# shellcheck disable=SC2086
+SCRIPT=$(basename $0)
 
-    if [[ "$#" -lt 3 ]]; then
-        echo "Usage: ${0} env target remoteport [localport] [remote target] [jumpport] " >&2
-        return 1
-    fi
+function usage() {
+    cat<<EOF
+Usage: ${SCRIPT} env target [remote port] [local port] [remote target]
 
-    ec2jump $1 $2 -F ${6:-${TUNNEL_JUMP_PORT}} -L ${4:-${3}}:${5:-127.0.0.1}:$3
+Jump through a bastion host to an EC2 instance and setup port forwarding
+
+  env             Environment (e.g. dev, test, stg, prod)
+  target          EC2 instance name (e.g. "test-web01")
+  remote port     Port on the remote target to forward (optional)
+  local port      Port on the local machine to forward to (optional)
+  remote target   Target to forward to on the remote target (optional)
+
+Uses ec2jump and JUMP_REGION environment variable to determine the region of the bastion host defaulting to us-east-1
+
+If remote port is not provided, will use default ports from ec2tunnel_defaults if available
+
+ec2tunnel_defaults will be provided the env and target, and should return an array of tunnels in the format
+  "remote_port:remote_target:remote_target_port"
+
+EOF
 }
 
+function tunnel() {
+    local vpc=${1}
+    local svr=${2}
+
+    # if no remote provided, use defaults
+    if [[ "$#" -eq 2 ]]; then
+        # shellcheck disable=SC2207
+        tunnels=($(ec2tunnel_defaults "${vpc}" "${svr}"))
+
+        # check length fof tunnels, if not empty, use them
+        if [[ ${#tunnels[@]} -eq 0 ]]; then
+            echo "No default tunnels found for ${vpc},${svr}"
+            exit 1
+        fi
+
+        # construct jump command for all tunnels as array of args
+        jump_args=()
+        for tunnel in "${tunnels[@]}"; do
+            jump_args+=(-L "${tunnel}")
+        done
+        # shellcheck disable=SC2068
+        "$(dirname "$0")/ec2jump" "$1" "$2" ${jump_args[@]}
+    else
+      "$(dirname "$0")/ec2jump" "$1" "$2" -L "${4:-${3}}":"${5:-127.0.0.1}":"$3"
+    fi
+}
+
+if [[ "$#" -lt 2 ]]; then
+    usage
+    exit 1
+fi
+
+# shellcheck disable=SC2068
 tunnel $@

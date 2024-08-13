@@ -21,8 +21,6 @@ to pick from the available instances
   -r REGION      EC2 Region, defaults to us-east-1
   -t TAG         Resolve instances with tag, defaults to Name
   -J JUMP        Jump host (optional)
-  -L FWD         Port forwarding - format port:host:host_port (if jump, proxies through JUMP_FWD)
-  -F JUMP_FWD    Port to use on jump host, defaults to 9999
   -d             Dry run of command
 
 Examples:
@@ -31,7 +29,7 @@ Examples:
      scp some-file through server named "jump-123" from EC2 instance starting with "server-456" to /tmp/some-file
 
   ec2scp -J jump-123 /tmp/some-file server-456:some-file
-     scp /tmp/some-file through server named "jump-123" to EC2 instance starting with "server-456" 
+     scp /tmp/some-file through server named "jump-123" to EC2 instance starting with "server-456"
 
 EOF
 }
@@ -47,9 +45,11 @@ type sed >/dev/null 2>&1 || die "ERROR: sed is required, but can't be found."
 # Runtime variables
 ##########################################################
 tag="Name"
+jump_tag="Name"
+src_tag="Name"
+dst_tag="Name"
 jump=""
 target=""
-filters=""
 src=""
 dst=""
 
@@ -62,14 +62,16 @@ while test $# != 0; do case "$1" in
   -c) CMD=$1;;
   -h) CMD=$1;;
   -r) set_region $2; shift;;
-  -J) jump=$2; shift;;
+  -J) jump=$2; jump_tag=${tag}; shift;;
   -t) tag=$2; shift;;
   *)
     if [ -z "${src}" ]; then
       src=${1}
+      src_tag=${tag}
     else
       if [ -z "${dst}" ]; then
         dst=${1}
+        dst_tag=${tag}
       fi
     fi
   esac
@@ -93,26 +95,30 @@ fi
 #  die "<TARGET>:<PATH> not in the right form"
 #fi
 
-
 init_cache
 
 transform_type="Public"
 transformed_loc=""
 function transform_loc() {
+  local target path
   transformed_loc=""
   if [[ "$1" =~ .*":".* ]]; then
-    echo "transforming $1"
-
-    local target=$(echo ${1} | sed "s/:.*//g")
-    local path=$(echo ${1} | sed "s/.*://")
+    # shellcheck disable=SC2001
+    target=$(echo ${1} | sed "s/:.*//g")
+    # shellcheck disable=SC2001
+    path=$(echo ${1} | sed "s/.*://")
     find_target "${target}"
     target=${found_target}
 
-    echo "checking $1 ${transform_type}"
-    target=`transform_host "${target}" "${transform_type}"`
+    target=$(transform_host "${target}" "${transform_type}")
     transformed_loc=${target}:${path}
+
+    # set user is specified
+    if [ -n "${EC2_USER}" ]; then
+      transformed_loc="${EC2_USER}@${transformed_loc}"
+    fi
+
   else
-    echo "Not transforming $1"
     transformed_loc=$1
   fi
 }
@@ -124,17 +130,25 @@ cmd='scp'
 
 if [[ ! -z "${jump}" ]]; then
   # get jump
+  tag=${jump_tag}
   find_target "${jump}"
   jump=${found_target}
   jump=`transform_host "${jump}" "Public"`
+
+  # set user is specified
+  if [ -n "${EC2_USER}" ]; then
+    jump="${EC2_USER}@${jump}"
+  fi
 
   # set transform to private and transform
   transform_type="Private"
   cmd="${cmd} -J ${jump}"
 fi
 
+tag=${src_tag}
 transform_loc "${src}"
 src=${transformed_loc}
+tag=${dst_tag}
 transform_loc "${dst}"
 dst=${transformed_loc}
 cmd="${cmd} ${src} ${dst}"
@@ -143,4 +157,3 @@ echo "executing: ${cmd}"
 if [[ ${DRY_RUN} == false ]]; then
   ${cmd}
 fi
-
