@@ -166,9 +166,21 @@ end)
 -- bind applications
 hs.application.enableSpotlightForNameSearches(true)
 
-local function launcher(app)
+local function launcher(appName)
   return function()
-    hs.application.launchOrFocus(app)
+	local app = hs.application.get(appName)
+	if not (app == nil) and app:isFrontmost() then
+	  app:hide()
+	else
+	  hs.application.launchOrFocus(appName)
+	end
+  end
+end
+
+function openChromeApp(name)
+  return function()
+	-- Be sure to get the real name of the app (Use ls -a to check).
+	hs.application.launchOrFocus(os.getenv('HOME') .. '/Applications/Chrome Apps.localized/' .. name .. '.app')
   end
 end
 
@@ -176,10 +188,12 @@ end
 local apps = {}
 apps["P"]=launcher('Slack')
 apps["O"]=launcher('Google Chrome')
-apps["I"]=launcher('iTerm')
-apps["J"]=launcher('IntelliJ IDEA')
+-- apps["I"]=launcher('iTerm')
+apps["J"]=launcher('IntelliJ IDEA Ultimate')
 apps["U"]=launcher('Safari')
 apps["["]=launcher('Obsidian')
+apps["M"]=openChromeApp('Google Meet')
+apps["N"]=openChromeApp('Messages')
 
 local launch_modifier = {"ctrl", "alt"}
 for char, launcher in pairs(apps) do
