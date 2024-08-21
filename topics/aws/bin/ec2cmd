@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+set -e
+
+# Create scripts with names ec2cmd_<command> in path to implement commands
+# that echo the command to pass as command to run on the target
+#
+# The script will be given the region and environment as arguments with any other arguments
+
+# mostly for dependency checking
+source "$(dirname "$0")/ec2util"
+
+# uses ec2jump to tunnel to an RDS instance and run a processlist query
+function usage() {
+  cat<<EOF
+Usage: $(basename ${0}) [-r REGION] <ENV> <PROXY-HOST> <CMD_TEMPLATE> <CMD_TEMPLATE_ARGS...>
+  -r REGION      EC2 Region, defaults to us-east-1
+
+Example:
+  $(basename ${0}) test worker rds-ps portal-replica-0
+    Connect to worker in test, and run ec2cmd_rds-ps command with args
+EOF
+}
+
+while test $# != 0; do case "$1" in
+  -r) REGION=$2; shift;;
+  *) break;;
+esac; shift; done
+
+env=${1}
+target=${2}
+cmd=${3}
+shift 3
+
+# check for required arguments
+if [ -z "${env}" ] || [ -z "${target}" ] || [ -z "${cmd}" ]; then
+  usage
+  exit 1
+fi
+
+# check if local function exists with name matching cmd var
+if [ -z "$(type -t "ec2cmd_${cmd}")" ]; then
+  echo "ERROR: No implementation found for ${cmd}"
+  echo "Please create a function named ec2cmd_${cmd} in path"
+  exit 1
+fi
+
+# call function with args
+
+cmd=$(ec2cmd_${cmd} ${REGION} ${env} ${@})
+"$(dirname "$0")/ec2jump" ${env} ${target} ${cmd}

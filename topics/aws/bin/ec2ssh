@@ -89,7 +89,7 @@ while test $# != 0; do case "$1" in
       target=$1; target_tag=${tag};
     else
       # append to remote command
-      remote_cmd="${remote_cmd} $1"
+      remote_cmd="${remote_cmd}$1 "
       shift
       break # break out of loop
     fi
@@ -99,7 +99,7 @@ done
 
 # capture remaining arguments as remote command
 while test $# != 0; do
-  remote_cmd="${remote_cmd} $1"
+  remote_cmd="${remote_cmd}$1 "
   shift
 done
 
@@ -176,7 +176,7 @@ fi
 
 # add remote command if specified
 if [ -n "${remote_cmd}" ]; then
-  cmd="${cmd} ${remote_cmd}"
+  cmd="${cmd} -t ${remote_cmd}"
 fi
 
 if [[ ${VERBOSE} == true ]]; then
