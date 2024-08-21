@@ -5,9 +5,11 @@ source "$(dirname "$0")/ec2util"
 
 function usage() {
   cat<<EOF
-Usage: ec2ssh [-r REGION] [-J JUMP] [-t TAG] <TARGET>
+Usage: ec2ssh [-r REGION] [-J JUMP] [-t TAG] <TARGET> [command [args]]
 
 Open an ssh connection to EC2 instance named <TARGET>
+
+Optionally run the command passed in [command [args]] on the remote host
 
 If more than one instance begins with <TARGET> then you will be prompted
 to pick from the available instances
@@ -52,6 +54,7 @@ target=""
 proxies_local=()
 proxies_target=()
 proxies_remote=()
+remote_cmd=""
 
 CMD=""
 DRY_RUN=false
@@ -80,8 +83,23 @@ while test $# != 0; do case "$1" in
       proxies_remote+=("${proxy[2]}")
       shift
       ;;
-  *) target=$1; target_tag=${tag};;
+  *)
+    # set target if not set
+    if [ -z "${target}" ]; then
+      target=$1; target_tag=${tag};
+    else
+      # append to remote command
+      remote_cmd="${remote_cmd} $1"
+      shift
+      break # break out of loop
+    fi
   esac
+  shift
+done
+
+# capture remaining arguments as remote command
+while test $# != 0; do
+  remote_cmd="${remote_cmd} $1"
   shift
 done
 
@@ -154,6 +172,11 @@ else
       cmd+="-L ${proxies_local[$i]}:${proxies_target[$i]}:${proxies_remote[$i]} "
     done
   fi
+fi
+
+# add remote command if specified
+if [ -n "${remote_cmd}" ]; then
+  cmd="${cmd} ${remote_cmd}"
 fi
 
 if [[ ${VERBOSE} == true ]]; then
