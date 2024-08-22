@@ -190,8 +190,9 @@ function find_target {
     target=$(echo "${instances}" | cut -f1)
   else
     # print matching instance names and allow user to specify the choice by index
-    echo "pick instance matching '${target}'"
-    echo "${instances}" | cut -f2 | awk '{printf "%d) %s\n", NR, $0}'
+    # using stderr to not interfere with stdout
+    echo "pick instance matching '${target}'" 1>&2
+    echo "${instances}" | cut -f2 | awk '{printf "%d) %s\n", NR, $0 | "cat 1>&2"}'
     read -r -p "pick (1): " pick
 
     # if nothing was chosen default pick to first match
