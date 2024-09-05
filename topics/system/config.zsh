@@ -14,5 +14,9 @@ fi
 
 
 function ssh-add-all {
-    find ${1:-~/.ssh} -type f -name 'id_*' -not -name '*.pub' -execdir ssh-add -t 6h {} \;
+    find ${1:-~/.ssh} -type f -name 'id_*' -not -name '*.pub' | while read -r key; do
+        if ! ssh-add -l | grep -q "$(ssh-keygen -lf "$key" | awk '{print $2}')"; then
+            ssh-add -t 6h "$key"
+        fi
+    done
 }
