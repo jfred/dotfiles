@@ -53,6 +53,7 @@ function get_ip {
   local instance=${1}
   local ip_type=${2}
   instance_cache | jq -r ".Reservations[].Instances[]
+  | select(.State.Name == \"running\")
   | select((.Tags[]?|select(.Key==\"${tag}\")|.Value) == \"${instance}\")
   | .${ip_type}IpAddress
   " | head -n 1
