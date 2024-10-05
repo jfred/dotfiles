@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -e
+
+# array of bg colors
+bg_colors=(red orange yellow green blue purple cyan white black)
+fg_colors=(white black black white white black black black white)
+
+# loop through bg_colors array in bash
+
+for i in "${!bg_colors[@]}"; do
+    # check if file exists
+    if [ -f "${fg_colors[$i]}-${bg_colors[$i]}.jpg" ]; then
+        continue
+    fi
+    echo -n "${bg_colors[$i]} on ${fg_colors[$i]}..."
+    create-media image ${fg_colors[$i]} ${bg_colors[$i]} > /dev/null 2>&1
+    create-media video ${fg_colors[$i]} ${bg_colors[$i]} > /dev/null 2>&1
+    echo "done"
+done
