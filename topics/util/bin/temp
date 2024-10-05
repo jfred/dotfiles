@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 # from: https://gist.github.com/thcipriani/915b47d59308db2bd9ea8a70e6719b1c
 
+# if osx use gnu-units
+if [[ $(uname) == "Darwin" ]]; then
+  units() {
+    gunits "$@"
+  }
+fi
+
 set -euo pipefail
 
 printf '%s°C\n' "$(units "tempF($@)" 'tempC' | xargs)"

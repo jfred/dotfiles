@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+set -e
+
+function usage() {
+  cat<<EOF
+Usage: create-media [type] [color] [bgColor]
+Will create a media file with the specified type, text color and background color
+
+  type     Type of media file to create (image or video)
+  color    Text color
+  bgColor  Background color
+
+filename is created as color-bgColor.jpg or color-bgColor.mp4
+
+Examples:
+    create-media image red blue
+      Create an image with red text on a blue background with filename red-blue.jpg
+
+    create-media video red blue
+      Create a video with red text on a blue background with filename red-blue.mp4
+
+EOF
+}
+
+# if not enough arguments are passed, show usage
+if [ $# -lt 3 ]; then
+  usage
+  exit 1
+fi
+
+type=${1}
+color=${2}
+bgColor=${3}
+
+if [ "${type}" == "image" ]; then
+  filename=${color}-${bgColor}.jpg
+  echo -n "Creating ${filename}..."
+  convert -size 1024x1024 xc:${bgColor} \
+              -fill ${color} \
+              -pointsize 128 \
+              -gravity center -draw 'text 0,0 "X"' \
+              -pointsize 450 \
+              -draw 'text 0,-256 "1024"' \
+              -draw 'text 0,256 "1024"' \
+              ${filename}
+  echo "done"
+elif [ "${type}" == "video" ]; then
+  filename=${color}-${bgColor}.mp4
+  echo -n "Creating ${filename}..."
+  ffmpeg -f lavfi -i color=size=1024x768:duration=10:rate=25:color=${bgColor} \
+              -vf "drawtext=fontfile=/path/to/font.ttf:fontsize=500:fontcolor=${color}:x=(w-text_w)/2:y=(h-text_h)/2:text='%{eif\:10-t\:d}',scale=1024:768:force_original_aspect_ratio=decrease" \
+              ${filename}
+  echo "done"
+else
+    echo "ERROR: Invalid type: ${type}" >&2
+    usage
+    exit 1
+fi
