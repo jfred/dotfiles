@@ -1,16 +1,36 @@
 #!/usr/bin/env bash
 # from https://gist.github.com/huytd/6a1a6a7b34a0d0abcac00b47e3d01513
+
+CORRECT_LETTER_AND_POSITION="\033[97;42m"
+CORRECT_LETTER_WRONG_POSITION="\033[97;43m"
+WRONG_LETTER="\033[97;41m"
+RESET="\033[0m"
+
+# Print legend
+echo -e "Color Legend:"
+echo -e "${CORRECT_LETTER_AND_POSITION} Correct letter and position ${RESET}"
+echo -e "${CORRECT_LETTER_WRONG_POSITION} Correct letter but wrong position ${RESET}"
+echo -e "${WRONG_LETTER} Wrong letter ${RESET}"
+echo ""
+
 words=($(grep '^\w\w\w\w\w$' /usr/share/dict/words | tr '[a-z]' '[A-Z]'))
 actual=${words[$[$RANDOM % ${#words[@]}]]}
 end=false
 guess_count=0
 max_guess=6
+wrong_letters=()
+
 if [[ $1 == "unlimit" ]]; then
     max_guess=999999
 fi
+
 while [[ $end != true ]]; do
-    guess_count=$(( $guess_count + 1 ))
+    guess_count=$(( guess_count + 1 ))
     if [[ $guess_count -le $max_guess ]]; then
+        if [[ ${#wrong_letters[@]} -gt 0 ]]; then
+            sorted_wrong_letters=($(printf "%s\n" "${wrong_letters[@]}" | sort))
+            echo -e "Wrong letters guessed so far: ${sorted_wrong_letters[@]}"
+        fi
         echo "Enter your guess ($guess_count / $max_guess):"
         read guess
         guess=$(echo $guess | tr '[a-z]' '[A-Z]')
@@ -19,7 +39,7 @@ while [[ $end != true ]]; do
                 echo "You guessed right!"
                 output=""
                 for ((i = 0; i < ${#actual}; i++)); do
-                    output+="\033[30;102m ${guess:$i:1} \033[0m"
+                    output+="${CORRECT_LETTER_AND_POSITION} ${guess:$i:1} ${RESET}"
                 done
                 printf "$output\n"
                 end=true
@@ -28,19 +48,20 @@ while [[ $end != true ]]; do
                 for ((i = 0; i < ${#actual}; i++)); do
                     if [[ "${actual:$i:1}" != "${guess:$i:1}" ]]; then
                         if [[ "$actual" == *"${guess:$i:1}"* ]]; then
-                            output+="\033[30;103m ${guess:$i:1} \033[0m"
+                            output+="${CORRECT_LETTER_WRONG_POSITION} ${guess:$i:1} ${RESET}"
                         else
-                            output+="\033[30;107m ${guess:$i:1} \033[0m"
+                            output+="${WRONG_LETTER} ${guess:$i:1} ${RESET}"
+                            wrong_letters+=("${guess:$i:1}")
                         fi
                     else
-                        output+="\033[30;102m ${guess:$i:1} \033[0m"
+                        output+="${CORRECT_LETTER_AND_POSITION} ${guess:$i:1} ${RESET}"
                     fi
                 done
                 printf "$output\n"
             fi
         else
-            echo "Please enter a valid word with 5 letters!";
-            guess_count=$(( $guess_count - 1 ))
+            echo "Please enter a valid word with 5 letters!"
+            guess_count=$(( guess_count - 1 ))
         fi
     else
         echo "You lose! The word is:"
