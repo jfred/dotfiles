@@ -1,19 +1,61 @@
 #!/usr/bin/env bash
 set -e
 
-# array of bg colors
-bg_colors=(red orange yellow green blue purple cyan white black)
-fg_colors=(white black black white white black black black white)
+# Array of colors
+colors=(
+    "aqua"
+    "beige"
+    "black"
+    "blue"
+    "brown"
+    "coral"
+    "cyan"
+    "darkgreen"
+    "gold"
+    "gray"
+    "green"
+    "ivory"
+    "lime"
+    "magenta"
+    "maroon"
+    "navy"
+    "olive"
+    "orange"
+    "pink"
+    "purple"
+    "red"
+    "silver"
+    "teal"
+    "white"
+    "yellow"
+)
 
-# loop through bg_colors array in bash
+video_resolution="1024x768"
+image_resolution="1080x1080"
 
-for i in "${!bg_colors[@]}"; do
-    # check if file exists
-    if [ -f "${fg_colors[$i]}-${bg_colors[$i]}.jpg" ]; then
+# Loop through colors array
+for color in "${colors[@]}"; do
+    # Check if files already exist, log and skip if they do
+    if [ -f "${color}.jpg" ] && [ -f "${color}.mp4" ]; then
+        echo "Files already exist: ${color}.jpg, ${color}.mp4"
         continue
     fi
-    echo -n "${bg_colors[$i]} on ${fg_colors[$i]}..."
-    create-media image ${fg_colors[$i]} ${bg_colors[$i]} > /dev/null 2>&1
-    create-media video ${fg_colors[$i]} ${bg_colors[$i]} > /dev/null 2>&1
-    echo "done"
+
+    # Check if image file exists
+    if [ ! -f "${color}.jpg" ]; then
+        if create-media image "${color}" -r "${image_resolution}" > /dev/null 2>&1; then
+            echo "Created image file: ${color}.jpg"
+        else
+            echo "Error creating image file: ${color}.jpg" >&2
+        fi
+    fi
+
+    # Check if video file exists
+    if [ ! -f "${color}.mp4" ]; then
+        if create-media video "${color}" -r "${video_resolution}" > /dev/null 2>&1; then
+            echo "Created video file: ${color}.mp4"
+        else
+            echo "Error creating video file: ${color}.mp4" >&2
+        fi
+    fi
 done

@@ -2,54 +2,73 @@
 set -e
 
 function usage() {
-  cat<<EOF
-Usage: create-media [type] [color] [bgColor]
-Will create a media file with the specified type, text color and background color
+cat<<EOF
+Usage: create-media [type] [bgColor] -r [resolution] [-o outputFilename]
+Will create a media file with the specified type, white text with a black border, background color, resolution, and optional output filename.
 
-  type     Type of media file to create (image or video)
-  color    Text color
-  bgColor  Background color
-
-filename is created as color-bgColor.jpg or color-bgColor.mp4
+  type            Type of media file to create (image or video)
+  bgColor         Background color
+  -r, --resolution   Resolution as WIDTHxHEIGHT (e.g., 1920x1080)
+  -o, --output       (Optional) Name of the output file. If not specified, the filename is created as bgColor.jpg or bgColor.mp4
 
 Examples:
-    create-media image red blue
-      Create an image with red text on a blue background with filename red-blue.jpg
+    create-media image blue -r 1920x1080 -o output.jpg
+      Create an image with white text and black border on a blue background with resolution 1920x1080 and filename output.jpg
 
-    create-media video red blue
-      Create a video with red text on a blue background with filename red-blue.mp4
+    create-media video blue -r 1920x1080
+      Create a video with white text and black border on a blue background with resolution 1920x1080 and filename blue.mp4
 
 EOF
 }
 
-# if not enough arguments are passed, show usage
-if [ $# -lt 3 ]; then
+# Check if minimum number of arguments is provided
+if [ $# -lt 2 ]; then
   usage
   exit 1
 fi
 
-type=${1}
-color=${2}
-bgColor=${3}
+# Positional arguments
+type=$1
+bgColor=$2
+resolution=${3:-1024x1024}
+shift 2
+
+# Optional arguments
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        -r|--resolution) resolution="$2"; shift ;;
+        -o|--output) outputFilename="$2"; shift ;;
+        *) echo "Unknown parameter $1"; usage; exit 1 ;;
+    esac
+    shift
+done
+
+width=$(echo ${resolution} | cut -d'x' -f1)
+height=$(echo ${resolution} | cut -d'x' -f2)
 
 if [ "${type}" == "image" ]; then
-  filename=${color}-${bgColor}.jpg
+  filename=${outputFilename:-${bgColor}.jpg}
   echo -n "Creating ${filename}..."
-  convert -size 1024x1024 xc:${bgColor} \
-              -fill ${color} \
-              -pointsize 128 \
+  convert -size ${resolution} "xc:${bgColor}" \
+              -fill white -stroke black -strokewidth 2 \
+              -pointsize $((width / 4)) \
               -gravity center -draw 'text 0,0 "X"' \
-              -pointsize 450 \
-              -draw 'text 0,-256 "1024"' \
-              -draw 'text 0,256 "1024"' \
-              ${filename}
+              -pointsize "$(echo "${width} / 3" | bc)" \
+              -draw "text 0,-$(echo "${height} / 4" | bc) \"${width}\"" \
+              -draw "text 0,$(echo "${width} / 4" | bc) \"${height}\"" \
+              "${filename}"
   echo "done"
 elif [ "${type}" == "video" ]; then
-  filename=${color}-${bgColor}.mp4
+  filename=${outputFilename:-${bgColor}.mp4}
   echo -n "Creating ${filename}..."
-  ffmpeg -f lavfi -i color=size=1024x768:duration=10:rate=25:color=${bgColor} \
-              -vf "drawtext=fontfile=/path/to/font.ttf:fontsize=500:fontcolor=${color}:x=(w-text_w)/2:y=(h-text_h)/2:text='%{eif\:10-t\:d}',scale=1024:768:force_original_aspect_ratio=decrease" \
-              ${filename}
+  ffmpeg -f lavfi -i "color=size=${resolution}:duration=10:rate=25:color=${bgColor}" \
+              -vf "drawtext=\
+              fontsize=$(echo "${height} / 1.5" | bc):fontcolor=white:\
+              borderw=4:bordercolor=black:\
+              x=(w-text_w)/2:y=(h-text_h)/2:\
+              text='%{eif\:10-t\:d}',scale=${resolution}:\
+              force_original_aspect_ratio=decrease" \
+              "${filename}"
   echo "done"
 else
     echo "ERROR: Invalid type: ${type}" >&2
