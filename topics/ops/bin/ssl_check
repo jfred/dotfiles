@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+host=$1
+port=443
+end_date=$(openssl s_client -host $host -port $port -showcerts < /dev/null 2>/dev/null |
+          sed -n '/BEGIN CERTIFICATE/,/END CERT/p' |
+          openssl x509 -text 2>/dev/null |
+          sed -n 's/ *Not After : *//p')
+
+# set date_command to gdate if present, otherwise use date
+date_cmd="date"
+if [ -n "$(which gdate)" ]; then
+    date_cmd="gdate"
+fi
+
+if [ -n "$end_date" ]
+then
+    end_date_seconds=$(${date_cmd} +%s --date="$end_date")
+    now_seconds=$(${date_cmd} '+%s')
+    days=$(echo "($end_date_seconds-$now_seconds)/24/3600" | bc)
+    echo "$end_date | $days" days
+fi
