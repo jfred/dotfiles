@@ -24,5 +24,6 @@ brew "dict"
 brew "autoenv"
 
 brew "imagemagick"
+brew "ffmpeg"
 
 brew "direnv"
