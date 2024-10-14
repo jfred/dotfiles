@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 set -e
 
-BASEDIR=$(dirname $0)
+BASEDIR=$(dirname "$0")
 # base system settings
-$BASEDIR/settings.sh
+"$BASEDIR"/settings.sh
 
-cd $BASEDIR
+cd "$BASEDIR"
 
 # Make sure we’re using the latest Home
 echo Updating homebrew...
@@ -27,7 +27,7 @@ for filename in ${LINKS}; do
         # echo "Skipping ${filename}"
         continue
     fi
-    echo ${filename} | sed -e 's/\.\.\/\(.*\)\/Brewfile/Installing \1 Brewfile.../g'
+    echo "${filename}" | sed -e 's/\.\.\/\(.*\)\/Brewfile/Installing \1 Brewfile.../g'
     brew bundle install --file="${filename}"
 done
 
