@@ -1,71 +1,92 @@
 #!/usr/bin/env bash
-# from https://gist.github.com/huytd/6a1a6a7b34a0d0abcac00b47e3d01513
+# based on https://gist.github.com/huytd/6a1a6a7b34a0d0abcac00b47e3d01513
 
 CORRECT_LETTER_AND_POSITION="\033[97;42m"
 CORRECT_LETTER_WRONG_POSITION="\033[97;43m"
 WRONG_LETTER="\033[97;41m"
 RESET="\033[0m"
 
-# Print legend
-echo -e "Color Legend:"
-echo -e "${CORRECT_LETTER_AND_POSITION} Correct letter and position ${RESET}"
-echo -e "${CORRECT_LETTER_WRONG_POSITION} Correct letter but wrong position ${RESET}"
-echo -e "${WRONG_LETTER} Wrong letter ${RESET}"
-echo ""
+print_legend() {
+    echo -e "Color Legend:"
+    echo -e "${CORRECT_LETTER_AND_POSITION} Correct letter and position ${RESET}"
+    echo -e "${CORRECT_LETTER_WRONG_POSITION} Correct letter but wrong position ${RESET}"
+    echo -e "${WRONG_LETTER} Wrong letter ${RESET}"
+    echo ""
+}
 
 words=($(grep '^\w\w\w\w\w$' /usr/share/dict/words | tr '[a-z]' '[A-Z]'))
 actual=${words[$[$RANDOM % ${#words[@]}]]}
 end=false
 guess_count=0
 max_guess=6
-wrong_letters=()
+previous_guesses=()
+error_message=""
 
 if [[ $1 == "unlimit" ]]; then
     max_guess=999999
 fi
 
-while [[ $end != true ]]; do
-    guess_count=$(( guess_count + 1 ))
-    if [[ $guess_count -le $max_guess ]]; then
-        if [[ ${#wrong_letters[@]} -gt 0 ]]; then
-            sorted_wrong_letters=($(printf "%s\n" "${wrong_letters[@]}" | sort))
-            echo -e "Wrong letters guessed so far: ${sorted_wrong_letters[@]}"
+print_guess_output() {
+    local guess=$1
+    local output=""
+    for ((i = 0; i < ${#actual}; i++)); do
+        if [[ "${actual:$i:1}" != "${guess:$i:1}" ]]; then
+            if [[ "$actual" == *"${guess:$i:1}"* ]]; then
+                output+="${CORRECT_LETTER_WRONG_POSITION} ${guess:$i:1} ${RESET}"
+            else
+                output+="${WRONG_LETTER} ${guess:$i:1} ${RESET}"
+            fi
+        else
+            output+="${CORRECT_LETTER_AND_POSITION} ${guess:$i:1} ${RESET}"
         fi
+    done
+    printf "$output\n"
+}
+
+print_board() {
+    if [[ ${#previous_guesses[@]} -gt 0 ]]; then
+        echo "Previous guesses:"
+        for prev_guess in "${previous_guesses[@]}"; do
+            print_guess_output "$prev_guess"
+        done
+    fi
+}
+
+while [[ $end != true ]]; do
+    clear
+    print_legend
+    guess_count=$(( guess_count + 1 ))
+
+    if ([[ $guess_count -le $max_guess ]]); then
+        if [[ -n $error_message ]]; then
+            echo -e "$error_message\n"
+            error_message=""
+            guess_count=$(( guess_count - 1 ))
+        fi
+
+        print_board
+
         echo "Enter your guess ($guess_count / $max_guess):"
         read guess
         guess=$(echo $guess | tr '[a-z]' '[A-Z]')
+
         if [[ " ${words[*]^^} " =~ " $guess " ]]; then
+            previous_guesses+=("$guess")
             if [[ $actual == $guess ]]; then
                 echo "You guessed right!"
-                output=""
-                for ((i = 0; i < ${#actual}; i++)); do
-                    output+="${CORRECT_LETTER_AND_POSITION} ${guess:$i:1} ${RESET}"
-                done
-                printf "$output\n"
+                print_guess_output "$guess"
                 end=true
             else
-                output=""
-                for ((i = 0; i < ${#actual}; i++)); do
-                    if [[ "${actual:$i:1}" != "${guess:$i:1}" ]]; then
-                        if [[ "$actual" == *"${guess:$i:1}"* ]]; then
-                            output+="${CORRECT_LETTER_WRONG_POSITION} ${guess:$i:1} ${RESET}"
-                        else
-                            output+="${WRONG_LETTER} ${guess:$i:1} ${RESET}"
-                            wrong_letters+=("${guess:$i:1}")
-                        fi
-                    else
-                        output+="${CORRECT_LETTER_AND_POSITION} ${guess:$i:1} ${RESET}"
-                    fi
-                done
-                printf "$output\n"
+                print_guess_output "$guess"
             fi
         else
-            echo "Please enter a valid word with 5 letters!"
-            guess_count=$(( guess_count - 1 ))
+            error_message="Please enter a valid word with 5 letters!"
         fi
     else
-        echo "You lose! The word is:"
-        echo $actual
+        clear
+        print_legend
+        print_board
+        echo "You lose! The word is: $actual"
         end=true
     fi
 done
