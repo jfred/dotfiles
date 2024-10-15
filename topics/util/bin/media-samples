@@ -1,40 +1,26 @@
 #!/usr/bin/env bash
 set -e
 
-# Array of colors
-colors=(
-    "aqua"
-    "beige"
-    "black"
-    "blue"
-    "brown"
-    "coral"
-    "cyan"
-    "darkgreen"
-    "gold"
-    "gray"
-    "green"
-    "ivory"
-    "lime"
-    "magenta"
-    "maroon"
-    "navy"
-    "olive"
-    "orange"
-    "pink"
-    "purple"
-    "red"
-    "silver"
-    "teal"
-    "white"
-    "yellow"
-)
+# Function to generate evenly spaced hex color codes
+generate_color() {
+    local index=$1
+    local total=$2
+    local step_size=$((0xFFFFFF / total))
+    local color=$((index * step_size))
+    printf "#%06X\n" $color
+}
+
+# Number of colors to generate
+num_colors=${1:-10}
 
 video_resolution="1024x768"
 image_resolution="1080x1080"
 
-# Loop through colors array
-for color in "${colors[@]}"; do
+# Loop to generate colors and create media files
+for ((i=0; i<num_colors; i++)); do
+    # Generate color
+    color=$(generate_color $i $num_colors)
+
     # Check if files already exist, log and skip if they do
     if [ -f "${color}.jpg" ] && [ -f "${color}.mp4" ]; then
         echo "Files already exist: ${color}.jpg, ${color}.mp4"
