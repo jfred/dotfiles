@@ -3,6 +3,7 @@ cask "macdown"
 cask "hammerspoon"
 cask "devutils"
 cask "choosy"
+cask "itsycal"
 # cask "google-chrome"
 # cask "visual-studio-code"
 
