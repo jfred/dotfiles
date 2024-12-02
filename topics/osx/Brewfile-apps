@@ -14,4 +14,3 @@ cask "font-inconsolata-nerd-font"
 cask "font-jetbrains-mono-nerd-font"
 
 cask "betterdisplay"
-cask "witch"

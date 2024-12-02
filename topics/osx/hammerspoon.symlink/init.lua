@@ -31,6 +31,9 @@ local function bindAll(char, func)
   bindSuper(char, func)
 end
 
+local hotswitch = require("hotswitch-hs/hotswitch-hs")
+hs.hotkey.bind({"alt"}, "tab", hotswitch.openOrClose)
+
 -- default grid
 hs.grid.ui.textSize = 60
 hs.grid.ui.showExtraKeys = false
