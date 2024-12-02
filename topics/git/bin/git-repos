@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # Checkout and fetch to ensure repos are up to date
 #
+# If origins is passed, check that origin matches and if not replace
+#
 # Expects a repos file in the current directory with the form:
 #  dir:cloneurl
 #
@@ -20,6 +22,29 @@ if [ ! -f "repos" ]; then
 fi
 
 fetch=()
+
+if [ "$1" == "origins" ]; then
+    while read repo; do
+        # skip empty lines
+        if [[ -z "$repo" ]]; then
+            continue
+        fi
+
+        dir=$( cut -d ':' -f 1 <<< "${repo}" )
+        clone=$( cut -d ':' -f 2- <<< "${repo}" )
+        if [ -d "${dir}" ]; then
+            echo -n checking origin for ${dir}...
+            if [ "$(git -C ${dir} remote get-url origin)" != "${clone}" ]; then
+                git -C ${dir} remote set-url origin ${clone}
+                echo origin updated
+            else
+                echo origin matches
+            fi
+        fi
+    done < repos
+    exit
+fi
+
 
 while read repo; do
     # skip empty lines
