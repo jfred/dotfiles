@@ -6,6 +6,7 @@ cask "choosy"
 cask "itsycal"
 # cask "google-chrome"
 # cask "visual-studio-code"
+cask "visual-studio-code@insiders"
 
 # fonts
 cask "font-inconsolata"
