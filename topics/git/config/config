@@ -40,7 +40,6 @@
     name = Joshua Frederick
     useConfigOnly = true
 [core]
-    excludesfile = ~/.gitignore
     autocrlf = input
 [advice]
     statusHints = false
