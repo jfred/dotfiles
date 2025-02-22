@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-INTER=1
+INTER=0
 
 # set exclude defaults
 DOT_EXCLUDE="${DOT_EXCLUDE:-osx}"
-DOT_EXCLUDE="${DOT_INCLUDE}"
+DOT_INCLUDE="${DOT_INCLUDE}"
 platform=$(uname -o 2> /dev/null || uname)
 if [ -z "${DOT_EXCLUDE}" ]; then
     DOT_EXCLUDE="osx"
@@ -18,7 +18,7 @@ fi
 while [[ $# -gt 0 ]]; do
     case "$1" in
         -i|--interactive)
-            INTER=0
+            INTER=1
             ;;
         -h)
             echo "usage: $0 [-i|--interactive]"
@@ -69,11 +69,15 @@ mklink(){
     fi
 
     if [ -e "${link_file}" ]; then
-        confirm "Replace ${link_file}? (y/N)"
-        if [ $? -eq 1 ]; then
-            return 1
+        if [ ${INTER} -eq 1 ]; then
+            confirm "Replace ${link_file}? (y/N)"
+            if [ $? -eq 1 ]; then
+                return 1
+            fi
+        else
+            echo "File ${link_file} already exists, skipping"
         fi
-    elif [ ${INTER} -eq 0 ]; then
+    elif [ ${INTER} -eq 1 ]; then
         confirm "Create link ${link_file}? (y/N)"
         if [ $? -eq 1 ]; then
             return 1
@@ -107,7 +111,7 @@ done
 LINKS=$(find topics -name 'install.sh')
 for filename in ${LINKS}; do
     if should_include "${filename}"; then
-        if [ ${INTER} -eq 0 ]; then
+        if [ ${INTER} -eq 1 ]; then
             confirm "Execute ${filename}? (y/N)"
             if [ $? -eq 0 ]; then
                 echo -n "Executing ${filename}..."
