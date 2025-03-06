@@ -21,6 +21,9 @@
     user = config --get-regex "user\\.[name|email]"
     name = config --local --add user.name
     email = config --local --add user.email
+    # browse aliases
+    bt = browse-tracker
+    ci = browse-ci
     # log aliases
     lg = log --graph --pretty=format:'%C(red)%h%C(reset) : %C(yellow)%d%C(reset) %s %C(green)(%an %cr)%C(reset)' --abbrev-commit --date=relative
     ll = log --pretty=format:'%C(red)%h%C(yellow)%d %C(reset)%s%C(green) [%cn]' --stat

@@ -1,4 +1,11 @@
 #!/usr/bin/env bash
 set -e
 
-git rev-parse --abbrev-ref HEAD | sed 's/.*\/\([A-Z]*-[0-9]*\).*/\1/g'
+ticket=$(git rev-parse --abbrev-ref HEAD | sed 's/.*\/\([A-Za-z]*-[0-9]*\).*/\1/g')
+
+if [[ ! $ticket =~ ^[A-Za-z]+-[0-9]+$ ]]; then
+  echo "Error: No valid ticket number found in branch name" >&2
+  exit 1
+fi
+
+echo $ticket

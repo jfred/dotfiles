@@ -27,11 +27,25 @@ RESULT_URL=${1}
 
 BRANCH=$(git rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null | cut -d'/' -f2-)
 BRANCH_ESCAPED=$(echo ${BRANCH} | sed 's/\//%252F/g')
-TICKET=$(git ticket)
 
-
+# replace branch in url template
 RESULT_URL=$(echo "${RESULT_URL}" | sed "s|_BRANCH_ESCAPED_|${BRANCH_ESCAPED}|g")
 RESULT_URL=$(echo "${RESULT_URL}" | sed "s|_BRANCH_|${BRANCH}|g")
-RESULT_URL=$(echo "${RESULT_URL}" | sed "s|_TICKET_|${TICKET}|g")
+
+# replace ticket in url template if it exists
+if grep "_TICKET_" <<< "${RESULT_URL}" > /dev/null; then
+    if ! command -v git-ticket > /dev/null; then
+        die "Error: git-ticket is not installed"
+    fi
+    TICKET=$(git ticket)
+    RESULT_URL=$(echo "${RESULT_URL}" | sed "s|_TICKET_|${TICKET}|g")
+fi
+
+# replace git SHA in url template if it exists
+if grep "_SHA_" <<< "${RESULT_URL}" > /dev/null; then
+    # useful for github ci - https://github.com/<name>/<repo>/commit/_SHA_/checks
+    SHA=$(git rev-parse HEAD)
+    RESULT_URL=$(echo "${RESULT_URL}" | sed "s|_SHA_|${SHA}|g")
+fi
 
 git web--browse ${RESULT_URL}

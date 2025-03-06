@@ -7,7 +7,7 @@ function die() {
 }
 
 if [ "$TRACKER_URL" == "" ]; then
-    die "Error: No TRACKER_URL is set (e.g. https://some.atlassian.net/browse/_TICKET_)"
+    die "Error: No TRACKER_URL is set (e.g. https://some.tracker.example.org/some/prefix/_TICKET_)"
 fi
 
 git browse-template ${TRACKER_URL}
