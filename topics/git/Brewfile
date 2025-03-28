@@ -1,2 +1,5 @@
 brew "git"
 brew "gh"
+
+cask "gitkraken"
+cask "gitkraken-cli"
