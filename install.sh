@@ -2,6 +2,10 @@
 
 INTER=0
 
+# ensure running from the right directory
+
+HERE=`dirname $0`
+
 # set exclude defaults
 DOT_EXCLUDE="${DOT_EXCLUDE:-osx}"
 DOT_INCLUDE="${DOT_INCLUDE}"
@@ -24,7 +28,7 @@ while [[ $# -gt 0 ]]; do
             echo "usage: $0 [-i|--interactive]"
             exit 0 ;;
         *)
-            # Default case: set DOT_EXCLUDE to the first argument
+            # Default case: set DOT_INCLUDE to the first argument
             DOT_INCLUDE="$1"
             ;;
     esac
@@ -59,7 +63,7 @@ should_include() {
 mklink(){
     filename=$(echo "$1" | sed 's/\.\///')
     link_file="${HOME}/.$(echo "${filename}" | sed 's/.*\/\([a-z_.A-Z]*\).symlink/\1/')"
-    orig_file="$(pwd)/${filename}"
+    orig_file="${filename}"
     # if the link already exists and pointing to the right place - continue
     if [ -L "${link_file}" ]; then
         target=$(readlink "${link_file}")
@@ -70,7 +74,7 @@ mklink(){
 
     if [ -e "${link_file}" ]; then
         if [ ${INTER} -eq 1 ]; then
-            confirm "Replace ${link_file}? (y/N)"
+            confirm "Replace ${link_file} with ${filename}? (y/N)"
             if [ $? -eq 1 ]; then
                 return 1
             fi
@@ -100,7 +104,7 @@ if [ ! -f ~/.localrc ]; then
 fi
 
 # Create links
-LINKS=$(find . -name '*.symlink')
+LINKS=$(find ${HERE} -name '*.symlink')
 for filename in ${LINKS}; do
     if should_include "${filename}"; then
         mklink "${filename}"
@@ -108,7 +112,7 @@ for filename in ${LINKS}; do
 done
 
 # Run installs
-LINKS=$(find topics -name 'install.sh')
+LINKS=$(find ${HERE}/topics -name 'install.sh')
 for filename in ${LINKS}; do
     if should_include "${filename}"; then
         if [ ${INTER} -eq 1 ]; then
