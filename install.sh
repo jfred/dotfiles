@@ -35,6 +35,11 @@ while [[ $# -gt 0 ]]; do
     shift
 done
 
+# Override when in dev container to only install git
+if [ -f /.dockerenv ]; then
+    DOT_INCLUDE="git" 
+fi
+
 platform=$(uname -o 2> /dev/null || uname)
 
 confirm(){
