@@ -1,12 +1,12 @@
 cask "iterm2@beta"
 cask "macdown"
-cask "hammerspoon"
-cask "devutils"
+#cask "hammerspoon"
+#cask "devutils"
 cask "choosy"
-cask "itsycal"
+#cask "itsycal"
 # cask "google-chrome"
-# cask "visual-studio-code"
-cask "visual-studio-code@insiders"
+cask "visual-studio-code"
+# cask "visual-studio-code@insiders"
 cask "raycast"
 
 # fonts
