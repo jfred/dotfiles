@@ -1,0 +1,27 @@
+{
+  "python.testing.pytestEnabled": true,
+  "python.analysis.enablePytestSupport": false,
+  "python.testing.unittestArgs": ["--noinput"],
+  "terminal.external.osxExec": "iTerm.app",
+  "git.autofetch": true,
+  "mypy-type-checker.reportingScope": "workspace",
+  "files.autoSave": "afterDelay",
+  "pylint.importStrategy": "fromEnvironment",
+  "window.restoreWindows": "none",
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "git.openDiffOnClick": false,
+  "dotfiles.repository": "jfred/dotfiles",
+  "window.autoDetectColorScheme": true,
+  "git.blame.editorDecoration.template": "${hashShort}, ${authorName}",
+  "gitlens.autolinks": [
+    {
+      "prefix": "ENG-",
+      "url": "https://linear.app/watchduty/issue/ENG-<num>"
+    }
+  ],
+  "gitlens.ai.model": "vscode",
+  "gitlens.ai.vscode.model": "copilot:gpt-4",
+  "editor.minimap.enabled": false,
+  "mypy-type-checker.importStrategy": "fromEnvironment"
+}

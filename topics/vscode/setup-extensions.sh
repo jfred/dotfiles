@@ -1,0 +1,113 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# Get the directory this script is in
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+EXT_FILE="$SCRIPT_DIR/extensions.txt"
+
+# Parse flags
+CLEAN_MODE=false
+for arg in "$@"; do
+  if [[ "$arg" == "--clean" ]]; then
+    CLEAN_MODE=true
+  fi
+done
+
+# Wraps `code` CLI and filters out known Electron/Node warnings
+safe_code() {
+  code "$@" 2>&1 | grep -v -e 'DEP0168' -e 'Electron --trace-deprecation'
+}
+
+# Same as safe_code but fully quiet (suppress output unless error)
+quiet_safe_code() {
+  code "$@" > /dev/null 2>&1
+}
+
+# Check if 'code' command is available
+if ! command -v code &>/dev/null; then
+  echo "Error: VSCode CLI ('code') is not installed or not in PATH." >&2
+  exit 1
+fi
+
+# Check if extensions file exists
+if [[ ! -f "$EXT_FILE" ]]; then
+  echo "Error: Extensions file not found at $EXT_FILE" >&2
+  exit 1
+fi
+
+echo "Checking for uninstalled VSCode extensions..."
+
+# Read and clean extensions from file
+code_extensions=()
+while IFS= read -r line || [[ -n "$line" ]]; do
+  clean_line="$(echo "$line" | tr -d '\r' | xargs)"
+  [[ -n "$clean_line" ]] && code_extensions+=("$clean_line")
+done < <(sort "$EXT_FILE")
+
+if [[ ${#code_extensions[@]} -eq 0 ]]; then
+  echo "Warning: No extensions found in $EXT_FILE"
+  exit 0
+fi
+
+# Get currently installed extensions (cleaned)
+installed_extensions=()
+while IFS= read -r ext; do
+  clean_ext="$(echo "$ext" | tr -d '\r' | xargs)"
+  [[ -n "$clean_ext" && ! "$clean_ext" =~ DEP0168 && ! "$clean_ext" =~ Electron ]] && installed_extensions+=("$clean_ext")
+done < <(safe_code --list-extensions | sort)
+
+# Track uninstalled and extra extensions
+uninstalled_extensions=()
+extra_extensions=()
+
+for ext in "${code_extensions[@]}"; do
+  if printf '%s\n' "${installed_extensions[@]}" | grep -Fxq "$ext"; then
+    echo "✅ $ext is already installed"
+  else
+    echo "📥 $ext is not installed, marking for installation"
+    uninstalled_extensions+=("$ext")
+  fi
+done
+
+for ext in "${installed_extensions[@]}"; do
+  if ! printf '%s\n' "${code_extensions[@]}" | grep -Fxq "$ext"; then
+    extra_extensions+=("$ext")
+  fi
+done
+
+# Install missing extensions
+if [ ${#uninstalled_extensions[@]} -eq 0 ]; then
+  echo "All listed extensions are installed."
+else
+  echo "Installing ${#uninstalled_extensions[@]} missing extensions..."
+
+  for extension in "${uninstalled_extensions[@]}"; do
+    echo "Installing $extension..."
+    quiet_safe_code --install-extension "$extension"
+  done
+
+  echo "Installation complete."
+fi
+
+# Handle extra extensions
+if [ ${#extra_extensions[@]} -eq 0 ]; then
+  echo "No extra extensions found."
+else
+  if [ "$CLEAN_MODE" = true ]; then
+    echo "Cleaning ${#extra_extensions[@]} extensions not listed in $EXT_FILE..."
+
+    for extension in "${extra_extensions[@]}"; do
+      echo "❌ Uninstalling $extension..."
+      quiet_safe_code --uninstall-extension "$extension"
+    done
+
+    echo "Cleanup complete."
+  else
+    echo "⚠️  Found ${#extra_extensions[@]} extra extensions that are NOT listed in $EXT_FILE:"
+    for extension in "${extra_extensions[@]}"; do
+      echo "   - $extension"
+    done
+    echo "Run the script with '--clean' to uninstall them."
+  fi
+fi
