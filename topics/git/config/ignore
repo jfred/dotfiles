@@ -43,3 +43,7 @@ tags
 # Mac stuff, ios
 .DS_Store
 Pods
+
+# AI Agent (for local only cases)
+CLAUDE.md
+.github/copilot-instructions.md
