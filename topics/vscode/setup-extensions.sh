@@ -8,9 +8,12 @@ EXT_FILE="$SCRIPT_DIR/extensions.txt"
 
 # Parse flags
 CLEAN_MODE=false
+PROMPT_ADD=false
 for arg in "$@"; do
   if [[ "$arg" == "--clean" ]]; then
     CLEAN_MODE=true
+  elif [[ "$arg" == "--prompt-add" ]]; then
+    PROMPT_ADD=true
   fi
 done
 
@@ -62,9 +65,7 @@ uninstalled_extensions=()
 extra_extensions=()
 
 for ext in "${code_extensions[@]}"; do
-  if printf '%s\n' "${installed_extensions[@]}" | grep -Fxq "$ext"; then
-    echo "✅ $ext is already installed"
-  else
+  if ! printf '%s\n' "${installed_extensions[@]}" | grep -Fxq "$ext"; then
     echo "📥 $ext is not installed, marking for installation"
     uninstalled_extensions+=("$ext")
   fi
@@ -107,7 +108,21 @@ else
     echo "⚠️  Found ${#extra_extensions[@]} extra extensions that are NOT listed in $EXT_FILE:"
     for extension in "${extra_extensions[@]}"; do
       echo "   - $extension"
+      if [ "$PROMPT_ADD" = true ]; then
+        read -p "Do you want to add $extension to the list? (y/n): " choice
+        case "$choice" in
+          y|Y )
+            echo "$extension" >> "$EXT_FILE"
+            echo "$extension added to $EXT_FILE."
+            ;;
+          * )
+            echo "$extension not added."
+            ;;
+        esac
+      fi
     done
-    echo "Run the script with '--clean' to uninstall them."
+    if [ "$PROMPT_ADD" = false ]; then
+      echo "Run the script with '--clean' to uninstall them."
+    fi
   fi
 fi

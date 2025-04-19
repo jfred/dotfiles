@@ -29,3 +29,4 @@ ms-vscode.makefile-tools
 ms-vsliveshare.vsliveshare
 redhat.vscode-yaml
 vscodevim.vim
+ms-python.pylint
