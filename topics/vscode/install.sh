@@ -31,4 +31,4 @@ ln -sf "$KEYBINDINGS_SRC" "$TARGET_DIR/keybindings.json"
 
 echo "VS Code configuration symlinked successfully!"
 
-${SCRIPT_DIR}/setup-extensions.sh
+${SCRIPT_DIR}/bin/vscode-ext

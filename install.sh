@@ -125,12 +125,10 @@ for filename in ${LINKS}; do
             if [ $? -eq 0 ]; then
                 echo -n "Executing ${filename}..."
                 ${filename}
-                echo " done"
             fi
         else
             echo -n "Executing ${filename}..."
             ${filename}
-            echo " done"
         fi
     fi
 done

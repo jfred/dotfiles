@@ -4,7 +4,7 @@ set -euo pipefail
 
 # Get the directory this script is in
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-EXT_FILE="$SCRIPT_DIR/extensions.txt"
+EXT_FILE="$SCRIPT_DIR/../extensions.txt"
 
 # Parse flags
 CLEAN_MODE=false
@@ -79,7 +79,7 @@ done
 
 # Install missing extensions
 if [ ${#uninstalled_extensions[@]} -eq 0 ]; then
-  echo "All listed extensions are installed."
+  echo "All configured extensions are installed."
 else
   echo "Installing ${#uninstalled_extensions[@]} missing extensions..."
 
@@ -92,9 +92,7 @@ else
 fi
 
 # Handle extra extensions
-if [ ${#extra_extensions[@]} -eq 0 ]; then
-  echo "No extra extensions found."
-else
+if [ ${#extra_extensions[@]} -ne 0 ]; then
   if [ "$CLEAN_MODE" = true ]; then
     echo "Cleaning ${#extra_extensions[@]} extensions not listed in $EXT_FILE..."
 
