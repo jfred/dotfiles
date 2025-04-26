@@ -1,3 +1,4 @@
+bierner.markdown-mermaid
 dbaeumer.vscode-eslint
 docker.docker
 dotjoshjohnson.xml
@@ -9,6 +10,7 @@ fastly.vscode-fastly-vcl
 gamunu.vscode-yarn
 github.copilot
 github.copilot-chat
+github.vscode-github-actions
 golang.go
 ionic.ionic
 mgesbert.python-path
@@ -17,6 +19,7 @@ ms-kubernetes-tools.vscode-kubernetes-tools
 ms-python.black-formatter
 ms-python.debugpy
 ms-python.mypy-type-checker
+ms-python.pylint
 ms-python.python
 ms-python.vscode-pylance
 ms-toolsai.jupyter
@@ -28,5 +31,5 @@ ms-vscode-remote.remote-containers
 ms-vscode.makefile-tools
 ms-vsliveshare.vsliveshare
 redhat.vscode-yaml
+vitest.explorer
 vscodevim.vim
-ms-python.pylint
