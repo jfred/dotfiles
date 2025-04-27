@@ -12,6 +12,7 @@
   "typescript.updateImportsOnFileMove.enabled": "always",
   "git.openDiffOnClick": false,
   "dotfiles.repository": "jfred/dotfiles",
+  "dotfiles.installCommand": "./install.sh git",
   "window.autoDetectColorScheme": true,
   "git.blame.editorDecoration.template": "${hashShort}, ${authorName}",
   "gitlens.autolinks": [
@@ -25,5 +26,8 @@
   "editor.minimap.enabled": false,
   "mypy-type-checker.importStrategy": "fromEnvironment",
   "explorer.confirmDelete": false,
-  "makefile.configureOnOpen": true
+  "makefile.configureOnOpen": true,
+  "settingsSync.ignoredSettings": [
+    "-dotfiles.installCommand"
+  ]
 }
