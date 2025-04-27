@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+# relative path to clear 
+ALIAS_DIR=.direnv/aliases
+
+# check for .direnv/alias dir in the current path and confirm removing it
+if [[ -d ${ALIAS_DIR} ]]; then
+    # prompt for confirmation
+    read -p "Are you sure you want to remove ${ALIAS_DIR} directory? (y/n) " -n 1 -r
+    echo    # move to a new line
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        # remove the directory
+        rm -rf ${ALIAS_DIR}
+        echo "Removed ${ALIAS_DIR} directory"
+    else
+        echo "Aborted. ${ALIAS_DIR} directory not removed."
+    fi
+fi
