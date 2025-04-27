@@ -24,5 +24,6 @@
   "gitlens.ai.vscode.model": "copilot:gpt-4",
   "editor.minimap.enabled": false,
   "mypy-type-checker.importStrategy": "fromEnvironment",
-  "explorer.confirmDelete": false
+  "explorer.confirmDelete": false,
+  "makefile.configureOnOpen": true
 }
