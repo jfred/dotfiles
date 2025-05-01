@@ -28,6 +28,5 @@
   "explorer.confirmDelete": false,
   "makefile.configureOnOpen": true,
   "settingsSync.ignoredSettings": [
-    "-dotfiles.installCommand"
   ]
 }
