@@ -6,8 +6,15 @@ function die() {
     exit 1
 }
 
-if [ "$TRACKER_URL" == "" ]; then
+if [ "${TRACKER_URL}" == "" ]; then
     die "Error: No TRACKER_URL is set (e.g. https://some.tracker.example.org/some/prefix/_TICKET_)"
 fi
 
-git browse-template ${TRACKER_URL}
+# if an agument is provided for ticket, use it instead of the current branch
+if [ "$1" != "" ]; then
+    RESULT_URL=$(echo "${TRACKER_URL}" | sed "s|_TICKET_|${1}|g")
+    git web--browse ${RESULT_URL}
+else
+    git browse-template ${TRACKER_URL}
+fi
+
