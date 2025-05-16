@@ -28,5 +28,8 @@
   "explorer.confirmDelete": false,
   "makefile.configureOnOpen": true,
   "settingsSync.ignoredSettings": [
-  ]
+  ],
+  "gitlens.advanced.messages": {
+    "suppressCommitNotFoundWarning": true
+  }
 }
