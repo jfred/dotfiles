@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # Attempts to find branch by partial match
-# If input is url attempt to match against last segment (e.g. ticket urls)
+# If input is url attempt to match against last segment (e.g. ticket urls)#
+#
+# Uses BRANCH_OPTIONS_STR env var to override default branch options
 set -e
 
 usage() {
@@ -23,8 +25,10 @@ if [[ $input =~ $regex ]]; then
     input=${input##*/} # use last segment
 fi
 
+# lowercase input
+input=$(echo "${input}" | tr '[:upper:]' '[:lower:]')
+
 # default branch options
-echo ${BRANCH_OPTIONS_STR}
 if [[ -z "${BRANCH_OPTIONS_STR}" ]]; then
     BRANCH_OPTIONS_STR="task/_input_,feature/_input_,bug/_input_,epic/_input_,hotfix/_input_,spike/_input_"
 fi
