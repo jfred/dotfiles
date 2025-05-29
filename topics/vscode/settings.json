@@ -31,5 +31,8 @@
   ],
   "gitlens.advanced.messages": {
     "suppressCommitNotFoundWarning": true
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
   }
 }
