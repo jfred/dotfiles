@@ -4,7 +4,9 @@ INTER=0
 
 # ensure running from the right directory
 
+# Get the absolute path of the script
 HERE=`dirname $0`
+HERE=`cd ${HERE} && pwd`
 
 # set exclude defaults
 DOT_EXCLUDE="${DOT_EXCLUDE:-osx}"
