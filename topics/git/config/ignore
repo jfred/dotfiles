@@ -44,3 +44,5 @@ Pods
 # AI Agent (for local only cases)
 CLAUDE.md
 .github/copilot-instructions.md
+
+**/.claude/settings.local.json
