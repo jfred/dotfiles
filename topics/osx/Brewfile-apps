@@ -1,18 +1,26 @@
 cask "iterm2@beta"
 cask "macdown"
-#cask "hammerspoon"
-#cask "devutils"
-cask "choosy"
-#cask "itsycal"
-# cask "google-chrome"
-cask "visual-studio-code"
-# cask "visual-studio-code@insiders"
 cask "raycast"
+cask "ticktick"
+
+# browsers
+cask "google-chrome"
+cask "firefox"
+
+# dev
+cask "ngrok"
+cask "proxyman"
+cask "visual-studio-code"
+
+# system
+cask "1password-cli"
+cask "bartender"
+cask "betterdisplay"
+cask "qlmarkdown"
+cask "notunes"
 
 # fonts
 cask "font-inconsolata"
 cask "font-jetbrains-mono"
 cask "font-inconsolata-nerd-font"
 cask "font-jetbrains-mono-nerd-font"
-
-cask "betterdisplay"

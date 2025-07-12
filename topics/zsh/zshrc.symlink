@@ -10,11 +10,11 @@ fi;
 
 # matches case insensitive for lowercase
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
-#setopt promptsubst
 
-# Load the prompt theme system
-#autoload -U promptinit
-#promptinit
-#prompt jfred
-
+POWERLEVEL9K_SHORTEN_DIR_LENGTH=2
+POWERLEVEL9K_VCS_SHORTEN_LENGTH=25
+POWERLEVEL9K_VCS_SHORTEN_MIN_LENGTH=10
+POWERLEVEL9K_VCS_SHORTEN_STRATEGY="truncate_from_right"
+POWERLEVEL9K_VCS_SHORTEN_DELIMITER=".."
+POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(dir vcs)
 source /opt/homebrew/opt/powerlevel9k/powerlevel9k.zsh-theme

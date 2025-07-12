@@ -1,7 +1,9 @@
 {
   "python.testing.pytestEnabled": true,
   "python.analysis.enablePytestSupport": false,
-  "python.testing.unittestArgs": ["--noinput"],
+  "python.testing.unittestArgs": [
+    "--noinput"
+  ],
   "terminal.external.osxExec": "iTerm.app",
   "git.autofetch": true,
   "mypy-type-checker.reportingScope": "workspace",
@@ -27,8 +29,7 @@
   "mypy-type-checker.importStrategy": "fromEnvironment",
   "explorer.confirmDelete": false,
   "makefile.configureOnOpen": true,
-  "settingsSync.ignoredSettings": [
-  ],
+  "settingsSync.ignoredSettings": [],
   "gitlens.advanced.messages": {
     "suppressCommitNotFoundWarning": true
   },
@@ -37,5 +38,28 @@
   },
   "[python]": {
     "editor.defaultFormatter": "charliermarsh.ruff"
-  }
+  },
+  "docker.extension.enableComposeLanguageServer": false,
+  "telemetry.feedback.enabled": false,
+  "telemetry.telemetryLevel": "off",
+  "cSpell.userWords": [
+    "beresp",
+    "broadcastify",
+    "burnover",
+    "evac",
+    "evacs",
+    "FASTLY",
+    "FASTLYPURGE",
+    "filtersep",
+    "fireperimeters",
+    "posthog",
+    "regsuball",
+    "sonoma",
+    "tileset",
+    "tilesets",
+    "Uids",
+    "Watchduty",
+    "weatherstations",
+    "workos"
+  ]
 }
