@@ -1,0 +1,106 @@
+#!/usr/bin/env bash
+# Adds /opt/homebrew/lib/docker/cli-plugins to cliPluginsExtraDirs in ~/.docker/config.json
+
+set -e
+
+CONFIG_FILE="$HOME/.docker/config.json"
+PLUGIN_DIR="/opt/homebrew/lib/docker/cli-plugins"
+
+mkdir -p "$HOME/.docker"
+
+if [ -f "$CONFIG_FILE" ]; then
+    # If cliPluginsExtraDirs exists, update it; else, add it
+    if grep -q '"cliPluginsExtraDirs"' "$CONFIG_FILE"; then
+        # Use jq if available for safe JSON manipulation
+        if command -v jq >/dev/null 2>&1; then
+            tmpfile=$(mktemp)
+            jq --arg dir "$PLUGIN_DIR" 'if .cliPluginsExtraDirs then .cliPluginsExtraDirs |= (if index($dir) then . else . + [$dir] end) | . else . + {cliPluginsExtraDirs: [$dir]} end' "$CONFIG_FILE" > "$tmpfile"
+            mv "$tmpfile" "$CONFIG_FILE"
+        else
+            echo "Error: jq is required to safely update config.json. Please install jq." >&2
+            exit 1
+        fi
+    else
+        # Add cliPluginsExtraDirs using jq
+        if command -v jq >/dev/null 2>&1; then
+            tmpfile=$(mktemp)
+            jq --arg dir "$PLUGIN_DIR" '. + {cliPluginsExtraDirs: [$dir]}' "$CONFIG_FILE" > "$tmpfile"
+            mv "$tmpfile" "$CONFIG_FILE"
+        else
+            echo "Error: jq is required to safely update config.json. Please install jq." >&2
+            exit 1
+        fi
+    fi
+else
+    # Create config.json with cliPluginsExtraDirs
+    cat > "$CONFIG_FILE" <<EOF
+{
+  "cliPluginsExtraDirs": [
+    "$PLUGIN_DIR"
+  ]
+}
+EOF
+fi
+
+echo "cliPluginsExtraDirs updated in $CONFIG_FILE"
+
+#!/usr/bin/env bash
+# Adds /opt/homebrew/lib/docker/cli-plugins to cliPluginsExtraDirs in ~/.docker/config.json, but only on macOS and only if run from the docker topic.
+
+set -e
+
+# Only run on macOS
+if [[ "$(uname)" != "Darwin" ]]; then
+    echo "This script only runs on macOS. Skipping."
+    exit 0
+fi
+
+# Only run if called from the docker topic directory
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PARENT_DIR="$(dirname "$SCRIPT_DIR")"
+TOPIC_NAME="$(basename "$PARENT_DIR")"
+if [[ "$TOPIC_NAME" != "docker" ]]; then
+    echo "This script should only be run from the docker topic. Skipping."
+    exit 0
+fi
+
+CONFIG_FILE="$HOME/.docker/config.json"
+PLUGIN_DIR="/opt/homebrew/lib/docker/cli-plugins"
+
+mkdir -p "$HOME/.docker"
+
+if [ -f "$CONFIG_FILE" ]; then
+        # If cliPluginsExtraDirs exists, update it; else, add it
+        if grep -q '"cliPluginsExtraDirs"' "$CONFIG_FILE"; then
+                # Use jq if available for safe JSON manipulation
+                if command -v jq >/dev/null 2>&1; then
+                        tmpfile=$(mktemp)
+                        jq --arg dir "$PLUGIN_DIR" 'if .cliPluginsExtraDirs then .cliPluginsExtraDirs |= (if index($dir) then . else . + [$dir] end) | . else . + {cliPluginsExtraDirs: [$dir]} end' "$CONFIG_FILE" > "$tmpfile"
+                        mv "$tmpfile" "$CONFIG_FILE"
+                else
+                        echo "Error: jq is required to safely update config.json. Please install jq." >&2
+                        exit 1
+                fi
+        else
+                # Add cliPluginsExtraDirs using jq
+                if command -v jq >/dev/null 2>&1; then
+                        tmpfile=$(mktemp)
+                        jq --arg dir "$PLUGIN_DIR" '. + {cliPluginsExtraDirs: [$dir]}' "$CONFIG_FILE" > "$tmpfile"
+                        mv "$tmpfile" "$CONFIG_FILE"
+                else
+                        echo "Error: jq is required to safely update config.json. Please install jq." >&2
+                        exit 1
+                fi
+        fi
+else
+        # Create config.json with cliPluginsExtraDirs
+        cat > "$CONFIG_FILE" <<EOF
+{
+    "cliPluginsExtraDirs": [
+        "$PLUGIN_DIR"
+    ]
+}
+EOF
+fi
+
+echo "cliPluginsExtraDirs updated in $CONFIG_FILE"
