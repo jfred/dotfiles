@@ -18,6 +18,8 @@ brew "ctags"
 brew "fzf"
 brew "ripgrep"
 
+brew "tmux"
+
 brew "dict"
 
 # config

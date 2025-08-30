@@ -9,16 +9,20 @@ HERE=`dirname $0`
 HERE=`cd ${HERE} && pwd`
 
 # set exclude defaults
-DOT_EXCLUDE="${DOT_EXCLUDE:-osx}"
+DOT_EXCLUDE="${DOT_EXCLUDE}"
 DOT_INCLUDE="${DOT_INCLUDE}"
 platform=$(uname -o 2> /dev/null || uname)
 if [ -z "${DOT_EXCLUDE}" ]; then
     DOT_EXCLUDE="osx"
-    if [[ ${platform} == 'Darwin' ]]
+    if [[ "${platform}" == 'Darwin' ]]
     then
         DOT_EXCLUDE="(linux|ubuntu)"
     fi
 fi
+
+echo "Running with:"
+echo "   include: ${DOT_INCLUDE}"
+echo "   exclude: ${DOT_EXCLUDE}"
 
 # Check arguments using shift
 while [[ $# -gt 0 ]]; do
