@@ -3,5 +3,28 @@
     {
         "key": "ctrl+shift+1",
         "command": "linear-open-issue.openIssue"
+    },
+    {
+        "key": "ctrl+shift+2",
+        "command": "workbench.action.tasks.runTask",
+        "args": "Run Django Tests in Docker",
+    },
+    {
+        "key": "ctrl+shift+5",
+        "command": "workbench.action.tasks.runTask",
+        "args": "Run Django Current Test in Docker",
+        "when": "editorTextFocus && resourceExtname == '.py' && resourcePath =~ /\\/tests\\//",
+    },
+    {
+        "key": "ctrl+shift+t",
+        "command": "workbench.action.tasks.runTask",
+        "args": "Run Django Current Test in Docker (--keepdb)",
+        "when": "editorTextFocus && resourceExtname == '.py' && resourcePath =~ /\\/tests\\//",
+    },
+    {
+        "key": "ctrl+shift+cmd+t",
+        "command": "workbench.action.tasks.runTask",
+        "args": "Run Django Current Test File in Docker (--keepdb)",
+        "when": "editorTextFocus && resourceExtname == '.py' && resourcePath =~ /\\/tests\\//",
     }
 ]
