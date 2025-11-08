@@ -10,8 +10,9 @@
 .projections.json
 coverage.coverage
 coverage.xml
-.jfred-tmp/*
-jfred.tmp
+.jfred-*/*
+jfred.*
+jfred-*
 
 # ruby
 .ruby-gemset
