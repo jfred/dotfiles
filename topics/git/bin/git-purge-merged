@@ -2,13 +2,49 @@
 set -e
 
 # exclude current branch, main, master and develop
-EXCLUDE_MATCH='\*\|main\|master\|develop'
+EXCLUDE_BRANCHES="main|master|develop"
 
 git fetch -p
+
+# Find merged branches (safe to delete with -d)
+MERGED_BRANCHES=$(git branch --merged | grep -v '^\*' | awk '{print $1}' | grep -vE "^(${EXCLUDE_BRANCHES})$" || true)
+
+# Find branches where remote is gone (requires -D force delete)
+GONE_BRANCHES=$(git branch -vv | grep -v '^\*' | grep "gone]" | awk '{print $1}' | grep -vE "^(${EXCLUDE_BRANCHES})$" || true)
+
+if [ -n "$MERGED_BRANCHES" ]; then
+    echo "==> Merged branches:"
+    echo "$MERGED_BRANCHES"
+    echo
+fi
+
+if [ -n "$GONE_BRANCHES" ]; then
+    echo "==> Branches with gone remotes:"
+    echo "$GONE_BRANCHES"
+    echo
+fi
+
+if [ -z "$MERGED_BRANCHES" ] && [ -z "$GONE_BRANCHES" ]; then
+    echo "No branches to purge!"
+    exit 0
+fi
+
+# Delete branches
 if [ "$1" = "-f" ]; then
-    git branch --merged | grep -v "${EXCLUDE_MATCH}" | xargs -n 1 git branch -d
-    git branch -vv | grep -v "${EXCLUDE_MATCH}" | grep ": gone]" | awk '{ print $1 }' | xargs -n 1 git branch -D
+    # Force mode - no prompts for merged branches only
+    if [ -n "$MERGED_BRANCHES" ]; then
+        echo "$MERGED_BRANCHES" | xargs -n 1 git branch -d
+    fi
 else
-    git branch --merged | grep -v "${EXCLUDE_MATCH}" | xargs -p -n 1 git branch -d
-    git branch -vv | grep -v "${EXCLUDE_MATCH}" | grep ": gone]" | awk '{ print $1 }' | xargs -p -n 1 git branch -D
+    # Interactive mode - prompt for merged branches
+    if [ -n "$MERGED_BRANCHES" ]; then
+        echo "Deleting merged branches..."
+        echo "$MERGED_BRANCHES" | xargs -p -n 1 git branch -d
+    fi
+fi
+
+# ALWAYS prompt for gone branches (they require force delete and may have unmerged work)
+if [ -n "$GONE_BRANCHES" ]; then
+    echo "Force-deleting branches with gone remotes (UNMERGED WORK MAY BE LOST)..."
+    echo "$GONE_BRANCHES" | xargs -p -n 1 git branch -D
 fi
