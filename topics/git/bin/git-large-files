@@ -1,36 +1,40 @@
-#!/usr/bin/env python
-# via: http://stackoverflow.com/a/10099633/205090
-import os
-import sys
+#!/usr/bin/env bash
 
+# Usage: git-large-files [size]
+#   size: number with unit (e.g., "5mb", "100kb", "5242880b", "1gb")
+#   default: 10mb
 
-def getOutput(cmd):
-    return os.popen(cmd).read()
+# Parse size with unit, defaulting to 10mb
+sizeArg="${1:-10mb}"
 
+if [[ "$sizeArg" =~ ^([0-9]+\.?[0-9]*)([kmgb]+)$ ]]; then
+  number="${BASH_REMATCH[1]}"
+  unit="${BASH_REMATCH[2],,}"  # Convert to lowercase
 
-if (len(sys.argv) != 2):
-    print "usage: %s size_in_bytes" % sys.argv[0]
-else:
-    maxSize = int(sys.argv[1])
+  case "$unit" in
+    b)   maxSize=$(printf "%.0f" "$number") ;;
+    kb)  maxSize=$(printf "%.0f" "$(echo "$number * 1024" | bc)") ;;
+    mb)  maxSize=$(printf "%.0f" "$(echo "$number * 1024 * 1024" | bc)") ;;
+    gb)  maxSize=$(printf "%.0f" "$(echo "$number * 1024 * 1024 * 1024" | bc)") ;;
+    *)   echo "Error: Invalid unit '$unit'. Use b, kb, mb, or gb" >&2; exit 1 ;;
+  esac
+else
+  echo "Error: Invalid format. Use: git-large-files [size][unit]" >&2
+  echo "Examples: git-large-files 10mb, git-large-files 5gb, git-large-files 100kb" >&2
+  exit 1
+fi
 
-    revisions = getOutput("git rev-list HEAD").split()
-
-    bigfiles = set()
-    for revision in revisions:
-        files = getOutput("git ls-tree -zrl %s" % revision).split('\0')
-        for file in files:
-            if file == "":
-                continue
-            splitdata = file.split()
-            commit = splitdata[2]
-            if splitdata[3] == "-":
-                continue
-            size = int(splitdata[3])
-            path = splitdata[4]
-            if (size > maxSize):
-                bigfiles.add("%10d %s %s" % (size, commit, path))
-
-    bigfiles = sorted(bigfiles, reverse=True)
-
-    for f in bigfiles:
-        print f
+git rev-list --objects --all |
+  git cat-file --batch-check='%(objecttype) %(objectname) %(objectsize) %(rest)' |
+  awk -v max="$maxSize" '
+    function human(bytes) {
+      if (bytes >= 1073741824) return sprintf("%.2f GB", bytes/1073741824)
+      if (bytes >= 1048576) return sprintf("%.2f MB", bytes/1048576)
+      if (bytes >= 1024) return sprintf("%.2f KB", bytes/1024)
+      return sprintf("%d B", bytes)
+    }
+    $1 == "blob" && $3 > max {
+      printf "%10s %s %s\n", human($3), substr($2,1,7), $4
+    }
+  ' |
+  sort -h -r
