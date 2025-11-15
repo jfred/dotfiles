@@ -1,41 +1,9 @@
-zmodload zsh/datetime
+# XDG Base Directory Specification
+export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
+export XDG_STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
+export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
 
-# Override in ~/.localrc to disable modules
-# The following example would disable java and vagrant
-#     DOT_EXCLUDE='(java|vagrant)' 
-DOT_EXCLUDE='_no_matches_'
-
-# load config and system specific
-[[ -f ~/.localrc ]] && source ~/.localrc
-
-export PATH=${PATH}:~/bin:${DOTFILES}/bin
-
-if [[ $- == *i* ]]; then
-    # threshold where config is configured slow
-    WARN_THRESHOLD=1.0
-    function source_config {
-        local -i t0
-        t0=$EPOCHREALTIME
-        source ${1}
-        runtime=$[EPOCHREALTIME-t0]
-        [[ $runtime -gt $WARN_THRESHOLD ]] && echo "WARN sourcing $1 took ${runtime}s"
-    }
-else
-    function source_config {
-        source ${1}
-    }
-fi
-
-# load all zsh and bin for enabled topics
-for config_file (${DOTFILES}/**/*.zsh) do
-    if [[ ! ${config_file} =~ ${DOT_EXCLUDE} ]]; then
-        source_config ${config_file}
-    fi
-done
-for bin (${DOTFILES}/**/bin); do
-    if [[ ! ${bin} =~ ${DOT_EXCLUDE} ]]; then
-        export PATH=${PATH}:${bin}
-    fi
-done
-
-[ -n ${DOTFILES_POST_INIT+1} ] && eval ${DOTFILES_POST_INIT}
+# Set ZDOTDIR to use XDG structure for zsh
+# Zsh will automatically source $ZDOTDIR/.zshrc
+export ZDOTDIR="${XDG_CONFIG_HOME}/zsh"
