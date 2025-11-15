@@ -131,6 +131,29 @@ if [ ! -f ~/.localrc ]; then
     echo "export DOT_EXCLUDE='${DOT_EXCLUDE}'" >> ~/.localrc
 fi
 
+# Clean up broken symlinks that point to dotfiles repo
+echo "Checking for broken symlinks..."
+find "${HOME}" -maxdepth 1 -type l -name '.*' 2>/dev/null | while read -r link; do
+    # Check if the link is broken
+    if [ ! -e "${link}" ]; then
+        target=$(readlink "${link}")
+        # Check if it points into our dotfiles directory
+        if [[ "${target}" == *"/dotfiles/"* ]] || [[ "${target}" == *"${HERE}"* ]]; then
+            if [ ${INTER} -eq 1 ]; then
+                confirm "Remove broken symlink ${link} -> ${target}? (y/N)"
+                if [ $? -eq 0 ]; then
+                    rm "${link}"
+                    echo "Removed broken symlink: ${link}"
+                fi
+            else
+                echo "Found broken symlink: ${link} -> ${target}"
+                echo "  Run with -i to interactively remove broken symlinks"
+            fi
+        fi
+    fi
+done
+echo
+
 # Create links
 LINKS=$(find ${HERE} -name '*.symlink')
 for filename in ${LINKS}; do
