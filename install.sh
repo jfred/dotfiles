@@ -66,8 +66,9 @@ fi
 platform=$(uname -o 2> /dev/null || uname)
 
 confirm(){
-    echo -n "$* "
-    read ans
+    local ans
+    echo -n "$* " >&2
+    read -r ans </dev/tty
     for res in y Y yes; do
         if [ "_${ans}" == "_${res}" ]; then
             return 0
@@ -120,6 +121,50 @@ mklink(){
     echo "${orig_file} linked as ${link_file}"
 }
 
+mkxdglink(){
+    local source_file="$1"
+    # Extract the path after /config/
+    # e.g., topics/git/config/git/config -> git/config
+    local xdg_path=$(echo "${source_file}" | sed 's|.*/topics/[^/]*/config/||')
+    local xdg_config_home="${XDG_CONFIG_HOME:-$HOME/.config}"
+    local link_file="${xdg_config_home}/${xdg_path}"
+    local orig_file="${source_file}"
+
+    # if the link already exists and pointing to the right place - continue
+    if [ -L "${link_file}" ]; then
+        target=$(readlink "${link_file}")
+        if [ "${target}" == "${orig_file}" ]; then
+            return 0
+        fi
+    fi
+
+    if [ -e "${link_file}" ]; then
+        if [ ${INTER} -eq 1 ]; then
+            confirm "Replace ${link_file} with ${source_file}? (y/N)"
+            if [ $? -eq 1 ]; then
+                return 1
+            fi
+        else
+            echo "File ${link_file} already exists, skipping"
+            return 1
+        fi
+    elif [ ${INTER} -eq 1 ]; then
+        confirm "Create link ${link_file}? (y/N)"
+        if [ $? -eq 1 ]; then
+            return 1
+        fi
+    fi
+
+    # Create parent directory if needed
+    local parent_dir=$(dirname "${link_file}")
+    if [ ! -d "${parent_dir}" ]; then
+        mkdir -p "${parent_dir}"
+    fi
+
+    ln -fs "${orig_file}" "${link_file}"
+    echo "${orig_file} linked as ${link_file}"
+}
+
 # Create base config
 if [ ! -f ~/.localrc ]; then
     echo "Creating defaults"
@@ -133,7 +178,7 @@ fi
 
 # Clean up broken symlinks that point to dotfiles repo
 echo "Checking for broken symlinks..."
-find "${HOME}" -maxdepth 1 -type l -name '.*' 2>/dev/null | while read -r link; do
+while IFS= read -r link; do
     # Check if the link is broken
     if [ ! -e "${link}" ]; then
         target=$(readlink "${link}")
@@ -151,10 +196,18 @@ find "${HOME}" -maxdepth 1 -type l -name '.*' 2>/dev/null | while read -r link; 
             fi
         fi
     fi
-done
+done < <(find "${HOME}" -maxdepth 1 -type l -name '.*' 2>/dev/null)
 echo
 
-# Create links
+# Create XDG config links (files in topics/*/config/)
+XDG_FILES=$(find ${HERE}/topics -path '*/config/*' -type f)
+for filename in ${XDG_FILES}; do
+    if should_include "${filename}"; then
+        mkxdglink "${filename}"
+    fi
+done
+
+# Create traditional home directory symlinks (*.symlink files)
 LINKS=$(find ${HERE} -name '*.symlink')
 for filename in ${LINKS}; do
     if should_include "${filename}"; then
