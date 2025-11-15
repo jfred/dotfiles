@@ -1,0 +1,6 @@
+# Modern CLI replacements for traditional Unix tools
+brew "bat"        # Modern cat with syntax highlighting
+brew "eza"        # Modern ls with icons and git integration
+brew "ripgrep"    # Fast grep alternative (rg)
+brew "fd"         # Modern find alternative
+brew "zoxide"     # Smarter cd with frecency (z command)
