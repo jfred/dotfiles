@@ -1,7 +1,7 @@
 cask "iterm2@beta"
 cask "macdown"
 cask "raycast"
-caks "todoist"
+cask "todoist"
 
 # browsers
 cask "google-chrome"
