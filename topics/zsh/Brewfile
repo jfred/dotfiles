@@ -1,4 +1,1 @@
 brew "zsh", link: true
-
-tap "sambadevi/powerlevel9k"
-brew "powerlevel9k"
