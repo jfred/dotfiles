@@ -1,5 +1,6 @@
 brew "git"
 brew "gh"
+brew "git-delta"  # Better git diff viewer
 
 cask "gitkraken"
 cask "gitkraken-cli"
