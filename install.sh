@@ -30,8 +30,25 @@ while [[ $# -gt 0 ]]; do
         -i|--interactive)
             INTER=1
             ;;
-        -h)
-            echo "usage: $0 [-i|--interactive]"
+        -h|--help)
+            echo "usage: $0 [-i|--interactive] [topic]"
+            echo ""
+            echo "Options:"
+            echo "  -i, --interactive    Confirm each step interactively"
+            echo "  -h, --help          Show this help message"
+            echo ""
+            echo "Arguments:"
+            echo "  topic               Install only the specified topic (e.g., git, vim, zsh)"
+            echo ""
+            echo "Environment Variables:"
+            echo "  DOT_EXCLUDE         Regex pattern to exclude topics (e.g., '(java|vagrant)')"
+            echo "  DOT_INCLUDE         Regex pattern to include topics (overridden by topic arg)"
+            echo ""
+            echo "Examples:"
+            echo "  $0                  Install all topics (platform-aware)"
+            echo "  $0 git              Install only git topic"
+            echo "  $0 -i               Install all topics interactively"
+            echo "  DOT_EXCLUDE='java' $0   Install all except java topic"
             exit 0 ;;
         *)
             # Default case: set DOT_INCLUDE to the first argument
@@ -121,6 +138,25 @@ for filename in ${LINKS}; do
         mklink "${filename}"
     fi
 done
+
+# Run Brewfiles
+if command -v brew &> /dev/null; then
+    BREWFILES=$(find ${HERE}/topics -name 'Brewfile*')
+    for filename in ${BREWFILES}; do
+        if should_include "${filename}"; then
+            if [ ${INTER} -eq 1 ]; then
+                confirm "Run brew bundle for ${filename}? (y/N)"
+                if [ $? -eq 0 ]; then
+                    echo "Running brew bundle for ${filename}..."
+                    brew bundle --file="${filename}"
+                fi
+            else
+                echo "Running brew bundle for ${filename}..."
+                brew bundle --file="${filename}"
+            fi
+        fi
+    done
+fi
 
 # Run installs
 LINKS=$(find ${HERE}/topics -name 'install.sh')
