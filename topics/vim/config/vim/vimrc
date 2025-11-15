@@ -1,36 +1,10 @@
-" XDG Base Directory support for Vim
-" Vim doesn't natively support XDG, so we set it up manually
+set nocompatible
 
-" Set XDG paths if not already set
-if empty($XDG_CONFIG_HOME)
-  let $XDG_CONFIG_HOME = $HOME . '/.config'
-endif
-if empty($XDG_DATA_HOME)
-  let $XDG_DATA_HOME = $HOME . '/.local/share'
-endif
-if empty($XDG_STATE_HOME)
-  let $XDG_STATE_HOME = $HOME . '/.local/state'
-endif
-if empty($XDG_CACHE_HOME)
-  let $XDG_CACHE_HOME = $HOME . '/.cache'
-endif
+set encoding=utf-8
 
-" Set vim runtime path to use XDG
-set runtimepath^=$XDG_CONFIG_HOME/vim
-set runtimepath+=$XDG_DATA_HOME/vim
-set runtimepath+=$XDG_CONFIG_HOME/vim/after
+source $DOTFILES/topics/vim/plugins.vim
 
-" Use XDG directories for vim data files
-set viminfo+=n$XDG_STATE_HOME/vim/viminfo
-set directory=$XDG_STATE_HOME/vim/swap//
-set backupdir=$XDG_STATE_HOME/vim/backup//
-set undodir=$XDG_STATE_HOME/vim/undo//
-set viewdir=$XDG_STATE_HOME/vim/view//
-
-" Source the main vimrc from XDG location
-if filereadable($XDG_CONFIG_HOME . '/vim/vimrc')
-  source $XDG_CONFIG_HOME/vim/vimrc
-endif
+filetype plugin on
 
 set backspace=indent,eol,start
 set visualbell
