@@ -25,16 +25,22 @@ echo "   include: ${DOT_INCLUDE}"
 echo "   exclude: ${DOT_EXCLUDE}"
 
 # Check arguments using shift
+CLEANUP_ONLY=0
 while [[ $# -gt 0 ]]; do
     case "$1" in
         -i|--interactive)
             INTER=1
             ;;
+        -c|--cleanup)
+            CLEANUP_ONLY=1
+            INTER=1
+            ;;
         -h|--help)
-            echo "usage: $0 [-i|--interactive] [topic]"
+            echo "usage: $0 [-i|--interactive] [-c|--cleanup] [topic]"
             echo ""
             echo "Options:"
             echo "  -i, --interactive    Confirm each step interactively"
+            echo "  -c, --cleanup        Only remove broken symlinks (implies -i)"
             echo "  -h, --help          Show this help message"
             echo ""
             echo "Arguments:"
@@ -48,6 +54,7 @@ while [[ $# -gt 0 ]]; do
             echo "  $0                  Install all topics (platform-aware)"
             echo "  $0 git              Install only git topic"
             echo "  $0 -i               Install all topics interactively"
+            echo "  $0 -c               Only cleanup broken symlinks"
             echo "  DOT_EXCLUDE='java' $0   Install all except java topic"
             exit 0 ;;
         *)
@@ -178,6 +185,7 @@ fi
 
 # Clean up broken symlinks that point to dotfiles repo
 echo "Checking for broken symlinks..."
+CLEANED_COUNT=0
 while IFS= read -r link; do
     # Check if the link is broken
     if [ ! -e "${link}" ]; then
@@ -189,6 +197,7 @@ while IFS= read -r link; do
                 if [ $? -eq 0 ]; then
                     rm "${link}"
                     echo "Removed broken symlink: ${link}"
+                    ((CLEANED_COUNT++))
                 fi
             else
                 echo "Found broken symlink: ${link} -> ${target}"
@@ -197,6 +206,12 @@ while IFS= read -r link; do
         fi
     fi
 done < <(find "${HOME}" -maxdepth 1 -type l -name '.*' 2>/dev/null)
+
+if [ ${CLEANUP_ONLY} -eq 1 ]; then
+    echo ""
+    echo "Cleanup complete. Removed ${CLEANED_COUNT} broken symlink(s)."
+    exit 0
+fi
 echo
 
 # Create XDG config links (files in topics/*/config/)
