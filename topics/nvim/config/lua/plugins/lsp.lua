@@ -62,11 +62,41 @@ return {
       -- Enable all configured LSPs
       vim.lsp.enable({ "pyright", "ruff", "dockerls", "yamlls", "jsonls", "ts_ls" })
 
-      -- Key mappings for LSP (uses Telescope for better previews)
+      local builtin = require("telescope.builtin")
+
+      -- Show LSP progress in the command line (clears when done)
+      vim.api.nvim_create_autocmd("LspProgress", {
+        callback = function(ev)
+          local client = vim.lsp.get_client_by_id(ev.data.client_id)
+          local value = ev.data.params.value
+          if client and value.kind then
+            if value.kind == "end" then
+              vim.cmd("echo ''")
+            else
+              local msg = value.message or ""
+              local title = value.title or ""
+              vim.cmd(string.format("echo '[%s] %s %s'", client.name, title, msg))
+            end
+          end
+        end,
+      })
+
+      -- Global workspace symbol searches (work without opening a file first)
+      vim.keymap.set("n", "<Leader>sS", function()
+        builtin.lsp_dynamic_workspace_symbols()
+      end, { desc = "Workspace symbols" })
+      vim.keymap.set("n", "<Leader>sc", function()
+        builtin.lsp_dynamic_workspace_symbols({ symbols = "class" })
+      end, { desc = "Search classes" })
+      vim.keymap.set("n", "<Leader>sf", function()
+        builtin.lsp_dynamic_workspace_symbols({ symbols = { "function", "method" } })
+      end, { desc = "Search functions/methods" })
+      vim.keymap.set("n", "<Leader>sd", builtin.diagnostics, { desc = "Search diagnostics" })
+
+      -- Buffer-specific LSP keymaps (set when LSP attaches to a buffer)
       vim.api.nvim_create_autocmd("LspAttach", {
         callback = function(args)
           local opts = { buffer = args.buf }
-          local builtin = require("telescope.builtin")
 
           -- Go to commands (direct jump)
           vim.keymap.set("n", "gd", builtin.lsp_definitions, vim.tbl_extend("force", opts, { desc = "Go to definition" }))
@@ -77,15 +107,6 @@ return {
           -- Find commands (with preview)
           vim.keymap.set("n", "gr", builtin.lsp_references, vim.tbl_extend("force", opts, { desc = "Find references (with preview)" }))
           vim.keymap.set("n", "<Leader>ss", builtin.lsp_document_symbols, vim.tbl_extend("force", opts, { desc = "Document symbols" }))
-          vim.keymap.set("n", "<Leader>sS", function()
-            builtin.lsp_dynamic_workspace_symbols()
-          end, vim.tbl_extend("force", opts, { desc = "Workspace symbols" }))
-          vim.keymap.set("n", "<Leader>sc", function()
-            builtin.lsp_dynamic_workspace_symbols({ symbols = "class" })
-          end, vim.tbl_extend("force", opts, { desc = "Search classes" }))
-          vim.keymap.set("n", "<Leader>sf", function()
-            builtin.lsp_dynamic_workspace_symbols({ symbols = { "function", "method" } })
-          end, vim.tbl_extend("force", opts, { desc = "Search functions/methods" }))
 
           -- Actions
           vim.keymap.set("n", "K", vim.lsp.buf.hover, vim.tbl_extend("force", opts, { desc = "Hover documentation" }))
@@ -93,7 +114,6 @@ return {
           vim.keymap.set("n", "<Leader>ca", vim.lsp.buf.code_action, vim.tbl_extend("force", opts, { desc = "Code action" }))
 
           -- Diagnostics
-          vim.keymap.set("n", "<Leader>sd", builtin.diagnostics, vim.tbl_extend("force", opts, { desc = "Search diagnostics" }))
           vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, vim.tbl_extend("force", opts, { desc = "Previous diagnostic" }))
           vim.keymap.set("n", "]d", vim.diagnostic.goto_next, vim.tbl_extend("force", opts, { desc = "Next diagnostic" }))
         end,
