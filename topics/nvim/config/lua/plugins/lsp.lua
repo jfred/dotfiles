@@ -13,6 +13,7 @@ return {
           "vimdoc",
           "javascript",
           "typescript",
+          "tsx",
           "html",
           "css",
           "json",
@@ -37,7 +38,7 @@ return {
     dependencies = { "williamboman/mason.nvim" },
     config = function()
       require("mason-lspconfig").setup({
-        ensure_installed = { "pyright", "ruff", "dockerls", "yamlls", "jsonls" },
+        ensure_installed = { "pyright", "ruff", "dockerls", "yamlls", "jsonls", "ts_ls" },
       })
     end,
   },
@@ -56,9 +57,10 @@ return {
       vim.lsp.config("dockerls", {})
       vim.lsp.config("yamlls", {})
       vim.lsp.config("jsonls", {})
+      vim.lsp.config("ts_ls", {})
 
       -- Enable all configured LSPs
-      vim.lsp.enable({ "pyright", "ruff", "dockerls", "yamlls", "jsonls" })
+      vim.lsp.enable({ "pyright", "ruff", "dockerls", "yamlls", "jsonls", "ts_ls" })
 
       -- Key mappings for LSP (uses Telescope for better previews)
       vim.api.nvim_create_autocmd("LspAttach", {
