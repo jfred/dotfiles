@@ -104,23 +104,34 @@ if [ ${#extra_extensions[@]} -ne 0 ]; then
     echo "Cleanup complete."
   else
     echo "⚠️  Found ${#extra_extensions[@]} extra extensions that are NOT listed in $EXT_FILE:"
+    added_any=false
     for extension in "${extra_extensions[@]}"; do
       echo "   - $extension"
       if [ "$PROMPT_ADD" = true ]; then
-        read -p "Do you want to add $extension to the list? (y/n): " choice
+        read -p "Do you want to add $extension to the list? (y/n): " choice </dev/tty
         case "$choice" in
           y|Y )
             echo "$extension" >> "$EXT_FILE"
-            echo "$extension added to $EXT_FILE."
+            echo "✓ $extension added to $EXT_FILE."
+            added_any=true
             ;;
           * )
-            echo "$extension not added."
+            echo "  Skipped."
             ;;
         esac
       fi
     done
+
+    # Sort the extensions file if we added any
+    if [ "$added_any" = true ]; then
+      echo "Sorting extensions file..."
+      sort -u "$EXT_FILE" -o "$EXT_FILE"
+      echo "Extensions file updated and sorted."
+    fi
+
     if [ "$PROMPT_ADD" = false ]; then
-      echo "Run the script with '--clean' to uninstall them."
+      echo ""
+      echo "Run with '--prompt-add' to interactively add them, or '--clean' to uninstall them."
     fi
   fi
 fi

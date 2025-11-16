@@ -1,4 +1,6 @@
+anthropic.claude-code
 bierner.markdown-mermaid
+charliermarsh.ruff
 dbaeumer.vscode-eslint
 docker.docker
 dotjoshjohnson.xml
@@ -12,6 +14,12 @@ github.copilot
 github.copilot-chat
 github.vscode-github-actions
 golang.go
+hashicorp.terraform
+hbenl.vscode-test-explorer
+linear.linear-connect
+linear.linear-open-issue
+littlefoxteam.vscode-python-test-adapter
+lokalise.i18n-ally
 mgesbert.python-path
 ms-azuretools.vscode-docker
 ms-kubernetes-tools.vscode-kubernetes-tools
@@ -21,6 +29,7 @@ ms-python.mypy-type-checker
 ms-python.pylint
 ms-python.python
 ms-python.vscode-pylance
+ms-python.vscode-python-envs
 ms-toolsai.jupyter
 ms-toolsai.jupyter-keymap
 ms-toolsai.jupyter-renderers
@@ -30,5 +39,6 @@ ms-vscode-remote.remote-containers
 ms-vscode.makefile-tools
 ms-vsliveshare.vsliveshare
 redhat.vscode-yaml
+tamasfe.even-better-toml
 vitest.explorer
 vscodevim.vim
