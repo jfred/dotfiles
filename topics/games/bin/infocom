@@ -1,0 +1,324 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# Directory for Infocom game files
+GAME_DIR="${HOME}/Documents/infocom"
+DOWNLOAD_BASE_URL="https://eblong.com/infocom"
+CACHE_FILE="${GAME_DIR}/.catalog_cache.html"
+CACHE_MAX_AGE=86400  # Cache for 24 hours (in seconds)
+
+# Ensure game directory exists
+mkdir -p "$GAME_DIR"
+
+# Game order and titles (order matters - this defines the display order)
+GAME_ORDER=(
+    "zork1"
+    "zork2"
+    "zork3"
+    "zork0"
+    "beyondzork"
+    "enchanter"
+    "sorcerer"
+    "spellbreaker"
+    "planetfall"
+    "stationfall"
+    "hitchhiker"
+    "trinity"
+    "amfv"
+    "deadline"
+    "infidel"
+    "suspect"
+    "witness"
+    "moonmist"
+    "ballyhoo"
+    "lurking"
+    "wishbringer"
+    "nord"
+    "plundered"
+    "bureaucracy"
+    "hollywoodhijinx"
+    "leathergoddesses"
+    "seastalker"
+    "cutthroats"
+    "suspended"
+    "starcross"
+    "borderzone"
+    "sherlock"
+    "journey"
+    "shogun"
+    "arthur"
+)
+
+# Game title mappings (short name -> full title)
+declare -A GAME_TITLES=(
+    ["zork1"]="Zork I: The Great Underground Empire"
+    ["zork2"]="Zork II: The Wizard of Frobozz"
+    ["zork3"]="Zork III: The Dungeon Master"
+    ["zork0"]="Zork Zero: The Revenge of Megaboz"
+    ["beyondzork"]="Beyond Zork: The Coconut of Quendor"
+    ["enchanter"]="Enchanter"
+    ["sorcerer"]="Sorcerer"
+    ["spellbreaker"]="Spellbreaker"
+    ["planetfall"]="Planetfall"
+    ["stationfall"]="Stationfall"
+    ["hitchhiker"]="The Hitchhiker's Guide to the Galaxy"
+    ["trinity"]="Trinity"
+    ["amfv"]="A Mind Forever Voyaging"
+    ["deadline"]="Deadline"
+    ["infidel"]="Infidel"
+    ["suspect"]="Suspect"
+    ["witness"]="The Witness"
+    ["moonmist"]="Moonmist"
+    ["ballyhoo"]="Ballyhoo"
+    ["lurking"]="The Lurking Horror"
+    ["wishbringer"]="Wishbringer: The Magick Stone of Dreams"
+    ["nord"]="Nord and Bert Couldn't Make Head or Tail of It"
+    ["plundered"]="Plundered Hearts"
+    ["bureaucracy"]="Bureaucracy"
+    ["hollywoodhijinx"]="Hollywood Hijinx"
+    ["leathergoddesses"]="Leather Goddesses of Phobos"
+    ["seastalker"]="Seastalker"
+    ["cutthroats"]="Cutthroats"
+    ["suspended"]="Suspended: A Cryogenic Nightmare"
+    ["starcross"]="Starcross"
+    ["borderzone"]="Border Zone"
+    ["sherlock"]="Sherlock: The Riddle of the Crown Jewels"
+    ["journey"]="Journey: The Quest Begins"
+    ["shogun"]="Shogun"
+    ["arthur"]="Arthur: The Quest for Excalibur"
+)
+
+# Function to get game title
+get_game_title() {
+    local game_name="$1"
+    if [ -n "${GAME_TITLES[$game_name]:-}" ]; then
+        echo "${GAME_TITLES[$game_name]}"
+    else
+        # Capitalize first letter of each word as fallback
+        echo "$game_name" | sed 's/\b\(.\)/\u\1/g'
+    fi
+}
+
+# Function to get catalog (with caching)
+get_catalog() {
+    # Check if cache exists and is still fresh
+    if [ -f "$CACHE_FILE" ]; then
+        local cache_age=$(($(date +%s) - $(stat -f %m "$CACHE_FILE" 2>/dev/null || stat -c %Y "$CACHE_FILE" 2>/dev/null)))
+        if [ $cache_age -lt $CACHE_MAX_AGE ]; then
+            cat "$CACHE_FILE"
+            return 0
+        fi
+    fi
+
+    # Cache is stale or doesn't exist, download fresh
+    if curl -s "${DOWNLOAD_BASE_URL}/" -o "$CACHE_FILE" 2>/dev/null; then
+        cat "$CACHE_FILE"
+        return 0
+    else
+        return 1
+    fi
+}
+
+# Function to list all available games from catalog (in defined order)
+list_catalog_games() {
+    local catalog_content
+    catalog_content=$(get_catalog)
+
+    # Iterate through games in defined order and check if they exist in catalog
+    for game in "${GAME_ORDER[@]}"; do
+        # Check if this game exists in the catalog (excluding alpha/beta/dev versions)
+        if echo "$catalog_content" | grep -qE "gamefiles/${game}-(r[0-9]+|rlater)-"; then
+            echo "$game"
+        fi
+    done
+}
+
+# Function to list downloaded games
+list_downloaded_games() {
+    if [ -d "$GAME_DIR" ]; then
+        find "$GAME_DIR" -type f \( -name "*.z[1-8]" -o -name "*.dat" \) -exec basename {} \; | \
+            sed 's/\.[^.]*$//' | \
+            sort
+    fi
+}
+
+# Function to play a game
+play_game() {
+    local game_file="$1"
+    if [ ! -f "$game_file" ]; then
+        echo "Error: Game file not found: $game_file"
+        exit 1
+    fi
+
+    echo "Launching $(basename "$game_file") with frotz..."
+    echo ""
+    frotz "$game_file"
+}
+
+# Function to download a specific game
+download_file() {
+    local game_name="$1"
+
+    echo "Fetching available versions for ${game_name}..."
+
+    # Get catalog and search for all available versions of the game
+    mapfile -t available_versions < <(get_catalog | grep -oE "(gamefiles/${game_name}-(r[0-9]+|rlater)-[^\"<>]*\.(z[1-8]|dat))")
+
+    if [ ${#available_versions[@]} -eq 0 ]; then
+        echo "Error: Could not find any game files for $game_name in catalog"
+        exit 1
+    fi
+
+    # Display available versions
+    echo ""
+    echo "Available versions of ${game_name}:"
+    echo ""
+    for i in "${!available_versions[@]}"; do
+        local filename=$(basename "${available_versions[$i]}")
+        printf "%2d) %s\n" $((i+1)) "$filename"
+    done
+    echo ""
+    echo "Select version (number) or 'cancel' to abort:"
+    read -r version_choice </dev/tty
+
+    case "$version_choice" in
+        cancel|"") echo "Download cancelled."; exit 0 ;;
+        *)
+            if [[ "$version_choice" =~ ^[0-9]+$ ]] && [ "$version_choice" -ge 1 ] && [ "$version_choice" -le ${#available_versions[@]} ]; then
+                local download_link="${available_versions[$((version_choice-1))]}"
+            else
+                echo "Invalid selection: $version_choice"
+                exit 1
+            fi
+            ;;
+    esac
+
+    # Construct full URL
+    local full_url="${DOWNLOAD_BASE_URL}/${download_link}"
+    local ext="${download_link##*.}"
+
+    # Download the file
+    echo "Downloading from $full_url..."
+    local temp_file=$(mktemp)
+
+    if ! curl -L "$full_url" -o "$temp_file" 2>/dev/null; then
+        echo "Error: Failed to download game file"
+        rm -f "$temp_file"
+        exit 1
+    fi
+
+    # Save with simplified name (remove version info)
+    local target_file="${GAME_DIR}/${game_name}.${ext}"
+    mv "$temp_file" "$target_file"
+
+    echo "✓ Downloaded and saved as: $target_file"
+    echo ""
+
+    # Launch the game automatically
+    play_game "$target_file"
+}
+
+# Main menu
+if [ $# -eq 0 ]; then
+    echo "Infocom Game Launcher"
+    echo ""
+
+    # Get all available games from catalog
+    if ! get_catalog >/dev/null 2>&1; then
+        echo "Error: Could not fetch game catalog from ${DOWNLOAD_BASE_URL}"
+        echo "Please check your internet connection."
+        exit 1
+    fi
+
+    mapfile -t all_games < <(list_catalog_games)
+
+    if [ ${#all_games[@]} -eq 0 ]; then
+        echo "Error: No games found in catalog"
+        echo "This might be a temporary issue with the catalog."
+        exit 1
+    fi
+
+    # Get downloaded games
+    mapfile -t downloaded < <(list_downloaded_games)
+
+    # Display games with download status
+    for i in "${!all_games[@]}"; do
+        game="${all_games[$i]}"
+        status="  "
+
+        # Check if downloaded
+        if printf '%s\n' "${downloaded[@]}" | grep -Fxq "$game"; then
+            status="✓ "
+        fi
+
+        game_title=$(get_game_title "$game")
+        printf "%s%2d) %-50s (%s)\n" "$status" $((i+1)) "$game_title" "$game"
+    done
+
+    echo ""
+    echo "✓ = downloaded"
+    echo ""
+    echo "Select a game (number) or 'q' to quit:"
+    read -r choice </dev/tty
+
+    case "$choice" in
+        q|Q|"") exit 0 ;;
+        *)
+            if [[ "$choice" =~ ^[0-9]+$ ]] && [ "$choice" -ge 1 ] && [ "$choice" -le ${#all_games[@]} ]; then
+                game_name="${all_games[$((choice-1))]}"
+
+                # Check if game is downloaded
+                game_found=""
+                for ext in z1 z2 z3 z4 z5 z6 z7 z8 dat; do
+                    if [ -f "${GAME_DIR}/${game_name}.${ext}" ]; then
+                        game_found="${GAME_DIR}/${game_name}.${ext}"
+                        break
+                    fi
+                done
+
+                if [ -n "$game_found" ]; then
+                    # Game is downloaded, play it
+                    play_game "$game_found"
+                else
+                    # Game not downloaded, download it
+                    echo ""
+                    download_file "$game_name"
+                fi
+            else
+                echo "Invalid selection: $choice"
+                exit 1
+            fi
+            ;;
+    esac
+else
+    # Arguments provided - play specified game
+    game_name="$1"
+
+    # Check if it's a full path
+    if [ -f "$game_name" ]; then
+        play_game "$game_name"
+    else
+        # Try to find in game directory
+        found_game=""
+        for ext in z1 z2 z3 z4 z5 z6 z7 z8 dat; do
+            if [ -f "${GAME_DIR}/${game_name}.${ext}" ]; then
+                found_game="${GAME_DIR}/${game_name}.${ext}"
+                break
+            fi
+            # Also try exact filename
+            if [ -f "${GAME_DIR}/${game_name}" ]; then
+                found_game="${GAME_DIR}/${game_name}"
+                break
+            fi
+        done
+
+        if [ -n "$found_game" ]; then
+            play_game "$found_game"
+        else
+            echo "Game not found locally. Downloading..."
+            echo ""
+            download_file "$game_name"
+        fi
+    fi
+fi
