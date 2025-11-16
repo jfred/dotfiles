@@ -68,7 +68,6 @@
 [delta]
     navigate = true    # use n and N to move between diff sections
     light = false      # set to true if you use a light terminal background
-    side-by-side = true
 
 [merge]
     conflictstyle = diff3
