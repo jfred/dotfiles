@@ -1,39 +1,77 @@
-## Issues
+# Neovim Configuration
 
-!note: copied from vim temporarily - needs updating
+Modern Neovim configuration using [lazy.nvim](https://github.com/folke/lazy.nvim) plugin manager.
 
-On OS X, jslint will try to use the system jsc which fails. Set `JS_CMD` to
-an alternate js command (etc. node) in the install specific `~/.localrc`
+## Features
 
-## Key-mappings
+- **Plugin Manager**: lazy.nvim (auto-installs on first launch)
+- **File Navigation**: NERDTree, fzf
+- **Version Control**: fugitive
+- **Code Tools**: ALE linting, vim-test, tagbar
+- **Language Support**: Go, Java, Python, Ruby, JavaScript, TypeScript, Clojure, Elixir
+- **Colorscheme**: Solarized
 
-* `,` is `<Leader>`
+## Installation
 
-##### Misc
+Run the install script:
+```bash
+./install.sh
+```
 
-* `,` + `i` - toggle invisible characters
-* `,N` - Toggle line numbers
-* `,jt` - Pass the current buffer through `python -m json.tool` to format
-* `,/` - Toggle comments
-* `,nt` - Toggle NERDTree (filebrowser)
+Then launch nvim - lazy.nvim will automatically install on first run and download all plugins.
 
-##### Move between splits
+## Plugin Management
 
-* `Ctrl` + `h` - Move to left split
-* `Ctrl` + `j` - Move to lower split
-* `Ctrl` + `k` - Move to upper split
-* `Ctrl` + `l` - Move to right split
-* `Ctrl` + `N` - Toggle highlighting of search term
+- `:Lazy` - Open lazy.nvim UI
+- `:Lazy sync` - Install/update/clean plugins
+- `:Lazy update` - Update all plugins
+- `:Lazy clean` - Remove unused plugins
+- `:Lazy profile` - View startup profiling
 
-##### FuzzyFinder
+## Key Mappings
 
-* `,t` - Find tag
-* `,f` - Find file (honoring .gitignore)
-* `,F` - Find files
-* `,b` - Find open buffer
-* `,l` - Find line
+Leader key: `,`
 
-##### Tags (ctags)
+### File Navigation
+- `,nt` - Toggle NERDTree
+- `,nf` - NERDTree find current file
+- `,f` - FZF Git files
+- `,F` - FZF All files
+- `,b` - FZF Buffers
+- `,l` - FZF Lines
+- `,L` - FZF Ripgrep
 
-* `F8` - Show Tag List
-* `F9` - Retag current directory (using ctags)
+### Code
+- `,/` - Toggle comment
+- `F8` - Toggle Tagbar
+- `,Tf` - Run test file
+- `,Tn` - Run nearest test
+
+### Buffers
+- `,n` - Next buffer
+- `,p` - Previous buffer / alternate file
+- `,d` - Delete buffer
+
+### Window Navigation
+- `Ctrl+h` - Move to left split
+- `Ctrl+j` - Move to lower split
+- `Ctrl+k` - Move to upper split
+- `Ctrl+l` - Move to right split
+
+### Misc
+- `,N` - Toggle line numbers
+- `,?` - Toggle invisible characters
+- `Ctrl+N` - Toggle search highlighting
+- `F2` - Save file
+
+## Structure
+
+```
+config/
+├── init.lua              # Main configuration
+├── lua/
+│   └── config/
+│       └── lazy.lua      # Plugin specifications
+└── ftplugin/             # Filetype-specific configs
+lang/                     # Language-specific configurations
+```
