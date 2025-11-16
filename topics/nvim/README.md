@@ -61,6 +61,8 @@ Leader key: `,`
 ### LSP Search (Telescope)
 - `,ss` - Document symbols (classes/functions in current file)
 - `,sS` - Workspace symbols (all symbols in project)
+- `,sc` - Search classes in workspace
+- `,sf` - Search functions/methods in workspace
 - `,sd` - Search diagnostics
 
 ### LSP Actions
@@ -88,6 +90,10 @@ Leader key: `,`
 - `,dd` - Django migrate
 - `,fb` - Format with black
 - `,fr` - Format with ruff
+
+### Git / Pre-commit (global)
+- `,pc` - Run pre-commit on all files
+- `,pf` - Run pre-commit on current file
 
 ### Buffers
 - `,n` - Next buffer

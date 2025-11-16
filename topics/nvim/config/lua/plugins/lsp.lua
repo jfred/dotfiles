@@ -78,6 +78,12 @@ return {
           vim.keymap.set("n", "<Leader>sS", function()
             builtin.lsp_dynamic_workspace_symbols()
           end, vim.tbl_extend("force", opts, { desc = "Workspace symbols" }))
+          vim.keymap.set("n", "<Leader>sc", function()
+            builtin.lsp_dynamic_workspace_symbols({ symbols = "class" })
+          end, vim.tbl_extend("force", opts, { desc = "Search classes" }))
+          vim.keymap.set("n", "<Leader>sf", function()
+            builtin.lsp_dynamic_workspace_symbols({ symbols = { "function", "method" } })
+          end, vim.tbl_extend("force", opts, { desc = "Search functions/methods" }))
 
           -- Actions
           vim.keymap.set("n", "K", vim.lsp.buf.hover, vim.tbl_extend("force", opts, { desc = "Hover documentation" }))
