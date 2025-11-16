@@ -135,7 +135,107 @@ require("lazy").setup({
   { "tpope/vim-fireplace", ft = "clojure" },
   { "slim-template/vim-slim", ft = "ruby" },
   { "tpope/vim-rails", ft = "rails" },
-  { "python-mode/python-mode", ft = "python", branch = "develop" },
+
+  -- Python/Django enhanced support
+  -- Note: Using Pyright + Ruff LSP instead of python-mode for better performance
+  {
+    "nvim-treesitter/nvim-treesitter",
+    build = ":TSUpdate",
+    config = function()
+      require("nvim-treesitter.configs").setup({
+        ensure_installed = { "python", "lua", "vim", "vimdoc", "javascript", "typescript", "html", "css", "json", "yaml", "dockerfile" },
+        highlight = { enable = true },
+        indent = { enable = true },
+      })
+    end,
+  },
+  {
+    "williamboman/mason.nvim",
+    config = function()
+      require("mason").setup()
+    end,
+  },
+  {
+    "williamboman/mason-lspconfig.nvim",
+    dependencies = { "williamboman/mason.nvim" },
+    config = function()
+      require("mason-lspconfig").setup({
+        ensure_installed = { "pyright", "ruff", "dockerls", "yamlls", "jsonls" },
+      })
+    end,
+  },
+  {
+    "neovim/nvim-lspconfig",
+    dependencies = {
+      "williamboman/mason.nvim",
+      "williamboman/mason-lspconfig.nvim",
+    },
+    config = function()
+      -- Use the new vim.lsp.config API (nvim 0.11+)
+      vim.lsp.config("pyright", {})
+      vim.lsp.config("ruff", {})
+      vim.lsp.config("dockerls", {})
+      vim.lsp.config("yamlls", {})
+      vim.lsp.config("jsonls", {})
+
+      -- Enable all configured LSPs
+      vim.lsp.enable({ "pyright", "ruff", "dockerls", "yamlls", "jsonls" })
+
+      -- Key mappings for LSP
+      vim.api.nvim_create_autocmd("LspAttach", {
+        callback = function(args)
+          vim.keymap.set("n", "gd", vim.lsp.buf.definition, { buffer = args.buf, desc = "Go to definition" })
+          vim.keymap.set("n", "K", vim.lsp.buf.hover, { buffer = args.buf, desc = "Hover documentation" })
+          vim.keymap.set("n", "<Leader>rn", vim.lsp.buf.rename, { buffer = args.buf, desc = "Rename symbol" })
+          vim.keymap.set("n", "<Leader>ca", vim.lsp.buf.code_action, { buffer = args.buf, desc = "Code action" })
+          vim.keymap.set("n", "gr", vim.lsp.buf.references, { buffer = args.buf, desc = "Find references" })
+        end,
+      })
+    end,
+  },
+
+  -- Autocompletion
+  {
+    "hrsh7th/nvim-cmp",
+    dependencies = {
+      "hrsh7th/cmp-nvim-lsp",
+      "hrsh7th/cmp-buffer",
+      "hrsh7th/cmp-path",
+      "L3MON4D3/LuaSnip",
+      "saadparwaiz1/cmp_luasnip",
+    },
+    config = function()
+      local cmp = require("cmp")
+      cmp.setup({
+        snippet = {
+          expand = function(args)
+            require("luasnip").lsp_expand(args.body)
+          end,
+        },
+        mapping = cmp.mapping.preset.insert({
+          ["<C-b>"] = cmp.mapping.scroll_docs(-4),
+          ["<C-f>"] = cmp.mapping.scroll_docs(4),
+          ["<C-Space>"] = cmp.mapping.complete(),
+          ["<CR>"] = cmp.mapping.confirm({ select = true }),
+          ["<Tab>"] = cmp.mapping.select_next_item(),
+          ["<S-Tab>"] = cmp.mapping.select_prev_item(),
+        }),
+        sources = {
+          { name = "nvim_lsp" },
+          { name = "luasnip" },
+          { name = "buffer" },
+          { name = "path" },
+        },
+      })
+    end,
+  },
+
+  -- Django templates
+  { "tweekmonster/django-plus.vim", ft = { "python", "htmldjango" } },
+
+  -- Docker/Compose
+  { "ekalinin/Dockerfile.vim", ft = "dockerfile" },
+
   { "elixir-lang/vim-elixir", ft = "erlang" },
   { "pangloss/vim-javascript", ft = "javascript" },
   { "leafgarland/typescript-vim", ft = "typescript" },

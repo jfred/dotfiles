@@ -1,0 +1,30 @@
+# direnv template for Django projects
+# Copy this to your project root as .envrc
+#
+# NOTE: "use mise" is deprecated and no longer supported.
+# If you need mise version management, use mise directly:
+#   - Add a .mise.toml to your project root
+#   - Run: mise activate --shims (or add to shell config)
+# See: https://mise.jdx.dev/direnv.html
+
+# Python virtual environment (if using)
+layout python
+
+# Django settings
+export DJANGO_SETTINGS_MODULE=config.settings.local
+export DEBUG=True
+
+# Database (example)
+export DATABASE_URL=postgresql://localhost/myproject
+
+# Docker container execution (for nvim Django commands)
+# Uncomment and adjust for your setup:
+# export DOCKER_EXEC="docker-compose exec app"  # docker-compose
+# export DOCKER_EXEC="docker exec -it mycontainer"  # plain docker
+export DOCKER_EXEC=""  # local development (no container)
+
+# Add project bin to PATH
+PATH_add bin
+
+# Load local environment variables
+dotenv_if_exists .env.local
