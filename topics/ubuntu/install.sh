@@ -6,7 +6,6 @@ sudo apt-get install \
     build-essential \
     curl \
     git \
-    tig \
     m4 \
     ruby \
     texinfo \
