@@ -68,6 +68,9 @@ vim.opt.wildignore = { "*.swp", "*.bak", "*.pyc", "*.class", "target", "build", 
 vim.opt.backup = false
 vim.opt.swapfile = false
 
+-- Enable project-local config files (.nvim.lua in project root)
+vim.opt.exrc = true
+
 -- Mouse support
 vim.opt.mouse = "a"
 
@@ -152,6 +155,7 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 
 -- Setup lazy.nvim and load plugins
 require("config.lazy")
+
 
 -- Load language-specific configurations
 local dotfiles = vim.env.DOTFILES
