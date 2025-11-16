@@ -77,6 +77,11 @@ else
 	compinit -C;
 fi;
 
+# Initialize zoxide (smarter cd) if available - must be after compinit
+if command -v zoxide &> /dev/null; then
+    eval "$(zoxide init zsh)"
+fi
+
 # matches case insensitive for lowercase
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 

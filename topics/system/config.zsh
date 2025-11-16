@@ -14,11 +14,6 @@ if type direnv > /dev/null; then
     direnv reload 2> /dev/null
 fi
 
-# Initialize zoxide (smarter cd) if available
-if command -v zoxide &> /dev/null; then
-    eval "$(zoxide init zsh)"
-fi
-
 
 function ssh-add-all {
     find ${1:-~/.ssh} -type f -name 'id_*' -not -name '*.pub' | while read -r key; do
