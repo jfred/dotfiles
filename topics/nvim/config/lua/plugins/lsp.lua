@@ -60,20 +60,32 @@ return {
       -- Enable all configured LSPs
       vim.lsp.enable({ "pyright", "ruff", "dockerls", "yamlls", "jsonls" })
 
-      -- Key mappings for LSP
+      -- Key mappings for LSP (uses Telescope for better previews)
       vim.api.nvim_create_autocmd("LspAttach", {
         callback = function(args)
           local opts = { buffer = args.buf }
-          vim.keymap.set("n", "gd", vim.lsp.buf.definition, vim.tbl_extend("force", opts, { desc = "Go to definition" }))
+          local builtin = require("telescope.builtin")
+
+          -- Go to commands (direct jump)
+          vim.keymap.set("n", "gd", builtin.lsp_definitions, vim.tbl_extend("force", opts, { desc = "Go to definition" }))
           vim.keymap.set("n", "gD", vim.lsp.buf.declaration, vim.tbl_extend("force", opts, { desc = "Go to declaration" }))
-          vim.keymap.set("n", "gi", vim.lsp.buf.implementation, vim.tbl_extend("force", opts, { desc = "Go to implementation" }))
-          vim.keymap.set("n", "gt", vim.lsp.buf.type_definition, vim.tbl_extend("force", opts, { desc = "Go to type definition" }))
+          vim.keymap.set("n", "gi", builtin.lsp_implementations, vim.tbl_extend("force", opts, { desc = "Go to implementation" }))
+          vim.keymap.set("n", "gt", builtin.lsp_type_definitions, vim.tbl_extend("force", opts, { desc = "Go to type definition" }))
+
+          -- Find commands (with preview)
+          vim.keymap.set("n", "gr", builtin.lsp_references, vim.tbl_extend("force", opts, { desc = "Find references (with preview)" }))
+          vim.keymap.set("n", "<Leader>ss", builtin.lsp_document_symbols, vim.tbl_extend("force", opts, { desc = "Document symbols" }))
+          vim.keymap.set("n", "<Leader>sS", function()
+            builtin.lsp_dynamic_workspace_symbols()
+          end, vim.tbl_extend("force", opts, { desc = "Workspace symbols" }))
+
+          -- Actions
           vim.keymap.set("n", "K", vim.lsp.buf.hover, vim.tbl_extend("force", opts, { desc = "Hover documentation" }))
           vim.keymap.set("n", "<Leader>rn", vim.lsp.buf.rename, vim.tbl_extend("force", opts, { desc = "Rename symbol" }))
           vim.keymap.set("n", "<Leader>ca", vim.lsp.buf.code_action, vim.tbl_extend("force", opts, { desc = "Code action" }))
-          vim.keymap.set("n", "gr", vim.lsp.buf.references, vim.tbl_extend("force", opts, { desc = "Find references" }))
-          vim.keymap.set("n", "<Leader>ds", vim.lsp.buf.document_symbol, vim.tbl_extend("force", opts, { desc = "Document symbols" }))
-          vim.keymap.set("n", "<Leader>ws", vim.lsp.buf.workspace_symbol, vim.tbl_extend("force", opts, { desc = "Workspace symbols" }))
+
+          -- Diagnostics
+          vim.keymap.set("n", "<Leader>sd", builtin.diagnostics, vim.tbl_extend("force", opts, { desc = "Search diagnostics" }))
           vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, vim.tbl_extend("force", opts, { desc = "Previous diagnostic" }))
           vim.keymap.set("n", "]d", vim.diagnostic.goto_next, vim.tbl_extend("force", opts, { desc = "Next diagnostic" }))
         end,
