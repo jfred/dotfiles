@@ -1,62 +1,72 @@
 set nocompatible
-
 set encoding=utf-8
 
-source $DOTFILES/topics/vim/plugins.vim
+filetype plugin indent on
 
-filetype plugin on
-
+" Basic settings
 set backspace=indent,eol,start
 set visualbell
+set noerrorbells
 
+" Leader key
 let mapleader = ","
+
+" Quick escape and save mappings
 inoremap <C-j> <Esc>
 inoremap <F2> <C-o>:w<CR>
 nnoremap <F2> :w<CR>
 nnoremap <C-d> :q<CR>
 
-" defaults *******************************************************************
-
-"set number
+" Line numbers
+set invnumber
+nmap <Leader>N :set invnumber<CR>
 set pastetoggle=<F3>
 
+" Clipboard
 set clipboard=unnamed
 
-" Invisible characters *******************************************************
+" Invisible characters
 set listchars=tab:❘-,trail:·,extends:»,precedes:«,nbsp:×
 set nolist
-" Toggle invisible chars
 noremap <Leader>? :set list!<CR>
 
-" Tabs ***********************************************************************
+" Tabs and indentation
 set softtabstop=4
 set shiftwidth=4
 set tabstop=4
 set expandtab
 set smarttab
-
-" Indents
 set autoindent
 set smartindent
 set cindent
 set copyindent
 
-set hidden            " allow for editied buffers in the background
+" Buffer and display settings
+set hidden
 set cursorline
 set nowrap
-set ruler             " show the cursor position all the time
-set showcmd           " display incomplete commands
+set ruler
+set showcmd
 set showmatch
-
-set foldlevelstart=20 " Don't start folded
-set history=1000      " keep 50 lines of command line history
+set foldlevelstart=20
+set history=1000
 set undolevels=1000
+
+" Search settings
+set incsearch
+set hlsearch
+set ignorecase
+set smartcase
+
+" Wildmenu
 set wildmode=list:longest
 set wildignore=*.swp,*.bak,*.pyc,*.class,target,build,node_modules,logs,out
 
-set nobackup          " do not keep a backup file, use versions instead
+" Backup and swap
+set nobackup
 set noswapfile
 
+" Mouse support
 if has('mouse')
     set mouse=a
     if !has('nvim')
@@ -64,69 +74,66 @@ if has('mouse')
     endif
 endif
 
-" Switch syntax highlighting on, when the terminal has colors
+" Syntax highlighting
 if &t_Co > 2 || has("gui_running")
     set t_Co=256
     syntax on
     set omnifunc=syntaxcomplete#Complete
 endif
 
+" GUI settings
 if has("gui_running")
-    " removes the toolbar in macvim
     set guioptions=egt
     set guioptions-=mrT
 endif
 
-" Only do this part when compiled with support for autocommands.
+" Autocmds
 if has("autocmd")
-    " Enable file type detection.
-    filetype plugin indent on
-
-    " Put these in an autocmd group, so that we can delete them easily.
     augroup vimrcEx
     au!
 
-    " When editing a file, always jump to the last known cursor position.
+    " Jump to last cursor position
     autocmd BufReadPost *
     \ if line("'\"") > 1 && line("'\"") <= line("$") |
     \   exe "normal! g`\"" |
     \ endif
+
+    " Remove trailing whitespace on save
+    autocmd BufWritePre * :%s/\s\+$//e
+
     augroup END
 
     set completeopt=menuone,menu,longest
-    let g:SuperTabDefaultCompletionType = "context"
-endif " has("autocmd")
+endif
 
-" Use whole "words" when opening URLs.
-" This avoids cutting off parameters (after '?') and anchors (after '#').
-" See https://vi.stackexchange.com/a/2980
+" Netrw settings
 let g:netrw_gx="<cWORD>"
 
+" Timeout settings
 set ttimeoutlen=50
 
-set invnumber
-nmap <Leader>N :set invnumber<CR>
-
-let g:ranger_map_keys = 0
-
-" Sudo file if you must
+" Sudo write
 cmap w!! %!sudo tee > /dev/null %
 
-" default colorscheme - can override in ~/.vimrc_local
-let g:solarized_termtrans=1
-colorscheme solarized
+" Clear search highlighting
+nnoremap <Leader><space> :nohlsearch<CR>
 
-" extra configurations
-for f in split(glob($DOTFILES.'/topics/vim/config/*.vim'), '\n')
-    exe 'source' f
-endfor
+" Navigate splits with Ctrl+hjkl
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
 
-" language specific configuration
-for f in split(glob($DOTFILES.'/topics/vim/lang/*.vim'), '\n')
-    exe 'source' f
-endfor
+" Buffer navigation
+nnoremap <Leader>n :bnext<CR>
+nnoremap <Leader>p :bprev<CR>
+nnoremap <Leader>d :bdelete<CR>
 
-" system specific
+" Colorscheme - simple terminal-friendly scheme
+set background=dark
+colorscheme pablo
+
+" Local overrides
 if filereadable(expand("~/.vimrc_local"))
   source ~/.vimrc_local
 endif

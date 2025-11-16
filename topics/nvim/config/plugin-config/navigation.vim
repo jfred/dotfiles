@@ -26,4 +26,3 @@ imap <right> <nop>
 imap <left> <nop>
 imap <up> <nop>
 imap <down> <nop>
-

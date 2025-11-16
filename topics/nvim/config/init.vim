@@ -18,7 +18,7 @@ nnoremap <C-d> :q<CR>
 " defaults *******************************************************************
 
 "set number
-set pastetoggle=<F3>
+" Note: pastetoggle removed in Neovim - paste mode handling is automatic
 
 set clipboard=unnamed
 
@@ -112,9 +112,21 @@ let g:ranger_map_keys = 0
 " Sudo file if you must
 cmap w!! %!sudo tee > /dev/null %
 
-" default colorscheme - can override in ~/.vimrc_local
+" default colorscheme - can override in ~/.nvimrc_local
 let g:solarized_termtrans=1
 colorscheme solarized
+
+" Load nvim-specific configuration files
+for f in split(glob('~/.config/nvim/plugin-config/*.vim'), '\n')
+  exe 'source' f
+endfor
+
+" Load language-specific configuration
+if !empty($DOTFILES)
+  for f in split(glob($DOTFILES.'/topics/nvim/lang/*.vim'), '\n')
+    exe 'source' f
+  endfor
+endif
 
 " system specific
 if filereadable(expand("~/.nvimrc_local"))
