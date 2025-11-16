@@ -39,15 +39,19 @@ return {
     },
   },
 
-  -- Linting
+  -- Linting (fallback for non-LSP languages)
   {
     "dense-analysis/ale",
     config = function()
       vim.opt.updatetime = 1000
       vim.g.ale_lint_on_text_changed = 0
+      -- Disable ALE for languages covered by LSP
+      vim.g.ale_linters_explicit = 1
+      vim.g.ale_linters = {
+        python = {}, -- LSP handles Python via Pyright/Ruff
+        javascript = {},
+        typescript = {},
+      }
     end,
   },
-
-  -- Syntax checking
-  { "neomake/neomake" },
 }
