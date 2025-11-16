@@ -36,43 +36,53 @@ return {
 
   -- File tree
   {
-    "preservim/nerdtree",
-    dependencies = {
-      "Xuyuanp/nerdtree-git-plugin",
-      "ryanoasis/vim-devicons",
-    },
+    "nvim-tree/nvim-tree.lua",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
     keys = {
-      { "<Leader>nt", ":NERDTreeToggle<CR>", silent = true, desc = "Toggle NERDTree" },
-      { "<Leader>nf", ":NERDTreeFind<CR>", silent = true, desc = "NERDTree find file" },
+      { "<Leader>nt", ":NvimTreeToggle<CR>", silent = true, desc = "Toggle NvimTree" },
+      { "<Leader>nf", ":NvimTreeFindFile<CR>", silent = true, desc = "NvimTree find file" },
     },
     config = function()
-      vim.g.NERDTreeMinimalUI = 1
-      vim.g.NERDTreeDirArrows = 1
-      vim.g.NERDTreeRespectWildIgnore = 1
-
-      -- Open NERDTree by default
-      local augroup = vim.api.nvim_create_augroup("NERDTree", { clear = true })
-      vim.api.nvim_create_autocmd("StdinReadPre", {
-        group = augroup,
-        callback = function()
-          vim.g.std_in = 1
-        end,
+      require("nvim-tree").setup({
+        view = {
+          width = 30,
+        },
+        renderer = {
+          icons = {
+            show = {
+              git = true,
+              folder = true,
+              file = true,
+              folder_arrow = true,
+            },
+          },
+        },
+        filters = {
+          dotfiles = false,
+        },
+        git = {
+          enable = true,
+          ignore = false,
+        },
       })
+
+      -- Open nvim-tree on startup when no file specified
+      local augroup = vim.api.nvim_create_augroup("NvimTree", { clear = true })
       vim.api.nvim_create_autocmd("VimEnter", {
         group = augroup,
-        callback = function()
-          if vim.fn.argc() == 0 and not vim.g.std_in then
-            vim.cmd("NERDTree")
+        callback = function(data)
+          -- Only open if directory or no args
+          local is_directory = vim.fn.isdirectory(data.file) == 1
+          local no_name = data.file == "" and vim.bo[data.buf].buftype == ""
+
+          if is_directory then
+            vim.cmd.cd(data.file)
+            require("nvim-tree.api").tree.open()
+          elseif no_name then
+            require("nvim-tree.api").tree.open()
             vim.cmd("wincmd p")
           end
         end,
-      })
-
-      -- Exit Vim if NERDTree is the only window left
-      vim.api.nvim_create_autocmd("BufEnter", {
-        group = augroup,
-        pattern = "*",
-        command = [[if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif]],
       })
     end,
   },
