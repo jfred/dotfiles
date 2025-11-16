@@ -1,7 +1,9 @@
 # setting up dir colors
-if [ -e ~/.dir_colors ]; then
+# Check XDG location first, fall back to old location
+XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+if [ -e "$XDG_CONFIG_HOME/dir_colors" ]; then
     if type dircolors > /dev/null; then
-        eval `dircolors ~/.dir_colors`
+        eval `dircolors "$XDG_CONFIG_HOME/dir_colors"`
     fi
 fi
 
