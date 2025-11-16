@@ -230,23 +230,38 @@ for filename in ${LINKS}; do
     fi
 done
 
-# Run Brewfiles
+# Run Brewfiles - combine them all into one temp file to reduce overhead and handle duplicates
 if command -v brew &> /dev/null; then
     BREWFILES=$(find ${HERE}/topics -name 'Brewfile*')
+    COMBINED_BREWFILE=$(mktemp /tmp/Brewfile.combined.XXXXXX)
+    BREWFILE_COUNT=0
+
+    # Combine all Brewfiles
     for filename in ${BREWFILES}; do
         if should_include "${filename}"; then
-            if [ ${INTER} -eq 1 ]; then
-                confirm "Run brew bundle for ${filename}? (y/N)"
-                if [ $? -eq 0 ]; then
-                    echo "Running brew bundle for ${filename}..."
-                    brew bundle --file="${filename}"
-                fi
-            else
-                echo "Running brew bundle for ${filename}..."
-                brew bundle --file="${filename}"
-            fi
+            echo "# From ${filename}" >> "${COMBINED_BREWFILE}"
+            cat "${filename}" >> "${COMBINED_BREWFILE}"
+            echo "" >> "${COMBINED_BREWFILE}"
+            ((BREWFILE_COUNT++))
         fi
     done
+
+    # Run combined Brewfile if any were found
+    if [ ${BREWFILE_COUNT} -gt 0 ]; then
+        if [ ${INTER} -eq 1 ]; then
+            confirm "Run brew bundle for ${BREWFILE_COUNT} combined Brewfile(s)? (y/N)"
+            if [ $? -eq 0 ]; then
+                echo "Running brew bundle for combined Brewfile..."
+                brew bundle --file="${COMBINED_BREWFILE}"
+            fi
+        else
+            echo "Running brew bundle for ${BREWFILE_COUNT} combined Brewfile(s)..."
+            brew bundle --file="${COMBINED_BREWFILE}"
+        fi
+    fi
+
+    # Clean up temp file
+    rm -f "${COMBINED_BREWFILE}"
 fi
 
 # Run installs

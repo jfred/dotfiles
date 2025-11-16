@@ -11,25 +11,9 @@ cd "$BASEDIR"
 echo Updating homebrew...
 brew update
 
-echo "Installing osx Brewfile..."
-brew bundle install
-
-echo "Installing osx Brewfile-apps..."
-brew bundle install --file="Brewfile-apps"
-
-# Create links
-LINKS=$(find .. -name 'Brewfile')
-for filename in ${LINKS}; do
-    if [[ ${filename} =~ "osx" ]]; then
-        continue
-    fi
-    if [[ ${filename} =~ ${DOT_EXCLUDE} ]]; then
-        # echo "Skipping ${filename}"
-        continue
-    fi
-    echo "${filename}" | sed -e 's/\.\.\/\(.*\)\/Brewfile/Installing \1 Brewfile.../g'
-    brew bundle install --file="${filename}"
-done
+# Note: Brewfiles are now handled by the main install.sh script
+# which combines all Brewfiles and runs them once to avoid duplication
+# The osx-specific Brewfile and Brewfile-apps are included in that process
 
 echo Upgrading existing homebrew formulas...
 brew upgrade
