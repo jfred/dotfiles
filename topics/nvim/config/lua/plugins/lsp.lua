@@ -38,7 +38,7 @@ return {
     dependencies = { "williamboman/mason.nvim" },
     config = function()
       require("mason-lspconfig").setup({
-        ensure_installed = { "ruff", "dockerls", "yamlls", "jsonls", "ts_ls" },
+        ensure_installed = { "pyright", "ruff", "dockerls", "yamlls", "jsonls", "ts_ls" },
       })
     end,
   },
@@ -52,17 +52,15 @@ return {
     },
     config = function()
       -- Use the new vim.lsp.config API (nvim 0.11+)
+      vim.lsp.config("pyright", {})
       vim.lsp.config("ruff", {})
       vim.lsp.config("dockerls", {})
       vim.lsp.config("yamlls", {})
       vim.lsp.config("jsonls", {})
       vim.lsp.config("ts_ls", {})
 
-      -- Disable pyright (using ruff for Python instead)
-      vim.lsp.enable("pyright", false)
-
       -- Enable all configured LSPs
-      vim.lsp.enable({ "ruff", "dockerls", "yamlls", "jsonls", "ts_ls" })
+      vim.lsp.enable({ "pyright", "ruff", "dockerls", "yamlls", "jsonls", "ts_ls" })
 
       -- Configure diagnostics to show source (LSP name)
       vim.diagnostic.config({
