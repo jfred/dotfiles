@@ -32,6 +32,27 @@ Then launch nvim - lazy.nvim will automatically install on first run and downloa
 - `:Lazy clean` - Remove unused plugins
 - `:Lazy profile` - View startup profiling
 - `:Mason` - Manage LSP servers
+- `:MasonUpdate` - Update Mason registry
+
+## Updating
+
+### LSP Servers (via Mason)
+```vim
+:Mason
+```
+Then press `U` to update all installed servers, or select individual servers and press `u`.
+
+### Plugins (via lazy.nvim)
+```vim
+:Lazy update
+```
+Updates all plugins. Use `:Lazy sync` to also clean up unused plugins.
+
+### Treesitter Parsers
+```vim
+:TSUpdate
+```
+Updates all installed Treesitter parsers for syntax highlighting.
 
 ## Key Mappings
 
@@ -57,6 +78,7 @@ Leader key: `,`
 - `gt` - Go to type definition
 - `gr` - Find all references (with preview and context)
 - `K` - Hover documentation
+- `,e` - Show diagnostic details (with source)
 
 ### LSP Search (Telescope)
 - `,ss` - Document symbols (classes/functions in current file)
