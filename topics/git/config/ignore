@@ -10,6 +10,7 @@
 .projections.json
 coverage.coverage
 coverage.xml
+pyrightconfig.json
 .jfred-*/*
 jfred.*
 jfred-*
