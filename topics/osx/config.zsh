@@ -1,3 +1,8 @@
+# Add Homebrew completions to fpath (must be before compinit)
+if [[ -d /opt/homebrew/share/zsh/site-functions ]]; then
+    fpath=(/opt/homebrew/share/zsh/site-functions $fpath)
+fi
+
 PATH="/usr/local/opt/gnu-units/libexec/gnubin:$PATH"
 
 if [[ "${TERM_PROGRAM}" = "iTerm.app" ]]; then
