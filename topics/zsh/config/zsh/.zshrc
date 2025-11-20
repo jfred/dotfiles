@@ -65,6 +65,14 @@ HISTSIZE=1000
 SAVEHIST=1000
 HISTFILE=${XDG_STATE_HOME:-$HOME/.local/state}/zsh/history
 
+# Ensure history directory exists
+[[ -d ${HISTFILE:h} ]] || mkdir -p ${HISTFILE:h}
+
+# History options
+setopt appendhistory        # Append to history file
+setopt sharehistory         # Share history between sessions
+setopt incappendhistory     # Write to history file immediately
+
 # Load zsh functions
 fpath=(${ZDOTDIR}/functions $fpath)
 autoload -U ${ZDOTDIR}/functions/*(:t)
