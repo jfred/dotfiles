@@ -64,6 +64,7 @@ set wildignore=*.swp,*.bak,*.pyc,*.class,target,build,node_modules,logs,out
 
 " Backup and swap
 set nobackup
+set nowritebackup
 set noswapfile
 
 " Mouse support
