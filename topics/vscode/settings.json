@@ -69,5 +69,8 @@
   "python.defaultInterpreterPath": "/Users/jfred/Code/watchduty/watchduty-backend/.venv",
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+  },
+  "claudeCode.preferredLocation": "panel",
+  "git.enableSmartCommit": true,
+  "github.copilot.nextEditSuggestions.enabled": true
 }

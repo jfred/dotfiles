@@ -5,26 +5,9 @@
         "command": "linear-open-issue.openIssue"
     },
     {
-        "key": "ctrl+shift+2",
-        "command": "workbench.action.tasks.runTask",
-        "args": "Run Django Tests in Docker",
-    },
-    {
-        "key": "ctrl+shift+5",
-        "command": "workbench.action.tasks.runTask",
-        "args": "Run Django Current Test in Docker",
-        "when": "editorTextFocus && resourceExtname == '.py' && resourcePath =~ /\\/tests\\//",
-    },
-    {
-        "key": "ctrl+shift+t",
-        "command": "workbench.action.tasks.runTask",
-        "args": "Run Django Current Test in Docker (--keepdb)",
-        "when": "editorTextFocus && resourceExtname == '.py' && resourcePath =~ /\\/tests\\//",
-    },
-    {
-        "key": "ctrl+shift+cmd+t",
-        "command": "workbench.action.tasks.runTask",
-        "args": "Run Django Current Test File in Docker (--keepdb)",
-        "when": "editorTextFocus && resourceExtname == '.py' && resourcePath =~ /\\/tests\\//",
+        // Custom keybinding to cycle test DB modes, mostly for django projects
+        "key": "cmd+; d",
+        "command": "settings.cycle.testDbMode",
+        // "when": "env.MANAGE_PY"
     }
 ]
