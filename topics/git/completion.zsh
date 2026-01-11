@@ -1,30 +1,24 @@
 # Git completion configuration
 # Ensure aliases and custom git-* commands are included in completion
 
-# Make sure all command types are completed, including external commands:
-# - common-commands: built-in git commands (checkout, commit, push, etc.)
-# - alias-commands: git aliases from ~/.config/git/config
-# - all-commands: all git commands including builtins
-# - external-commands: custom git-* executables in PATH
+# zstyle settings can be set before compinit
 zstyle ':completion:*:*:git:*' tag-order 'common-commands alias-commands all-commands external-commands'
-
-# Enable verbose completion to show what each alias does
 zstyle ':completion:*:*:git:*' verbose true
 
-# Add custom external command completion
-__git_zsh_cmd_external() {
-  local -a external_commands
-  # Get external git-* commands and add descriptions
-  # Format: "command:description"
-  local cmd
-  for cmd in ${(f)"$(git --list-cmds=others 2>/dev/null)"}; do
-    external_commands+=("$cmd:external git command")
-  done
-  _describe -t external-commands 'external commands' external_commands
+# Git alias completions - must be set up after compinit via precmd hook
+# This ensures _git-switch and other completion functions are loaded
+_setup_git_alias_completions() {
+  # Only run once
+  [[ -n $_git_alias_completions_done ]] && return
+  _git_alias_completions_done=1
+
+  # Remove this hook
+  precmd_functions=(${precmd_functions:#_setup_git_alias_completions})
+
+  # Map git aliases to their underlying command completions
+  # sw -> switch (branch completion)
+  __git-sw_main() { _git-switch "$@" }
 }
 
-# Hook into git completion if not already done
-if [[ ! " ${(k)functions} " =~ " __git_zsh_cmd_external " ]]; then
-  # Function is now defined above, this check prevents reloading
-  :
-fi
+# Register the setup to run once on first prompt (after compinit)
+precmd_functions+=(_setup_git_alias_completions)
