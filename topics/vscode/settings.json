@@ -23,7 +23,7 @@
     }
   ],
   "gitlens.ai.model": "vscode",
-  "gitlens.ai.vscode.model": "copilot:gpt-4",
+  "gitlens.ai.vscode.model": "copilot:gpt-4.1",
   "editor.minimap.enabled": false,
   "explorer.confirmDelete": false,
   "makefile.configureOnOpen": true,
