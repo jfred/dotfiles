@@ -143,3 +143,5 @@ compdef _mise mise
 
 # Starship prompt - initialize after /etc/zshrc
 command -v starship &> /dev/null && eval "$(starship init zsh)"
+
+export PATH="$PATH:/Users/jfred/.local/bin"
