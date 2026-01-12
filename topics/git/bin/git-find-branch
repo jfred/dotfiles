@@ -33,11 +33,18 @@ if [[ -z "${BRANCH_OPTIONS_STR}" ]]; then
     BRANCH_OPTIONS_STR="task/_input_,feature/_input_,bug/_input_,epic/_input_,hotfix/_input_,spike/_input_"
 fi
 
-# find matching branches
+# find matching branches with last commit date
 unset options i
 while IFS= read -r -d $'\n' f; do
 	options[i++]="$f"
 done < <(git list-branch ${input})
+
+# build display strings with relative dates
+unset display_options
+for branch in "${options[@]}"; do
+	date=$(git log -1 --format='%cr' "$branch" 2>/dev/null || echo "unknown")
+	display_options+=("$branch ($date)")
+done
 
 if [[ ${#options[@]} == 0 ]]; then
     # If no matching branches error
@@ -64,13 +71,11 @@ elif [[ "${#options[@]}" -eq "1" ]]; then
     # if only one branch check it out
     branch=${options}
 else
-    # if more than one branch present select
-    select opt in "${options[@]}"; do
-	case $opt in
-	    *) 
-		branch=${opt}
-		break
-	esac
+    # if more than one branch present select (show with dates)
+    select opt in "${display_options[@]}"; do
+	# extract index from REPLY and get actual branch name
+	branch=${options[$((REPLY-1))]}
+	break
     done
 fi
 
