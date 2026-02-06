@@ -72,5 +72,11 @@
   },
   "claudeCode.preferredLocation": "panel",
   "git.enableSmartCommit": true,
-  "github.copilot.nextEditSuggestions.enabled": true
+  "github.copilot.nextEditSuggestions.enabled": true,
+  "geminicodeassist.displayInlineContextHint": false,
+  "http.systemCertificatesNode": true,
+  "cSpell.enabledNotifications": {
+    "Lines too Long": false,
+    "Maximum Word Length Exceeded": false
+  }
 }
