@@ -96,5 +96,7 @@
     defaultBranch = main
 [interactive]
     diffFilter = delta --color-only
+[fetch]
+    prune = true
 [delta]
     navigate = true
