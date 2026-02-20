@@ -102,5 +102,7 @@
     autoStash = true
 [rerere]
     enabled = true
+[column]
+    ui = auto
 [delta]
     navigate = true
