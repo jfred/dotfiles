@@ -82,6 +82,7 @@
 [diff]
     renames = copies
     colorMoved = default
+    algorithm = histogram
 [branch]
     autosetupmerge = true
 [push]
