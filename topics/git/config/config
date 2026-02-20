@@ -98,5 +98,7 @@
     diffFilter = delta --color-only
 [fetch]
     prune = true
+[rebase]
+    autoStash = true
 [delta]
     navigate = true
