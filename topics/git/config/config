@@ -100,5 +100,7 @@
     prune = true
 [rebase]
     autoStash = true
+[rerere]
+    enabled = true
 [delta]
     navigate = true
