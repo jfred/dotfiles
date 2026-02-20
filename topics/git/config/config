@@ -76,6 +76,7 @@
 [core]
     autocrlf = input
     pager = delta
+    fsmonitor = true
 [advice]
     statusHints = false
 [diff]
