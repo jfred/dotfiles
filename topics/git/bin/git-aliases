@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+# List git aliases with descriptions, optional filter: git aliases [pattern]
+
+config_file="${XDG_CONFIG_HOME:-$HOME/.config}/git/config"
+
+result=$(awk '
+  /^[[:space:]]*#/ {
+    desc = $0
+    sub(/^[[:space:]]*# */, "", desc)
+    next
+  }
+  /^[[:space:]]*[a-z].*=/ {
+    name = $1
+    sub(/[[:space:]]*=.*/, "", name)
+    cmd = $0
+    sub(/^[^=]*=[[:space:]]*/, "", cmd)
+    if (name != "aliases") {
+      print name "\t" cmd "\t" desc
+    }
+    desc = ""
+  }
+' "$config_file" | if [ -n "$1" ]; then grep -i "$1"; else cat; fi | sort)
+
+count=$(echo "$result" | grep -c .)
+
+if [ "$count" -eq 1 ]; then
+  echo "$result" | awk -F'\t' '{
+    if ($3) print "# " $3
+    print $1 " = " $2
+  }'
+else
+  echo "$result" | awk -F'\t' '{
+    cmd = $2
+    if (length(cmd) > 40) cmd = substr(cmd, 1, 37) "..."
+    if ($3)
+      print $1 "\t" cmd "\t# " $3
+    else
+      print $1 "\t" cmd "\t"
+  }' | column -t -s $'\t'
+fi

@@ -1,38 +1,65 @@
 [alias]
+    # Switch branch
     sw = switch
+    # Stage all changes
     aa = add --all .
+    # Stage all changes interactively
     ap = add --all . -p
+    # Show branch list
     bl = show-branch --list
+    # Short status
     st = status -sb
+    # Diff against upstream
     du = diff @{upstream}
+    # Diff against HEAD
     dh = diff HEAD
+    # Word-level diff ignoring whitespace
     dd = diff -b -w --word-diff-regex=.
+    # Short diff stats
     ds = diff --shortstat
+    # Push to remote
     pushr = push-remote
+    # Amend last commit message
     reword = commit --amend
+    # Show object type
     type = cat-file -t
+    # Dump object contents
     dump = cat-file -p
+    # Find files by name
     find = "!git ls-files | grep -i"
+    # Edit files with uncommitted changes
     fix = "!f() { ${EDITOR} `git diff --name-only | uniq`; }; f"
+    # List branches matching pattern
     list-branch = "!f() { git branch -a | sed 's/remotes\\/[^/]*\\///g' | sed 's/^[* ]*//g' | sort -u | grep -v ' -> ' | grep $1; }; f"
+    # Find branch (alias for list-branch)
     fb = find-branch
+    # Generate ticket message
     tm = ticket-message
-    # config based aliases
+    # Show user config
     user = config --get-regex "user\\.[name|email]"
+    # Set local user name
     name = config --local --add user.name
+    # Set local user email
     email = config --local --add user.email
-    # browse aliases
+    # Browse issue tracker
     bt = browse-tracker
+    # Browse CI
     ci = browse-ci
-    # log aliases
+    # Graph log with colors
     lg = log --graph --pretty=format:'%C(red)%h%C(reset) : %C(yellow)%d%C(reset) %s %C(green)(%an %cr)%C(reset)' --abbrev-commit --date=relative
+    # Log with stats
     ll = log --pretty=format:'%C(red)%h%C(yellow)%d %C(reset)%s%C(green) [%cn]' --stat
+    # List local branches by date
     lb = "!git branch --sort=-committerdate --format='%(refname:short)|%(contents:subject) - %(authorname) (%(committerdate:relative))' | column -t -s '|' | sort -u"
+    # List remote branches by date
     lbr = "!git branch -r --sort=-committerdate --format='%(refname:short)|%(contents:subject) - %(authorname) (%(committerdate:relative))' | column -t -s '|' | sort -u"
-    # tag aliases
+    # List tags sorted by version
     vtag = "!git tag | sort --version-sort"
+    # Show latest version tag
     last = "!git tag | sort --version-sort | tail -n 1"
+    # Clone all repos from GitHub user
     clone-github-user = "!f() { curl -sL \"https://api.github.com/users/$1/repos?per_page=1000\" | jq -r '.[]| select( .fork == false ) |.clone_url' | xargs -L1 git clone; }; f"
+    # Run pre-commit hook
     pc = hook run pre-commit
 [color]
     diff = auto
