@@ -38,9 +38,9 @@
     # Show user config
     user = config --get-regex "user\\.[name|email]"
     # Set local user name
-    name = config --local --add user.name
+    name = config --local user.name
     # Set local user email
-    email = config --local --add user.email
+    email = config --local user.email
     # Browse issue tracker
     bt = browse-tracker
     # Browse CI
@@ -62,9 +62,9 @@
     # Run pre-commit hook
     pc = hook run pre-commit
     # Resolve conflict using our version
-    ours = "!f() { if [ ! -f .git/MERGE_HEAD ] && [ ! -d .git/rebase-merge ] && [ ! -d .git/rebase-apply ]; then echo 'Not in a merge or rebase'; exit 1; fi; git checkout --ours $@ && git add $@; }; f"
+    ours = "!f() { d=$(git rev-parse --git-dir); if [ ! -f $d/MERGE_HEAD ] && [ ! -d $d/rebase-merge ] && [ ! -d $d/rebase-apply ]; then echo 'Not in a merge or rebase'; exit 1; fi; git checkout --ours $@ && git add $@; }; f"
     # Resolve conflict using their version
-    theirs = "!f() { if [ ! -f .git/MERGE_HEAD ] && [ ! -d .git/rebase-merge ] && [ ! -d .git/rebase-apply ]; then echo 'Not in a merge or rebase'; exit 1; fi; git checkout --theirs $@ && git add $@; }; f"
+    theirs = "!f() { d=$(git rev-parse --git-dir); if [ ! -f $d/MERGE_HEAD ] && [ ! -d $d/rebase-merge ] && [ ! -d $d/rebase-apply ]; then echo 'Not in a merge or rebase'; exit 1; fi; git checkout --theirs $@ && git add $@; }; f"
 [color]
     diff = auto
     branch = auto
@@ -75,6 +75,7 @@
     useConfigOnly = true
 [core]
     autocrlf = input
+    pager = delta
 [advice]
     statusHints = false
 [diff]
@@ -83,21 +84,15 @@
 [branch]
     autosetupmerge = true
 [push]
-    default = tracking
+    default = upstream
 [merge]
     stat = true
+    conflictstyle = diff3
 [pull]
     rebase = true
 [init]
-	defaultBranch = main
-[core]
-    pager = delta
-
+    defaultBranch = main
 [interactive]
     diffFilter = delta --color-only
-
 [delta]
-    navigate = true    # use n and N to move between diff sections
-
-[merge]
-    conflictstyle = diff3
+    navigate = true
