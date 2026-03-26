@@ -19,14 +19,26 @@ function launch() {
 }
 
 REF=${1:-\@\{u\}}
-REMOTE_NAME=$(git rev-parse --abbrev-ref --symbolic-full-name ${REF} | sed 's/^remotes\///')
-REMOTE=$(echo ${REMOTE_NAME} | cut -d'/' -f1)
-REMOTE_BRANCH=$(echo ${REMOTE_NAME} | cut -d'/' -f2-)
-REMOTE_URL=$(git config --get remote.${REMOTE}.url)
+
+# Check if the argument is a bare remote name
+if [ -n "$1" ] && git config --get "remote.${1}.url" &>/dev/null; then
+    REMOTE=$1
+    REMOTE_URL=$(git config --get "remote.${REMOTE}.url")
+    # Use the remote's HEAD, falling back to main/master
+    REMOTE_BRANCH=$(git symbolic-ref "refs/remotes/${REMOTE}/HEAD" 2>/dev/null | sed "s|^refs/remotes/${REMOTE}/||")
+    if [ -z "$REMOTE_BRANCH" ]; then
+        REMOTE_BRANCH="main"
+    fi
+else
+    REMOTE_NAME=$(git rev-parse --abbrev-ref --symbolic-full-name ${REF} | sed 's/^remotes\///')
+    REMOTE=$(echo ${REMOTE_NAME} | cut -d'/' -f1)
+    REMOTE_BRANCH=$(echo ${REMOTE_NAME} | cut -d'/' -f2-)
+    REMOTE_URL=$(git config --get remote.${REMOTE}.url)
+fi
 REMOTE_ID=$(echo ${REMOTE_URL} | cut -d':' -f2 | sed 's/\.git$//')
 
 if [[ ${REMOTE_URL} =~ ^https?:.*$ ]]; then
-    REMOTE_ID=$(git config --get remote.origin.url | cut -d'/' -f4- | cut -d'.' -f1)
+    REMOTE_ID=$(echo ${REMOTE_URL} | cut -d'/' -f4- | cut -d'.' -f1)
 fi
 
 if [ "${GIT_BROWSE_URL}" != "" ]; then
