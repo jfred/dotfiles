@@ -43,8 +43,6 @@
     email = config --local user.email
     # Browse issue tracker
     bt = browse-tracker
-    # Browse CI
-    ci = browse-ci
     # Graph log with colors
     lg = log --graph --pretty=format:'%C(red)%h%C(reset) : %C(yellow)%d%C(reset) %s %C(green)(%an %cr)%C(reset)' --abbrev-commit --date=relative
     # Log with stats

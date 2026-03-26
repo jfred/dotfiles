@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -e
+
+function die() {
+    echo "$1" >&2
+    exit 1
+}
+
+REMOTE_URL=$(git config --get remote.origin.url 2>/dev/null || true)
+
+# GitHub repos: use gh CLI for inline status
+if [[ "$REMOTE_URL" == *github.com* ]]; then
+    command -v gh &>/dev/null || die "Error: gh CLI is not installed"
+    BRANCH=$(git rev-parse --abbrev-ref HEAD)
+    gh run list --branch "$BRANCH" --limit 10
+else
+    # Fall back to browse-ci for non-GitHub repos
+    exec git browse-ci
+fi
