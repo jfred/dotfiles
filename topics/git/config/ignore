@@ -15,6 +15,10 @@ pyrightconfig.json
 jfred.*
 jfred-*
 
+# incase the project doesn't use mise
+.mise.toml
+mise.toml
+
 # ruby
 .ruby-gemset
 .ruby-version
