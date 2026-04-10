@@ -2,7 +2,7 @@
 # Documentation: https://starship.rs/config/
 
 # Timeout for commands (in milliseconds)
-command_timeout = 500
+command_timeout = 800
 
 # Format of the prompt - clean and simple
 format = """
