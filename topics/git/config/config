@@ -20,7 +20,7 @@
     # Push to remote
     pushr = push-remote
     # Remove any local changes (no saving)
-    nuke = checkout -- .
+    nuke = reset --hard HEAD
     # Amend last commit message
     reword = commit --amend
     # Show object type
