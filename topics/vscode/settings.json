@@ -22,7 +22,7 @@
       "url": "https://linear.app/watchduty/issue/ENG-<num>"
     }
   ],
-  "gitlens.ai.model": "vscode",
+  "gitlens.ai.model": "gitkraken",
   "gitlens.ai.vscode.model": "copilot:gpt-4.1",
   "editor.minimap.enabled": false,
   "explorer.confirmDelete": false,
@@ -58,7 +58,8 @@
     "Uids",
     "Watchduty",
     "weatherstations",
-    "workos"
+    "workos",
+    "worktree"
   ],
   "mypy-type-checker.reportingScope": "workspace",
   "mypy-type-checker.importStrategy": "fromEnvironment",
@@ -78,5 +79,12 @@
   "cSpell.enabledNotifications": {
     "Lines too Long": false,
     "Maximum Word Length Exceeded": false
-  }
+  },
+  "gitlens.ai.gitkraken.model": "gemini:gemini-3-flash-preview",
+  "diffEditor.maxComputationTime": 0,
+  "claudeCode.selectedModel": "opus[1m]",
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "workbench.secondarySideBar.defaultVisibility": "hidden"
 }
