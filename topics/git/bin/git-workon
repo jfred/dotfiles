@@ -1,0 +1,153 @@
+#!/usr/bin/env bash
+# Manage git worktrees
+#
+# Usage:
+#   git workon                  list active worktrees
+#   git workon <branch>         create worktree, copy local files, run init cmd
+#   git workon --rm <branch>    run cleanup cmd, remove worktree, offer to delete branch
+#
+# If the branch doesn't exist locally or on origin, offers to create it from main.
+# Worktree paths mirror branch names: ../{REPO}.worktrees/some/branch
+#
+# Config (set in .env.local):
+#   WORKTREES_DIR              override worktree location (default: ../<repo>.worktrees)
+#   WORKTREES_LOCAL_FILES      comma-separated extra files to copy (e.g. ".envrc,.env.local")
+#   WORKTREES_INIT_CMD         command to run after creating a worktree (e.g. "mise run init")
+#   WORKTREES_CLEANUP_CMD      command to run before removing a worktree (e.g. "docker compose down")
+
+set -euo pipefail
+
+# Always resolve to the main repo, even when run from inside a worktree
+REPO_ROOT=$(realpath "$(git rev-parse --git-common-dir)/..")
+REPO_NAME=$(basename "$REPO_ROOT")
+
+WORKTREES_DIR="${WORKTREES_DIR:-$(dirname "$REPO_ROOT")/${REPO_NAME}.worktrees}"
+
+die()  { echo "error: $*" >&2; exit 1; }
+info() { echo "==> $*"; }
+
+REMOVE=false
+BRANCH=""
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --rm) REMOVE=true; shift ;;
+        -*) die "Unknown flag: $1" ;;
+        *) BRANCH="$1"; shift ;;
+    esac
+done
+
+# Files to copy into each new worktree (paths relative to repo root, missing files ignored)
+LOCAL_FILES=()
+IFS=',' read -ra _extra <<< "${WORKTREES_LOCAL_FILES:-}"
+LOCAL_FILES+=("${_extra[@]}")
+
+
+
+# no args, list worktrees
+if [[ -z "$BRANCH" && "$REMOVE" == "false" ]]; then
+    worktrees=$(git worktree list | tail -n +2)
+    if [[ -z "$worktrees" ]]; then
+        echo "No active worktrees. Create one with: git workon <branch>"
+    else
+        echo ""
+        echo "$worktrees"
+        echo ""
+    fi
+    exit 0
+fi
+
+if [[ -z "$BRANCH" ]]; then
+    die "Usage: git workon [--rm] <branch>"
+fi
+
+WORKTREE_PATH="${WORKTREES_DIR}/${BRANCH}"
+
+# --rm: run cleanup, remove worktree, optionally delete branch
+if [[ "$REMOVE" == "true" ]]; then
+    if [[ ! -d "$WORKTREE_PATH" ]]; then
+        die "No worktree found at ${WORKTREE_PATH}"
+    fi
+
+    info "Worktree: ${WORKTREE_PATH}"
+
+    if [[ "$(pwd)" == "${WORKTREE_PATH}"* ]]; then
+        cd "$REPO_ROOT"
+    fi
+
+    if [[ -n "${WORKTREES_CLEANUP_CMD:-}" ]]; then
+        info "Running cleanup…"
+        (cd "$WORKTREE_PATH" && eval "$WORKTREES_CLEANUP_CMD") || true
+    fi
+
+    LOCAL_BRANCH=$(git -C "$WORKTREE_PATH" branch --show-current 2>/dev/null || true)
+
+    info "Removing worktree…"
+    git worktree remove "$WORKTREE_PATH" --force
+
+    # clean up empty parent dirs under .worktrees/
+    rmdir -p "$(dirname "$WORKTREE_PATH")" 2>/dev/null || true
+
+    if [[ -n "$LOCAL_BRANCH" ]] && git rev-parse --verify "$LOCAL_BRANCH" >/dev/null 2>&1; then
+        echo ""
+        echo -n "Delete local branch '${LOCAL_BRANCH}'? [y/N] "
+        read -r answer
+        if [[ "$answer" =~ ^[Yy]$ ]]; then
+            git branch -D "$LOCAL_BRANCH"
+        fi
+    fi
+
+    info "Done."
+    exit 0
+fi
+
+# create worktree, fetch branch (or offer to create), copy local files, init
+if [[ "$(git rev-parse --show-toplevel)" != "$REPO_ROOT" ]]; then
+    die "You're inside a worktree. Run this from the main repo."
+fi
+
+if [[ -d "$WORKTREE_PATH" ]]; then
+    info "Worktree already exists at ${WORKTREE_PATH}"
+    echo ""
+    echo "  cd ${WORKTREE_PATH}"
+    exit 0
+fi
+
+mkdir -p "$(dirname "$WORKTREE_PATH")"
+info "Fetching origin…"
+git fetch --quiet origin
+
+if git rev-parse --verify "$BRANCH" >/dev/null 2>&1; then
+    # local branch exists, use it directly
+    git worktree add "$WORKTREE_PATH" "$BRANCH"
+elif git rev-parse --verify "origin/${BRANCH}" >/dev/null 2>&1; then
+    # remote branch, create local tracking branch
+    git worktree add -b "$BRANCH" "$WORKTREE_PATH" "origin/${BRANCH}"
+else
+    echo ""
+    echo "Branch '${BRANCH}' not found locally or on origin."
+    echo -n "Create new branch from main? [y/N] "
+    read -r answer
+    if [[ "$answer" =~ ^[Yy]$ ]]; then
+        git worktree add --no-track -b "$BRANCH" "$WORKTREE_PATH" origin/main
+    else
+        die "Aborted."
+    fi
+fi
+
+for f in "${LOCAL_FILES[@]}"; do
+    src="${REPO_ROOT}/${f}"
+    if [[ -f "$src" ]]; then
+        mkdir -p "$(dirname "${WORKTREE_PATH}/${f}")"
+        cp "$src" "${WORKTREE_PATH}/${f}"
+        info "Copied ${f}"
+    fi
+done
+
+if [[ -n "${WORKTREES_INIT_CMD:-}" ]]; then
+    info "Running init…"
+    (cd "$WORKTREE_PATH" && eval "$WORKTREES_INIT_CMD")
+fi
+
+echo ""
+echo "  Worktree ready: cd ${WORKTREE_PATH}"
+echo "  Remove: git workon --rm ${BRANCH}"
