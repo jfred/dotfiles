@@ -15,6 +15,7 @@
 #   WORKTREES_LOCAL_FILES      comma-separated extra files to copy (e.g. ".envrc,.env.local")
 #   WORKTREES_INIT_CMD         command to run after creating a worktree (e.g. "mise run init")
 #   WORKTREES_CLEANUP_CMD      command to run before removing a worktree (e.g. "docker compose down")
+#   WORKTREES_BASE_BRANCH      remote branch to create new branches from (default: origin/main)
 
 set -euo pipefail
 
@@ -77,7 +78,7 @@ if [[ "$PRUNE" == "true" ]]; then
                     git branch -D "$wt_branch"
                 fi
             fi
-            ((removed++))
+            (( ++removed ))
         fi
     done <<< "$worktrees"
     info "Pruned $removed worktree(s)."
@@ -131,7 +132,7 @@ if [[ "$REMOVE" == "true" ]]; then
     if [[ -n "$LOCAL_BRANCH" ]] && git rev-parse --verify "$LOCAL_BRANCH" >/dev/null 2>&1; then
         echo ""
         echo -n "Delete local branch '${LOCAL_BRANCH}'? [y/N] "
-        read -r answer
+        read -r answer </dev/tty
         if [[ "$answer" =~ ^[Yy]$ ]]; then
             git branch -D "$LOCAL_BRANCH"
         fi
@@ -165,11 +166,12 @@ elif git rev-parse --verify "origin/${BRANCH}" >/dev/null 2>&1; then
     git worktree add -b "$BRANCH" "$WORKTREE_PATH" "origin/${BRANCH}"
 else
     echo ""
+    base="${WORKTREES_BASE_BRANCH:-origin/main}"
     echo "Branch '${BRANCH}' not found locally or on origin."
-    echo -n "Create new branch from main? [y/N] "
-    read -r answer
+    echo -n "Create new branch from ${base}? [y/N] "
+    read -r answer </dev/tty
     if [[ "$answer" =~ ^[Yy]$ ]]; then
-        git worktree add --no-track -b "$BRANCH" "$WORKTREE_PATH" origin/main
+        git worktree add --no-track -b "$BRANCH" "$WORKTREE_PATH" "$base"
     else
         die "Aborted."
     fi
