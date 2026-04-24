@@ -28,6 +28,43 @@ WORKTREES_DIR="${WORKTREES_DIR:-$(dirname "$REPO_ROOT")/${REPO_NAME}.worktrees}"
 die()  { echo "error: $*" >&2; exit 1; }
 info() { echo "==> $*"; }
 
+# remove_worktree <path> <branch>
+# Warns on uncommitted changes, confirms, runs cleanup, removes worktree,
+# offers to delete the branch. Returns 1 if user declines removal.
+remove_worktree() {
+    local wt_path="$1" wt_branch="$2"
+
+    if [[ -n "$(git -C "$wt_path" status --porcelain 2>/dev/null)" ]]; then
+        echo "  ⚠ uncommitted changes:"
+        git -C "$wt_path" status --short | sed 's/^/    /'
+    fi
+
+    echo -n "  Remove? [y/N] "
+    read -r answer </dev/tty
+    [[ "$answer" =~ ^[Yy]$ ]] || return 1
+
+    if [[ "$(pwd)" == "${wt_path}"* ]]; then
+        cd "$REPO_ROOT"
+    fi
+
+    if [[ -n "${WORKTREES_CLEANUP_CMD:-}" ]]; then
+        info "Running cleanup…"
+        (cd "$wt_path" && eval "$WORKTREES_CLEANUP_CMD") || true
+    fi
+
+    info "Removing worktree…"
+    git worktree remove "$wt_path" --force
+    rmdir -p "$(dirname "$wt_path")" 2>/dev/null || true
+
+    if [[ -n "$wt_branch" ]] && git rev-parse --verify "$wt_branch" >/dev/null 2>&1; then
+        echo -n "  Delete branch '$wt_branch'? [y/N] "
+        read -r answer </dev/tty
+        if [[ "$answer" =~ ^[Yy]$ ]]; then
+            git branch -D "$wt_branch"
+        fi
+    fi
+}
+
 REMOVE=false
 PRUNE=false
 BRANCH=""
@@ -60,24 +97,7 @@ if [[ "$PRUNE" == "true" ]]; then
     while IFS=$'\t' read -r wt_path wt_branch; do
         echo ""
         echo "  $wt_branch  ($wt_path)"
-        echo -n "  Remove? [y/N] "
-        read -r answer </dev/tty
-        if [[ "$answer" =~ ^[Yy]$ ]]; then
-            if [[ "$(pwd)" == "${wt_path}"* ]]; then
-                cd "$REPO_ROOT"
-            fi
-            if [[ -n "${WORKTREES_CLEANUP_CMD:-}" ]]; then
-                (cd "$wt_path" && eval "$WORKTREES_CLEANUP_CMD") || true
-            fi
-            git worktree remove "$wt_path" --force
-            rmdir -p "$(dirname "$wt_path")" 2>/dev/null || true
-            if git rev-parse --verify "$wt_branch" >/dev/null 2>&1; then
-                echo -n "  Delete branch '$wt_branch'? [y/N] "
-                read -r answer2 </dev/tty
-                if [[ "$answer2" =~ ^[Yy]$ ]]; then
-                    git branch -D "$wt_branch"
-                fi
-            fi
+        if remove_worktree "$wt_path" "$wt_branch"; then
             (( ++removed ))
         fi
     done <<< "$worktrees"
@@ -110,34 +130,10 @@ if [[ "$REMOVE" == "true" ]]; then
         die "No worktree found at ${WORKTREE_PATH}"
     fi
 
-    info "Worktree: ${WORKTREE_PATH}"
-
-    if [[ "$(pwd)" == "${WORKTREE_PATH}"* ]]; then
-        cd "$REPO_ROOT"
-    fi
-
-    if [[ -n "${WORKTREES_CLEANUP_CMD:-}" ]]; then
-        info "Running cleanup…"
-        (cd "$WORKTREE_PATH" && eval "$WORKTREES_CLEANUP_CMD") || true
-    fi
-
     LOCAL_BRANCH=$(git -C "$WORKTREE_PATH" branch --show-current 2>/dev/null || true)
 
-    info "Removing worktree…"
-    git worktree remove "$WORKTREE_PATH" --force
-
-    # clean up empty parent dirs under .worktrees/
-    rmdir -p "$(dirname "$WORKTREE_PATH")" 2>/dev/null || true
-
-    if [[ -n "$LOCAL_BRANCH" ]] && git rev-parse --verify "$LOCAL_BRANCH" >/dev/null 2>&1; then
-        echo ""
-        echo -n "Delete local branch '${LOCAL_BRANCH}'? [y/N] "
-        read -r answer </dev/tty
-        if [[ "$answer" =~ ^[Yy]$ ]]; then
-            git branch -D "$LOCAL_BRANCH"
-        fi
-    fi
-
+    info "Worktree: ${WORKTREE_PATH}"
+    remove_worktree "$WORKTREE_PATH" "$LOCAL_BRANCH" || die "Aborted."
     info "Done."
     exit 0
 fi
@@ -192,5 +188,5 @@ if [[ -n "${WORKTREES_INIT_CMD:-}" ]]; then
 fi
 
 echo ""
-echo "  Worktree ready: cd ${WORKTREE_PATH}"
+echo "  Worktree ready: cd $(realpath "$WORKTREE_PATH")"
 echo "  Remove: git workon --rm ${BRANCH}"
