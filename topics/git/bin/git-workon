@@ -5,6 +5,7 @@
 #   git workon                  list active worktrees
 #   git workon <branch>         create worktree, copy local files, run init cmd
 #   git workon --rm <branch>    run cleanup cmd, remove worktree, offer to delete branch
+#   git workon --prune          interactively review and remove worktrees
 #
 # If the branch doesn't exist locally or on origin, offers to create it from main.
 # Worktree paths mirror branch names: ../{REPO}.worktrees/some/branch
@@ -27,10 +28,12 @@ die()  { echo "error: $*" >&2; exit 1; }
 info() { echo "==> $*"; }
 
 REMOVE=false
+PRUNE=false
 BRANCH=""
 while [[ $# -gt 0 ]]; do
     case "$1" in
         --rm) REMOVE=true; shift ;;
+        --prune) PRUNE=true; shift ;;
         -*) die "Unknown flag: $1" ;;
         *) BRANCH="$1"; shift ;;
     esac
@@ -42,6 +45,44 @@ IFS=',' read -ra _extra <<< "${WORKTREES_LOCAL_FILES:-}"
 LOCAL_FILES+=("${_extra[@]}")
 
 
+
+# prune - interactively review each worktree
+if [[ "$PRUNE" == "true" ]]; then
+    worktrees=$(git worktree list --porcelain | awk '/^worktree /{p=$2} /^branch refs\/heads\//{sub(/^branch refs\/heads\//, ""); print p "\t" $0}')
+    # skip the main worktree (first entry)
+    worktrees=$(echo "$worktrees" | tail -n +2)
+    if [[ -z "$worktrees" ]]; then
+        echo "No worktrees to prune."
+        exit 0
+    fi
+    removed=0
+    while IFS=$'\t' read -r wt_path wt_branch; do
+        echo ""
+        echo "  $wt_branch  ($wt_path)"
+        echo -n "  Remove? [y/N] "
+        read -r answer </dev/tty
+        if [[ "$answer" =~ ^[Yy]$ ]]; then
+            if [[ "$(pwd)" == "${wt_path}"* ]]; then
+                cd "$REPO_ROOT"
+            fi
+            if [[ -n "${WORKTREES_CLEANUP_CMD:-}" ]]; then
+                (cd "$wt_path" && eval "$WORKTREES_CLEANUP_CMD") || true
+            fi
+            git worktree remove "$wt_path" --force
+            rmdir -p "$(dirname "$wt_path")" 2>/dev/null || true
+            if git rev-parse --verify "$wt_branch" >/dev/null 2>&1; then
+                echo -n "  Delete branch '$wt_branch'? [y/N] "
+                read -r answer2 </dev/tty
+                if [[ "$answer2" =~ ^[Yy]$ ]]; then
+                    git branch -D "$wt_branch"
+                fi
+            fi
+            ((removed++))
+        fi
+    done <<< "$worktrees"
+    info "Pruned $removed worktree(s)."
+    exit 0
+fi
 
 # no args, list worktrees
 if [[ -z "$BRANCH" && "$REMOVE" == "false" ]]; then

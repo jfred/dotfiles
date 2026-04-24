@@ -2,8 +2,14 @@
 export GH_TELEMETRY=false
 
 # switch to a worktree for a branch, creating one if needed
+# flags (--prune, --rm, etc.) pass through to git workon
 switch-workon() {
-  local branch="${1:?Usage: switch-workon <branch>}"
+  if [[ $# -eq 0 || "$1" == --* ]]; then
+    git workon "$@"
+    return
+  fi
+
+  local branch="$1"
   local wt_path
   wt_path=$(git worktree list --porcelain 2>/dev/null | awk -v b="refs/heads/$branch" '
     /^worktree /{p=$2} /^branch /{if($2==b) print p}')
