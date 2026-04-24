@@ -20,29 +20,8 @@ _setup_git_alias_completions() {
   __git-sw_main() { _git-switch "$@" }
 
   # workon-switch / wo: complete branch names, worktree branches first
-  _workon-switch() {
-    local wt_branches other_branches all_branches wt_list
-    wt_list=(${${(f)"$(git worktree list --porcelain 2>/dev/null | awk '/^branch refs\/heads\//{sub(/^branch refs\/heads\//, ""); print}')"}})
-    all_branches=(${${(f)"$(git branch --list --format='%(refname:short)' 2>/dev/null)"}})
-    wt_branches=()
-    other_branches=()
-    for b in "${all_branches[@]}"; do
-      if (( ${wt_list[(Ie)$b]} )); then
-        wt_branches+=("$b")
-      else
-        other_branches+=("$b")
-      fi
-    done
-    local wt_descs=()
-    for b in "${wt_branches[@]}"; do
-      wt_descs+=("$b:* $b")
-    done
-    _describe -t worktree-branches 'active worktree' wt_descs
-    _describe -t branches 'branch' other_branches
-  }
   compdef _workon-switch workon-switch
   compdef _workon-switch wo
-
 }
 
 # Register the setup to run once on first prompt (after compinit)
