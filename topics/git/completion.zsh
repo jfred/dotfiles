@@ -19,8 +19,8 @@ _setup_git_alias_completions() {
   # sw -> switch (branch completion)
   __git-sw_main() { _git-switch "$@" }
 
-  # switch-workon / wo: complete branch names, worktree branches first
-  _switch-workon() {
+  # workon-switch / wo: complete branch names, worktree branches first
+  _workon-switch() {
     local wt_branches other_branches all_branches wt_list
     wt_list=(${${(f)"$(git worktree list --porcelain 2>/dev/null | awk '/^branch refs\/heads\//{sub(/^branch refs\/heads\//, ""); print}')"}})
     all_branches=(${${(f)"$(git branch --list --format='%(refname:short)' 2>/dev/null)"}})
@@ -40,8 +40,8 @@ _setup_git_alias_completions() {
     _describe -t worktree-branches 'active worktree' wt_descs
     _describe -t branches 'branch' other_branches
   }
-  compdef _switch-workon switch-workon
-  compdef _switch-workon wo
+  compdef _workon-switch workon-switch
+  compdef _workon-switch wo
 
 }
 

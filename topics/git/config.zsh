@@ -3,7 +3,7 @@ export GH_TELEMETRY=false
 
 # switch to a worktree for a branch, creating one if needed
 # flags (--prune, --rm, etc.) pass through to git workon
-switch-workon() {
+workon-switch() {
   if [[ $# -eq 0 || "$1" == --* ]]; then
     git workon "$@"
     return
@@ -26,4 +26,4 @@ switch-workon() {
     fi
   fi
 }
-alias wo='switch-workon'
+alias wo='workon-switch'
