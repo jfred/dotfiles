@@ -86,7 +86,9 @@ LOCAL_FILES+=("${_extra[@]}")
 
 # prune - interactively review each worktree
 if [[ "$PRUNE" == "true" ]]; then
-    worktrees=$(git worktree list --porcelain | awk '/^worktree /{p=$2} /^branch refs\/heads\//{sub(/^branch refs\/heads\//, ""); print p "\t" $0}')
+    worktrees=$(git worktree list --porcelain |
+        awk '/^worktree /{p=$2} /^branch refs\/heads\//{sub(/^branch refs\/heads\//, ""); print p "\t" $0}'
+    )
     # skip the main worktree (first entry)
     worktrees=$(echo "$worktrees" | tail -n +2)
     if [[ -z "$worktrees" ]]; then

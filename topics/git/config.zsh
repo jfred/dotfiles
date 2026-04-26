@@ -1,16 +1,26 @@
 # disable telemetry see: https://cli.github.com/telemetry
 export GH_TELEMETRY=false
 
+# print the worktree path for a branch (empty if none)
+_workon_path_for() {
+  git worktree list --porcelain 2>/dev/null | awk -v b="refs/heads/$1" '
+    /^worktree /{p=$2} /^branch /{if($2==b) print p}'
+}
+
+# print the main repo root (the common dir's parent), even from a worktree
+_workon_repo_root() {
+  local d
+  d=$(git rev-parse --git-common-dir 2>/dev/null) || return 1
+  realpath "$d/.."
+}
+
 # switch to a worktree for a branch, creating one if needed
 # flags (--prune, --rm, etc.) pass through to git workon
+# `-` switches to the previous worktree
 workon-switch() {
   if [[ "$1" == "-" ]]; then
-    if [[ -z "$WORKON_PREV" ]]; then
+    if [[ -z "$WORKON_PREV" || ! -d "$WORKON_PREV" ]]; then
       echo "no previous worktree" >&2
-      return 1
-    fi
-    if [[ ! -d "$WORKON_PREV" ]]; then
-      echo "previous worktree no longer exists: $WORKON_PREV" >&2
       WORKON_PREV=""
       return 1
     fi
@@ -20,17 +30,18 @@ workon-switch() {
     return
   fi
 
+  local repo_root
+  repo_root=$(_workon_repo_root) || { echo "Not in a git repo." >&2; return 1; }
+
   if [[ "$1" == "--done" ]]; then
-    local repo_root current_toplevel branch
-    repo_root=$(realpath "$(git rev-parse --git-common-dir 2>/dev/null)/..") || { echo "Not in a git repo." >&2; return 1; }
-    current_toplevel=$(git rev-parse --show-toplevel 2>/dev/null)
-    if [[ "$current_toplevel" == "$repo_root" ]]; then
+    if [[ "$(git rev-parse --show-toplevel)" == "$repo_root" ]]; then
       echo "error: not inside a worktree" >&2
       return 1
     fi
-    branch=$(git branch --show-current 2>/dev/null)
+    local branch
+    branch=$(git branch --show-current)
     if [[ -z "$branch" ]]; then
-      echo "error: could not determine current brmanch" >&2
+      echo "error: could not determine current branch" >&2
       return 1
     fi
     cd "$repo_root" || return
@@ -44,28 +55,20 @@ workon-switch() {
     return
   fi
 
-  local branch="$1"
-  local wt_path
-  wt_path=$(git worktree list --porcelain 2>/dev/null | awk -v b="refs/heads/$branch" '
-    /^worktree /{p=$2} /^branch /{if($2==b) print p}')
+  local branch="$1" wt_path
+  wt_path=$(_workon_path_for "$branch")
 
-  if [[ -n "$wt_path" ]]; then
-    [[ "$wt_path" != "$PWD" ]] && WORKON_PREV="$PWD"
-    cd "$wt_path"
-  else
+  if [[ -z "$wt_path" ]]; then
     echo "No worktree for '$branch'."
     echo -n "Create one? [y/N] "
     read -r answer
-    if [[ "$answer" =~ ^[Yy]$ ]]; then
-      local repo_root
-      repo_root=$(realpath "$(git rev-parse --git-common-dir)/..")
-      (cd "$repo_root" && git workon "$branch") || return
-      wt_path=$(git worktree list --porcelain | awk -v b="refs/heads/$branch" '
-        /^worktree /{p=$2} /^branch /{if($2==b) print p}')
-      WORKON_PREV="$PWD"
-      cd "$wt_path"
-    fi
+    [[ "$answer" =~ ^[Yy]$ ]] || return
+    (cd "$repo_root" && git workon "$branch") || return
+    wt_path=$(_workon_path_for "$branch")
   fi
+
+  [[ "$wt_path" != "$PWD" ]] && WORKON_PREV="$PWD"
+  cd "$wt_path"
 }
 alias wo='workon-switch'
 
