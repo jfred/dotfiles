@@ -4,6 +4,22 @@ export GH_TELEMETRY=false
 # switch to a worktree for a branch, creating one if needed
 # flags (--prune, --rm, etc.) pass through to git workon
 workon-switch() {
+  if [[ "$1" == "-" ]]; then
+    if [[ -z "$WORKON_PREV" ]]; then
+      echo "no previous worktree" >&2
+      return 1
+    fi
+    if [[ ! -d "$WORKON_PREV" ]]; then
+      echo "previous worktree no longer exists: $WORKON_PREV" >&2
+      WORKON_PREV=""
+      return 1
+    fi
+    local target="$WORKON_PREV"
+    WORKON_PREV="$PWD"
+    cd "$target"
+    return
+  fi
+
   if [[ "$1" == "--done" ]]; then
     local repo_root current_toplevel branch
     repo_root=$(realpath "$(git rev-parse --git-common-dir 2>/dev/null)/..") || { echo "Not in a git repo." >&2; return 1; }
@@ -17,7 +33,9 @@ workon-switch() {
       echo "error: could not determine current brmanch" >&2
       return 1
     fi
-    cd "$repo_root" && git workon --rm "$branch"
+    cd "$repo_root" || return
+    git workon --rm "$branch" || return
+    WORKON_PREV=""
     return
   fi
 
@@ -32,14 +50,18 @@ workon-switch() {
     /^worktree /{p=$2} /^branch /{if($2==b) print p}')
 
   if [[ -n "$wt_path" ]]; then
+    [[ "$wt_path" != "$PWD" ]] && WORKON_PREV="$PWD"
     cd "$wt_path"
   else
     echo "No worktree for '$branch'."
     echo -n "Create one? [y/N] "
     read -r answer
     if [[ "$answer" =~ ^[Yy]$ ]]; then
-      git workon "$branch" && wt_path=$(git worktree list --porcelain | awk -v b="refs/heads/$branch" '
-        /^worktree /{p=$2} /^branch /{if($2==b) print p}') && cd "$wt_path"
+      git workon "$branch" || return
+      wt_path=$(git worktree list --porcelain | awk -v b="refs/heads/$branch" '
+        /^worktree /{p=$2} /^branch /{if($2==b) print p}')
+      WORKON_PREV="$PWD"
+      cd "$wt_path"
     fi
   fi
 }
