@@ -57,7 +57,9 @@ workon-switch() {
     echo -n "Create one? [y/N] "
     read -r answer
     if [[ "$answer" =~ ^[Yy]$ ]]; then
-      git workon "$branch" || return
+      local repo_root
+      repo_root=$(realpath "$(git rev-parse --git-common-dir)/..")
+      (cd "$repo_root" && git workon "$branch") || return
       wt_path=$(git worktree list --porcelain | awk -v b="refs/heads/$branch" '
         /^worktree /{p=$2} /^branch /{if($2==b) print p}')
       WORKON_PREV="$PWD"
